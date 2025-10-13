@@ -238,12 +238,12 @@
             user-select: none;
         }
 
-        .hero-logo { 
-            width: min(200px, 45vw); 
-            height: auto; 
-            margin: 0 auto 24px; 
-            display: block; 
-        } 
+        .hero-logo {
+            width: clamp(160px, 18vw, 220px);
+            height: auto;
+            margin: 0 auto clamp(16px, 3vw, 24px);
+            display: block;
+        }
 
         .phone {
             display: flex;
@@ -304,17 +304,13 @@
             position: relative;
             display: flex;
             align-items: center;
-            justify-content: center;
             min-height: min(96vh, 780px);
-            color: white;
-            text-align: center;
-            padding: clamp(80px, 12vw, 140px) clamp(16px, 4vw, 40px);
-            background: radial-gradient(circle at 20% 20%, rgba(255, 212, 0, 0.15), transparent 45%),
-                        radial-gradient(circle at 80% 0%, rgba(255, 212, 0, 0.1), transparent 55%),
-                        #101013;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            color: #ffffff;
+            padding: clamp(88px, 12vw, 140px) 0;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(255, 212, 0, 0.18), transparent 48%),
+                radial-gradient(circle at 82% 0%, rgba(255, 212, 0, 0.12), transparent 58%),
+                #0c0c0f;
             overflow: hidden;
         }
 
@@ -328,34 +324,35 @@
         }
 
         .hero[data-has-image="true"]::before {
-            opacity: 0.82;
-        }
-
-        .hero[data-has-image="true"] {
-            background-color: #060607;
+            opacity: 0.78;
         }
 
         .hero > .container {
             position: relative;
-            display: grid;
-            justify-items: center;
+            width: min(100%, var(--container-max));
+            margin: 0 auto;
+            padding: 0 var(--section-inline);
+            z-index: 1;
         }
 
-        .hero-content {
-            position: relative;
-            width: min(100%, var(--content-narrow));
-            max-width: var(--content-narrow);
-            z-index: 1;
+        .hero-grid {
             display: grid;
-            gap: clamp(20px, 4vw, 32px);
+            gap: clamp(28px, 6vw, 52px);
+            align-items: center;
             justify-items: center;
-            padding: 0 clamp(16px, 4vw, 40px);
+            text-align: center;
+        }
+
+        .hero-text {
+            display: grid;
+            gap: clamp(18px, 4vw, 28px);
+            justify-items: center;
         }
 
         .hero h1 {
-            font-size: clamp(34px, 4.8vw, 56px);
+            font-size: clamp(36px, 5vw, 60px);
             margin: 0;
-            line-height: 1.1;
+            line-height: 1.05;
         }
 
         .hero p {
@@ -363,6 +360,158 @@
             margin: 0;
             max-width: 640px;
             color: rgba(255, 255, 255, 0.82);
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: clamp(14px, 2vw, 18px) clamp(26px, 5vw, 34px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            background: transparent;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: background-color var(--transition-base), border-color var(--transition-base), transform var(--transition-base);
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus-visible {
+            background-color: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .hero-highlights {
+            list-style: none;
+            display: grid;
+            gap: 16px;
+            margin: clamp(12px, 3vw, 18px) 0 0;
+            padding: 0;
+            width: min(100%, 520px);
+        }
+
+        .hero-highlights.is-hidden {
+            display: none;
+        }
+
+        .hero-highlight {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 14px;
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .hero-highlight-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-size: 20px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-highlight-text {
+            display: grid;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        .hero-highlight-text strong {
+            font-size: 17px;
+            color: #ffffff;
+        }
+
+        .hero-visual {
+            position: relative;
+            width: min(100%, 560px);
+            border-radius: clamp(22px, 4vw, 32px);
+            padding: clamp(18px, 3.5vw, 32px);
+            background: linear-gradient(135deg, rgba(255, 212, 0, 0.12), rgba(255, 212, 0, 0));
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .hero-visual.is-hidden {
+            display: none;
+        }
+
+        .hero-visual::after {
+            content: "";
+            position: absolute;
+            inset: 12px;
+            border-radius: inherit;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            pointer-events: none;
+        }
+
+        .hero-visual img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 18px 32px rgba(0, 0, 0, 0.28));
+        }
+
+        @media (min-width: 720px) {
+            .hero-grid {
+                grid-template-columns: repeat(12, minmax(0, 1fr));
+                text-align: left;
+                justify-items: stretch;
+            }
+
+            .hero-text {
+                grid-column: 1 / span 6;
+                justify-items: flex-start;
+                text-align: left;
+            }
+
+            .hero-logo {
+                margin-left: 0;
+            }
+
+            .hero-visual {
+                grid-column: 8 / -1;
+                justify-self: stretch;
+                width: 100%;
+            }
+
+            .hero-actions {
+                justify-content: flex-start;
+            }
+
+            .hero-highlights {
+                justify-self: stretch;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .hero-text {
+                grid-column: 1 / span 5;
+            }
+
+            .hero-visual {
+                grid-column: 7 / -1;
+            }
+
+            .hero-highlights {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px 24px;
+            }
         }
 
         .btn {
@@ -1532,11 +1681,20 @@
     <main id="top"> 
         <section class="hero" id="hero" data-has-image="false">
             <div class="container">
-                <div class="hero-content">
-                    <img src="assets/logo-hero.svg" alt="Эмблема Электроконструктив" class="hero-logo" loading="lazy" id="heroLogoImage">
-                    <h1 id="heroTitle">Заголовок загружается...</h1>
-                    <p id="heroSubtitle">Описание загружается...</p>
-                    <a href="#request" class="btn" id="heroCta" data-open-request="true">Связаться</a>
+                <div class="hero-grid">
+                    <div class="hero-text">
+                        <img src="assets/logo-hero.svg" alt="Эмблема Электроконструктив" class="hero-logo" loading="lazy" id="heroLogoImage">
+                        <h1 id="heroTitle">Заголовок загружается...</h1>
+                        <p id="heroSubtitle">Описание загружается...</p>
+                        <div class="hero-actions">
+                            <a href="#request" class="btn" id="heroCta" data-open-request="true">Связаться</a>
+                            <a href="#portfolio" class="btn-secondary">Наши проекты</a>
+                        </div>
+                        <ul class="hero-highlights is-hidden" id="heroHighlights" aria-live="polite" aria-label="Ключевые преимущества"></ul>
+                    </div>
+                    <div class="hero-visual is-hidden" id="heroVisualWrapper">
+                        <img src="" alt="Электромонтажные работы" id="heroVisual" loading="lazy" hidden>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1750,7 +1908,8 @@
         const contentEndpoint = new URL('/api/content', window.location.origin).toString(); 
         const reviewsEndpoint = new URL('/api/reviews/external', window.location.origin).toString(); 
         const defaultHeaderLogo = 'assets/logo-inline.svg'; 
-        const defaultHeroLogo = 'assets/logo-hero.svg'; 
+        const defaultHeroLogo = 'assets/logo-hero.svg';
+        const defaultHeroVisual = 'assets/hero-bg.svg';
         const PARTNERS_VISIBLE_COUNT = 5; 
         const DEFAULT_PARTNERS_INTERVAL_MS = 5000; 
         const MIN_PARTNERS_INTERVAL_MS = 1000; 
@@ -2432,40 +2591,98 @@
                 headerLogoImage.src = resolveAssetUrl(branding.headerLogo, defaultHeaderLogo); 
             } 
 
-            const heroLogoImage = document.getElementById('heroLogoImage'); 
-            if (heroLogoImage) { 
-                heroLogoImage.src = resolveAssetUrl(branding.heroLogo, defaultHeroLogo); 
-            } 
+            const heroLogoImage = document.getElementById('heroLogoImage');
+            if (heroLogoImage) {
+                heroLogoImage.src = resolveAssetUrl(branding.heroLogo, defaultHeroLogo);
+            }
 
-            updateRequestLogo(branding); 
+            updateRequestLogo(branding);
 
-            const heroSection = document.getElementById('hero'); 
+            const heroSection = document.getElementById('hero');
+            const heroVisual = document.getElementById('heroVisual');
+            const heroVisualWrapper = document.getElementById('heroVisualWrapper');
+            const heroImageSource = resolveAssetUrl(hero.image, defaultHeroVisual);
+
             if (heroSection) {
-                const heroImageUrl = resolveAssetUrl(hero.image);
-                if (heroImageUrl) {
-                    heroSection.style.backgroundImage = `url(${heroImageUrl})`;
+                if (heroImageSource) {
+                    heroSection.style.backgroundImage = `url(${heroImageSource})`;
                     heroSection.dataset.hasImage = 'true';
                 } else {
                     heroSection.style.removeProperty('background-image');
                     heroSection.dataset.hasImage = 'false';
                 }
             }
-            document.getElementById('heroTitle').textContent = hero.title || ''; 
-            document.getElementById('heroSubtitle').textContent = hero.subtitle || ''; 
-            document.getElementById('heroCta').textContent = hero.cta || ''; 
 
-            const featuresGrid = document.getElementById('featuresGrid'); 
-            featuresGrid.innerHTML = ''; 
-            features.forEach(feature => { 
-                const card = document.createElement('div'); 
-                card.className = 'feature-card'; 
-                card.innerHTML = `
-                    <i class="${feature.icon || ''}"></i>
-                    <h3>${feature.title || ''}</h3>
-                    <p>${feature.description || ''}</p>
-                `; 
-                featuresGrid.appendChild(card); 
-            }); 
+            if (heroVisual) {
+                if (heroImageSource) {
+                    heroVisual.src = heroImageSource;
+                    heroVisual.removeAttribute('hidden');
+                    if (heroVisualWrapper) {
+                        heroVisualWrapper.classList.remove('is-hidden');
+                    }
+                } else {
+                    heroVisual.removeAttribute('src');
+                    heroVisual.setAttribute('hidden', 'true');
+                    if (heroVisualWrapper) {
+                        heroVisualWrapper.classList.add('is-hidden');
+                    }
+                }
+            }
+
+            document.getElementById('heroTitle').textContent = hero.title || '';
+            document.getElementById('heroSubtitle').textContent = hero.subtitle || '';
+            document.getElementById('heroCta').textContent = hero.cta || '';
+
+            const heroHighlightsList = document.getElementById('heroHighlights');
+            if (heroHighlightsList) {
+                heroHighlightsList.innerHTML = '';
+                const highlightItems = features.slice(0, 3);
+                highlightItems.forEach(feature => {
+                    const item = document.createElement('li');
+                    item.className = 'hero-highlight';
+
+                    const iconWrapper = document.createElement('span');
+                    iconWrapper.className = 'hero-highlight-icon';
+                    const icon = document.createElement('i');
+                    icon.className = feature.icon || 'fas fa-bolt';
+                    iconWrapper.appendChild(icon);
+
+                    const textWrapper = document.createElement('div');
+                    textWrapper.className = 'hero-highlight-text';
+                    const titleElement = document.createElement('strong');
+                    titleElement.textContent = feature.title || '';
+                    const descriptionElement = document.createElement('span');
+                    descriptionElement.textContent = feature.description || '';
+                    textWrapper.appendChild(titleElement);
+                    textWrapper.appendChild(descriptionElement);
+
+                    item.appendChild(iconWrapper);
+                    item.appendChild(textWrapper);
+                    heroHighlightsList.appendChild(item);
+                });
+                heroHighlightsList.classList.toggle('is-hidden', highlightItems.length === 0);
+            }
+
+            const featuresGrid = document.getElementById('featuresGrid');
+            featuresGrid.innerHTML = '';
+            features.forEach(feature => {
+                const card = document.createElement('div');
+                card.className = 'feature-card';
+
+                const iconElement = document.createElement('i');
+                iconElement.className = feature.icon || 'fas fa-bolt';
+
+                const titleElement = document.createElement('h3');
+                titleElement.textContent = feature.title || '';
+
+                const descriptionElement = document.createElement('p');
+                descriptionElement.textContent = feature.description || '';
+
+                card.appendChild(iconElement);
+                card.appendChild(titleElement);
+                card.appendChild(descriptionElement);
+                featuresGrid.appendChild(card);
+            });
 
             const servicesGrid = document.getElementById('servicesGrid'); 
             servicesGrid.innerHTML = ''; 
