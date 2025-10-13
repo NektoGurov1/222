@@ -1,0 +1,2488 @@
+<!DOCTYPE html> 
+<html lang="ru"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Электроконструктив — Профессиональные электромонтажные работы</title>
+    <meta name="description" content="Профессиональные электромонтажные работы любой сложности. Качественно, надежно, с гарантией. Работаем в Москве и области."> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> 
+    <style> 
+        :root { 
+            --primary: #111111; 
+            --secondary: #ffd400; 
+            --accent: #ffe566; 
+            --light: #f5f5f5; 
+            --dark: #000000; 
+            --text: #1c1c1c; 
+            --muted: #6c6c6c; 
+        } 
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        } 
+
+        body {
+            color: var(--text);
+            line-height: 1.6;
+            background-color: var(--light);
+            cursor: default;
+        }
+
+        a { 
+            color: inherit; 
+        } 
+
+        .container { 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 15px; 
+        } 
+
+        header { 
+            background-color: var(--dark); 
+            color: white; 
+            padding: 20px 0; 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); 
+        } 
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 18px;
+            text-decoration: none;
+            color: white;
+            min-width: 0;
+        }
+
+        .logo img {
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            line-height: 1.05;
+            min-width: 0;
+        }
+
+        .logo-name {
+            font-size: clamp(18px, 2vw + 14px, 28px);
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-tagline {
+            font-size: clamp(16px, 1.4vw + 12px, 24px);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.65);
+            text-transform: none;
+            white-space: nowrap;
+            letter-spacing: 0.06em;
+        }
+
+        main section h1,
+        main section h2,
+        main section h3,
+        main section p,
+        main section li,
+        main section span {
+            cursor: default;
+            user-select: none;
+        }
+
+        .hero-logo { 
+            width: min(200px, 45vw); 
+            height: auto; 
+            margin: 0 auto 24px; 
+            display: block; 
+        } 
+
+        nav ul { 
+            display: flex; 
+            list-style: none; 
+        } 
+
+        nav ul li { 
+            margin-left: 30px; 
+        } 
+
+        nav ul li a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 500; 
+            transition: color 0.3s; 
+        } 
+
+        nav ul li a:hover { 
+            color: var(--secondary); 
+        } 
+
+        .phone { 
+            display: flex; 
+            align-items: center; 
+        } 
+
+        .phone a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 700; 
+            font-size: 18px; 
+            margin-left: 10px; 
+        } 
+
+        main { 
+            margin-top: 90px; 
+        } 
+
+        .hero { 
+            position: relative; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            color: white; 
+            text-align: center; 
+            padding: 40px 15px; 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+        } 
+
+        .hero::before { 
+            content: ""; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0,0,0,0.6); 
+        } 
+
+        .hero-content { 
+            position: relative; 
+            max-width: 800px; 
+            z-index: 1; 
+        } 
+
+        .hero h1 { 
+            font-size: 48px; 
+            margin-bottom: 20px; 
+        } 
+
+        .hero p { 
+            font-size: 20px; 
+            margin-bottom: 30px; 
+        } 
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+        }
+
+        .btn:hover { 
+            transform: translateY(-3px); 
+            background-color: #ffde33; 
+            box-shadow: 0 10px 20px rgba(255,212,0,0.35); 
+        } 
+
+        body.modal-open { 
+            overflow: hidden; 
+        } 
+
+        .request-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0, 0, 0, 0.75); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 24px; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease; 
+            z-index: 1400; 
+        } 
+
+        .request-overlay.is-visible { 
+            opacity: 1; 
+            pointer-events: auto; 
+        } 
+
+        .request-modal {
+            position: relative;
+            width: min(640px, 100%);
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 36px 40px 44px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+            color: var(--text);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .request-logo {
+            width: 160px;
+            height: auto;
+            display: block;
+        }
+
+        .request-close { 
+            position: absolute; 
+            top: 16px; 
+            right: 16px; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            border: none; 
+            background: rgba(0, 0, 0, 0.08); 
+            color: var(--dark); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease, color 0.2s ease; 
+        } 
+
+        .request-close:hover, .request-close:focus-visible { 
+            background: var(--dark); 
+            color: var(--secondary); 
+            outline: none; 
+        } 
+
+        .request-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .request-tab {
+            padding: 18px 40px;
+            border-radius: 999px;
+            border: 2px solid var(--dark);
+            background: transparent;
+            color: var(--dark);
+            font-weight: 700;
+            font-size: clamp(22px, 4vw + 8px, 44px);
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .request-tab.is-active {
+            background: transparent;
+            color: var(--dark);
+            border-color: var(--dark);
+            transform: scale(1.02);
+        }
+
+        .request-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+        }
+
+        .request-field label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 6px; 
+        } 
+
+        .request-field input,
+        .request-field textarea { 
+            width: 100%; 
+            border-radius: 12px; 
+            border: 1px solid rgba(0, 0, 0, 0.1); 
+            padding: 14px 16px; 
+            background: rgba(255, 255, 255, 0.95); 
+            color: var(--text); 
+            transition: border-color 0.2s ease, box-shadow 0.2s ease; 
+        } 
+
+        .request-field.has-error input,
+        .request-field.has-error textarea { 
+            border-color: #d93025; 
+            box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.15); 
+        } 
+
+        .request-field textarea { 
+            min-height: 120px; 
+            resize: vertical; 
+        } 
+
+        .request-field input:focus,
+        .request-field textarea:focus { 
+            outline: none; 
+            border-color: var(--secondary); 
+            box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.25); 
+        } 
+
+        .field-error { 
+            margin-top: 6px; 
+            font-size: 14px; 
+            color: #d93025; 
+            min-height: 18px; 
+        } 
+
+        .request-file-control { 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+            flex-wrap: wrap; 
+        } 
+
+        .request-file-button { 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 12px 24px; 
+            border-radius: 999px; 
+            background: var(--dark); 
+            color: #ffffff; 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease; 
+        } 
+
+        .request-file-button:hover,
+        .request-file-button:focus-visible { 
+            background: var(--secondary); 
+            color: var(--dark); 
+            box-shadow: 0 8px 20px rgba(255, 212, 0, 0.35); 
+        } 
+
+        .request-field.has-error .request-file-button { 
+            background: #d93025; 
+            color: #ffffff; 
+            box-shadow: 0 8px 20px rgba(217, 48, 37, 0.35); 
+        } 
+
+        .request-field.has-error .request-file-button:hover,
+        .request-field.has-error .request-file-button:focus-visible { 
+            background: #c5221f; 
+            color: #ffffff; 
+            box-shadow: 0 8px 20px rgba(197, 34, 31, 0.45); 
+        } 
+
+        .request-file-control input[type="file"] { 
+            position: absolute; 
+            width: 1px; 
+            height: 1px; 
+            padding: 0; 
+            margin: -1px; 
+            overflow: hidden; 
+            clip: rect(0, 0, 0, 0); 
+            border: 0; 
+        } 
+
+        .request-file-status { 
+            font-size: 14px; 
+            color: var(--muted); 
+            min-height: 20px; 
+        } 
+
+        .request-progress { 
+            position: relative; 
+            width: 100%; 
+            height: 6px; 
+            border-radius: 999px; 
+            background: rgba(0, 0, 0, 0.08); 
+            overflow: hidden; 
+        } 
+
+        .request-progress-bar { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            height: 100%; 
+            width: 0; 
+            background: var(--secondary); 
+            transition: width 0.3s ease; 
+        } 
+
+        .request-actions { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            margin-top: 8px; 
+        } 
+
+        .request-submit { 
+            border: none; 
+            border-radius: 999px; 
+            background: var(--secondary); 
+            color: var(--dark); 
+            font-weight: 700; 
+            font-size: 16px; 
+            padding: 16px 28px; 
+            cursor: pointer; 
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease; 
+        } 
+
+        .request-submit:hover:not([disabled]),
+        .request-submit:focus-visible:not([disabled]) { 
+            transform: translateY(-2px); 
+            background-color: #ffde33; 
+            box-shadow: 0 12px 24px rgba(255, 212, 0, 0.35); 
+            outline: none; 
+        } 
+
+        .request-submit[disabled] { 
+            opacity: 0.6; 
+            cursor: not-allowed; 
+        } 
+
+        .request-status { 
+            font-size: 14px; 
+            color: var(--muted); 
+            min-height: 18px; 
+        } 
+
+        .request-status.is-error { 
+            color: #d93025; 
+        } 
+
+        .request-status.is-success { 
+            color: #1a7f37; 
+        } 
+
+        .request-footer { 
+            margin-top: 24px; 
+            padding-top: 20px; 
+            border-top: 1px solid rgba(0, 0, 0, 0.08); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            text-align: center; 
+        } 
+
+        .request-footer a { 
+            color: var(--dark); 
+            font-weight: 600; 
+            text-decoration: none; 
+            transition: color 0.2s ease; 
+        } 
+
+        .request-footer a:hover, .request-footer a:focus-visible { 
+            color: var(--secondary); 
+            outline: none; 
+        } 
+
+        .request-toast { 
+            position: fixed; 
+            bottom: 32px; 
+            right: 32px; 
+            background: #ffffff; 
+            border-radius: 16px; 
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25); 
+            padding: 20px 24px; 
+            display: flex; 
+            align-items: center; 
+            gap: 16px; 
+            opacity: 0; 
+            pointer-events: none; 
+            transform: translateY(20px); 
+            transition: opacity 0.3s ease, transform 0.3s ease; 
+            z-index: 1500; 
+        } 
+
+        .request-toast.is-visible { 
+            opacity: 1; 
+            pointer-events: auto; 
+            transform: translateY(0); 
+        } 
+
+        .request-toast-message { 
+            font-weight: 600; 
+            color: var(--text); 
+        } 
+
+        .request-toast-close { 
+            border: none; 
+            border-radius: 999px; 
+            background: var(--secondary); 
+            color: var(--dark); 
+            font-weight: 700; 
+            padding: 10px 18px; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease, transform 0.2s ease; 
+        } 
+
+        .request-toast-close:hover,
+        .request-toast-close:focus-visible { 
+            background: #ffde33; 
+            transform: translateY(-1px); 
+            outline: none; 
+        } 
+
+        .call-button { 
+            position: fixed; 
+            bottom: 24px; 
+            right: 24px; 
+            width: 64px; 
+            height: 64px; 
+            border-radius: 50%; 
+            background-color: var(--dark); 
+            color: #ffffff; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            box-shadow: 0 0 0 rgba(255,212,0,0); 
+            animation: callPulse 3s infinite; 
+            transition: box-shadow 0.3s, color 0.3s; 
+            z-index: 1200; 
+        } 
+
+        .call-button i { 
+            font-size: 26px; 
+            transition: color 0.3s; 
+        } 
+
+        .call-button:hover { 
+            animation: none; 
+            box-shadow: 0 0 18px rgba(255,212,0,0.6); 
+        } 
+
+        .call-button:hover i { 
+            color: var(--secondary); 
+        } 
+
+        .call-button::after { 
+            content: ""; 
+            position: absolute; 
+            inset: 0; 
+            border-radius: 50%; 
+            box-shadow: 0 0 0 rgba(255,212,0,0); 
+            pointer-events: none; 
+            transition: box-shadow 0.3s; 
+        } 
+
+        .call-button:hover::after { 
+            box-shadow: 0 0 18px rgba(255,212,0,0.6); 
+        } 
+
+        .call-button.hidden { 
+            opacity: 0; 
+            pointer-events: none; 
+        } 
+
+        @keyframes callPulse { 
+            0%, 70% { 
+                box-shadow: 0 0 0 rgba(255,212,0,0); 
+            } 
+            80% { 
+                box-shadow: 0 0 18px rgba(255,212,0,0.55); 
+            } 
+            90%, 100% { 
+                box-shadow: 0 0 0 rgba(255,212,0,0); 
+            } 
+        } 
+
+        .sr-only { 
+            position: absolute; 
+            width: 1px; 
+            height: 1px; 
+            padding: 0; 
+            margin: -1px; 
+            overflow: hidden; 
+            clip: rect(0, 0, 0, 0); 
+            white-space: nowrap; 
+            border: 0; 
+        } 
+
+        section { 
+            padding: 80px 0; 
+        } 
+
+        .section-title { 
+            text-align: center; 
+            margin-bottom: 50px; 
+        } 
+
+        .section-title h2 { 
+            font-size: 36px; 
+            position: relative; 
+            display: inline-block; 
+        } 
+
+        .section-title h2::after { 
+            content: ""; 
+            position: absolute; 
+            left: 50%; 
+            bottom: -15px; 
+            transform: translateX(-50%); 
+            width: 60px; 
+            height: 4px; 
+            background-color: var(--accent); 
+        } 
+
+        .features-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 30px; 
+        } 
+
+        .feature-card { 
+            background-color: white; 
+            border-radius: 15px; 
+            padding: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            text-align: center; 
+            transition: transform 0.3s, box-shadow 0.3s; 
+        } 
+
+        .feature-card i { 
+            font-size: 36px; 
+            color: var(--secondary); 
+            margin-bottom: 20px; 
+        } 
+
+        .feature-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12); 
+        } 
+
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 30px; 
+        } 
+
+        .service-card { 
+            background-color: white; 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+        } 
+
+        .service-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12); 
+        } 
+
+        .steps-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 30px; 
+        } 
+
+        .step-card { 
+            background-color: white; 
+            border-radius: 15px; 
+            padding: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            position: relative; 
+        } 
+
+        .step-card::before { 
+            content: attr(data-step); 
+            position: absolute; 
+            top: -15px; 
+            left: 20px; 
+            background-color: var(--secondary); 
+            color: var(--dark); 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+        } 
+
+        .about { 
+            background-color: var(--light); 
+        } 
+
+        .about-content { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 40px; 
+            align-items: center; 
+        } 
+
+        .about-text p { 
+            margin-bottom: 20px; 
+        } 
+
+        .about-stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+            gap: 20px; 
+        } 
+
+        .stat-card { 
+            background-color: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            text-align: center; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
+        } 
+
+        .stat-card h3 { 
+            font-size: 28px; 
+            color: var(--secondary); 
+            margin-bottom: 10px; 
+        } 
+
+        .about-image { 
+            position: relative; 
+        } 
+
+        .about-image img { 
+            width: 100%; 
+            border-radius: 15px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15); 
+        } 
+
+        .partners { 
+            padding: 80px 0; 
+            background-color: #ffffff; 
+        } 
+
+        .partners.is-hidden { 
+            display: none; 
+        } 
+
+        .partners-viewport { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 20px; 
+            border-radius: 16px; 
+            background-color: var(--light); 
+            padding: 24px; 
+        } 
+
+        .partners-window { 
+            flex: 1; 
+            overflow: hidden; 
+            border-radius: 12px; 
+        } 
+
+        .partners-track { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+            will-change: transform; 
+            transition: transform 0.6s ease; 
+        } 
+
+        .partners-nav {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(17, 17, 17, 0.85);
+            background-color: rgba(17, 17, 17, 0.92);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .partners-nav:hover {
+            background-color: var(--secondary);
+            color: var(--primary);
+            border-color: var(--secondary);
+            box-shadow: 0 12px 24px rgba(17, 17, 17, 0.25);
+        }
+
+        .partners-nav:focus-visible {
+            outline: 3px solid var(--secondary);
+            outline-offset: 3px;
+        } 
+
+        .partners-nav i { 
+            pointer-events: none; 
+        } 
+
+        .partner-card { 
+            flex: 0 0 calc(20% - 16px); 
+            background-color: #ffffff; 
+            border-radius: 12px; 
+            padding: 16px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 96px; 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06); 
+        } 
+
+        .partner-card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: 0 16px 32px rgba(17, 17, 17, 0.18); 
+        } 
+
+        .partner-card img { 
+            max-width: 100%; 
+            max-height: 72px; 
+            object-fit: contain; 
+            filter: grayscale(100%); 
+            transition: filter 0.3s ease, transform 0.3s ease; 
+        } 
+
+        .partner-card:hover img { 
+            filter: grayscale(0%); 
+            transform: scale(1.04); 
+        } 
+
+        .partners-status { 
+            text-align: center; 
+            margin-top: 20px; 
+            color: var(--muted); 
+            font-size: 14px; 
+        } 
+
+        .portfolio-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); 
+            gap: 30px; 
+        } 
+
+        .portfolio-card { 
+            background-color: white; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            transition: transform 0.3s, box-shadow 0.3s; 
+        } 
+
+        .portfolio-card img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+        } 
+
+        .portfolio-placeholder { 
+            width: 100%; 
+            height: 200px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: repeating-linear-gradient(
+                135deg,
+                rgba(17, 17, 17, 0.15),
+                rgba(17, 17, 17, 0.15) 10px,
+                rgba(255, 212, 0, 0.15) 10px,
+                rgba(255, 212, 0, 0.15) 20px
+            ); 
+        } 
+
+        .portfolio-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12); 
+        } 
+
+        .portfolio-card .portfolio-info { 
+            padding: 20px; 
+        } 
+
+        .reviews { 
+            background-color: var(--light); 
+        } 
+
+        .reviews-slider { 
+            position: relative; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            overflow: hidden; 
+        } 
+
+        #reviewsContainer { 
+            display: flex; 
+            transition: transform 0.6s ease; 
+            will-change: transform; 
+        } 
+
+        .review-card { 
+            flex: 0 0 100%; 
+            background-color: white; 
+            border-radius: 15px; 
+            padding: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+            text-align: center; 
+            opacity: 0.4; 
+            transform: scale(0.94); 
+            transition: opacity 0.4s ease, transform 0.4s ease; 
+        } 
+
+        .review-card.active { 
+            opacity: 1; 
+            transform: scale(1); 
+        } 
+
+        .review-card img { 
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            margin-bottom: 15px; 
+        } 
+
+        .review-placeholder { 
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%; 
+            margin: 0 auto 15px; 
+            background: linear-gradient(135deg, #f7f7f7, #d9d9d9); 
+        } 
+
+        .review-author { 
+            margin-top: 15px; 
+            font-weight: 600; 
+        } 
+
+        .review-meta { 
+            margin-top: 10px; 
+            font-size: 14px; 
+            color: var(--muted); 
+        } 
+
+        .review-rating { 
+            margin-top: 10px; 
+            font-weight: 600; 
+            color: var(--accent); 
+            letter-spacing: 2px; 
+        } 
+
+        .reviews-status { 
+            margin-top: 15px; 
+            text-align: center; 
+            font-size: 14px; 
+            color: var(--muted); 
+        } 
+
+        .slider-controls { 
+            display: flex; 
+            justify-content: center; 
+            margin-top: 20px; 
+            gap: 10px; 
+        } 
+
+        .slider-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--secondary);
+            color: var(--dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .slider-button:hover {
+            background-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .cta { 
+            background: linear-gradient(135deg, var(--dark), #2d2d2d); 
+            color: white; 
+            text-align: center; 
+        } 
+
+        .cta h2 { 
+            font-size: 36px; 
+            margin-bottom: 20px; 
+        } 
+
+        footer { 
+            background-color: var(--dark); 
+            color: white; 
+            padding: 60px 0 30px; 
+        } 
+
+        .footer-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 30px; 
+            margin-bottom: 40px; 
+        } 
+
+        .footer-col h3 { 
+            margin-bottom: 15px; 
+        } 
+
+        .footer-col ul { 
+            list-style: none; 
+        } 
+
+        .footer-col ul li { 
+            margin-bottom: 8px; 
+        } 
+
+        .footer-col a { 
+            color: white; 
+            text-decoration: none; 
+            transition: color 0.3s; 
+        } 
+
+        .footer-col a:hover { 
+            color: var(--accent); 
+        } 
+
+        .footer-bottom { 
+            text-align: center; 
+            border-top: 1px solid rgba(255,255,255,0.1); 
+            padding-top: 20px; 
+            font-size: 14px; 
+        } 
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .logo {
+                gap: 12px;
+                align-items: center;
+            }
+
+            .logo img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .logo-text {
+                align-items: center;
+                text-align: center;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            .request-tab {
+                font-size: clamp(20px, 6vw, 32px);
+                padding: 12px 24px;
+            }
+
+            .partners-viewport { 
+                flex-direction: column; 
+                align-items: stretch; 
+                padding: 16px 12px; 
+                gap: 16px; 
+                justify-content: center; 
+            } 
+
+            .partners-window { 
+                width: 100%; 
+            } 
+
+            .partners-nav { 
+                width: 40px; 
+                height: 40px; 
+                align-self: center; 
+            } 
+
+            .partner-card { 
+                flex: 0 0 calc(50% - 12px); 
+                min-height: 88px; 
+            } 
+
+            .request-modal {
+                width: min(540px, 100%);
+                padding: 28px 28px 34px;
+                gap: 20px;
+            }
+
+            .request-tabs {
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .request-file-control {
+                gap: 12px;
+            }
+
+            .request-toast { 
+                right: 16px; 
+                left: 16px; 
+                bottom: 24px; 
+            } 
+        } 
+
+        @media (max-width: 540px) { 
+            .partners-nav { 
+                width: 34px; 
+                height: 34px; 
+                border-width: 1px; 
+            } 
+
+            .partner-card { 
+                flex: 0 0 100%; 
+            } 
+
+            .request-modal {
+                padding: 24px 20px 30px;
+                border-radius: 18px;
+                gap: 18px;
+            }
+
+            .request-tabs {
+                flex-direction: column;
+                gap: 6px;
+            } 
+
+            .request-file-control { 
+                flex-direction: column; 
+                align-items: stretch; 
+                gap: 10px; 
+            } 
+
+            .request-file-status { 
+                font-size: 13px; 
+            } 
+
+            .request-toast { 
+                left: 12px; 
+                right: 12px; 
+                bottom: 16px; 
+                flex-direction: column; 
+                align-items: stretch; 
+                gap: 12px; 
+            } 
+
+            .request-toast-close { 
+                width: 100%; 
+                text-align: center; 
+            } 
+        } 
+    </style> 
+</head> 
+<body> 
+    <header>
+        <div class="container header-container">
+            <a href="#top" class="logo">
+                <img src="assets/logo-inline.svg" alt="Логотип Электроконструктив" loading="lazy" id="headerLogoImage">
+                <div class="logo-text">
+                    <span class="logo-name">ЭЛЕКТРОКОНСТРУКТИВ</span>
+                    <span class="logo-tagline">энергия надежных решений</span>
+                </div>
+            </a>
+            <nav> 
+                <ul> 
+                    <li><a href="#services">Услуги</a></li> 
+                    <li><a href="#process">Этапы</a></li> 
+                    <li><a href="#about">О компании</a></li> 
+                    <li><a href="#partners">Партнёры</a></li> 
+                    <li><a href="#portfolio">Проекты</a></li> 
+                    <li><a href="#reviews">Отзывы</a></li> 
+                    <li><a href="#contacts">Контакты</a></li> 
+                </ul> 
+            </nav> 
+            <div class="phone"> 
+                <i class="fas fa-phone"></i> 
+                <a href="tel:+74951234567" id="phoneLink">+7 (495) 123-45-67</a> 
+            </div> 
+        </div> 
+    </header> 
+
+    <main id="top"> 
+        <section class="hero" id="hero"> 
+            <div class="hero-content"> 
+                <img src="assets/logo-hero.svg" alt="Эмблема Электроконструктив" class="hero-logo" loading="lazy" id="heroLogoImage">
+                <h1 id="heroTitle">Заголовок загружается...</h1> 
+                <p id="heroSubtitle">Описание загружается...</p> 
+                <a href="#request" class="btn" id="heroCta" data-open-request="true">Связаться</a> 
+            </div> 
+        </section> 
+
+        <section class="features" id="features"> 
+            <div class="container"> 
+                <div class="section-title"> 
+                    <h2>Почему выбирают нас</h2> 
+                </div> 
+                <div class="features-grid" id="featuresGrid"> 
+                     
+                </div> 
+            </div> 
+        </section> 
+
+        <section class="services" id="services"> 
+            <div class="container"> 
+                <div class="section-title"> 
+                    <h2>Наши услуги</h2> 
+                </div> 
+                <div class="services-grid" id="servicesGrid"> 
+                     
+                </div> 
+            </div> 
+        </section> 
+
+        <section class="process" id="process"> 
+            <div class="container"> 
+                <div class="section-title"> 
+                    <h2>Как мы работаем</h2> 
+                </div> 
+                <div class="steps-grid" id="stepsGrid"> 
+                     
+                </div> 
+            </div> 
+        </section> 
+
+        <section class="about" id="about"> 
+            <div class="container"> 
+                <div class="section-title"> 
+                    <h2>О компании</h2> 
+                </div> 
+                <div class="about-content"> 
+                    <div class="about-text"> 
+                        <h3 id="aboutTitle">Заголовок о компании</h3> 
+                        <p id="aboutDescription">Описание о компании загружается...</p> 
+                        <div class="about-stats" id="aboutStats"> 
+                             
+                        </div> 
+                    </div> 
+                    <div class="about-image"> 
+                        <img id="aboutImage" src="" alt="Команда Электроконструктив">
+                    </div> 
+                </div> 
+            </div> 
+        </section> 
+
+        <section class="partners is-hidden" id="partners"> 
+            <div class="container"> 
+                <div class="section-title"> 
+                    <h2>Наши партнёры</h2> 
+                </div> 
+                <div class="partners-viewport" id="partnersViewport"> 
+                    <button type="button" class="partners-nav partners-nav--prev" id="partnersPrev" aria-label="Показать предыдущих партнёров"> 
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i> 
+                    </button> 
+                    <div class="partners-window"> 
+                        <div class="partners-track" id="partnersTrack"> 
+                             
+                        </div> 
+                    </div> 
+                    <button type="button" class="partners-nav partners-nav--next" id="partnersNext" aria-label="Показать следующих партнёров"> 
+                        <i class="fas fa-chevron-right" aria-hidden="true"></i> 
+                    </button> 
+                </div> 
+                <p class="partners-status" id="partnersStatus">Логотипы загружаются...</p> 
+            </div> 
+        </section> 
+
+        <section class="portfolio" id="portfolio"> 
+            <div class="container"> 
+                <div class="section-title"> 
+                    <h2>Недавние проекты</h2> 
+                </div> 
+                <div class="portfolio-grid" id="portfolioGrid"> 
+                     
+                </div> 
+            </div> 
+        </section> 
+
+        <section class="reviews" id="reviews"> 
+            <div class="container"> 
+                <div class="section-title"> 
+                    <h2>Отзывы клиентов</h2> 
+                </div> 
+                <div class="reviews-slider"> 
+                    <div id="reviewsContainer"> 
+                         
+                    </div> 
+                    <p class="reviews-status" id="reviewsStatus">Отзывы загружаются...</p> 
+                    <div class="slider-controls"> 
+                        <button class="slider-button" id="prevReview" aria-label="Предыдущий отзыв">&#8592;</button> 
+                        <button class="slider-button" id="nextReview" aria-label="Следующий отзыв">&#8594;</button> 
+                    </div> 
+                </div> 
+            </div> 
+        </section> 
+
+        <section class="cta" id="cta"> 
+            <div class="container"> 
+                <h2 id="ctaTitle">Готовы начать сотрудничество?</h2> 
+                <p id="ctaDescription">Оставьте заявку и наш специалист свяжется с вами.</p> 
+                <a href="#request" class="btn" id="ctaButton" data-open-request="true">Оставить заявку</a> 
+            </div> 
+        </section> 
+    </main> 
+
+    <a href="tel:+74951234567" class="call-button" id="callButton" aria-label="Позвонить компании"> 
+        <i class="fas fa-phone" aria-hidden="true"></i> 
+        <span class="sr-only">Позвонить компании</span> 
+    </a> 
+
+    <div class="request-overlay" id="requestOverlay" aria-hidden="true"> 
+        <div class="request-modal" id="requestModal" role="dialog" aria-modal="true" aria-labelledby="requestModalTitle"> 
+            <button type="button" class="request-close" id="requestClose" aria-label="Закрыть окно"> 
+                <i class="fas fa-times" aria-hidden="true"></i> 
+            </button> 
+            <h2 class="sr-only" id="requestModalTitle">Получить коммерческое предложение</h2> 
+            <img src="assets/logo-inline.svg" alt="Электроконструктив" class="request-logo" id="requestModalLogo">
+            <div class="request-tabs" role="tablist" aria-label="Варианты заявки"> 
+                <button type="button" class="request-tab is-active" id="requestPrimaryTab" aria-selected="true">Получить коммерческое предложение</button> 
+            </div> 
+            <form class="request-form" id="requestForm" novalidate> 
+                <div class="request-field"> 
+                    <label for="requestName">Ваше имя</label> 
+                    <input type="text" id="requestName" name="name" placeholder="Введите ваше имя" autocomplete="name" required> 
+                    <p class="field-error" id="requestNameError"></p> 
+                </div> 
+                <div class="request-field"> 
+                    <label for="requestEmail">E-mail</label> 
+                    <input type="email" id="requestEmail" name="email" placeholder="Введите ваш e-mail" autocomplete="email" required> 
+                    <p class="field-error" id="requestEmailError"></p> 
+                </div> 
+                <div class="request-field"> 
+                    <label for="requestPhone">Телефон</label> 
+                    <input type="tel" id="requestPhone" name="phone" placeholder="Введите номер телефона" autocomplete="tel"> 
+                </div> 
+                <div class="request-field"> 
+                    <label for="requestComment">Комментарий</label> 
+                    <textarea id="requestComment" name="comment" placeholder="Опишите ваш проект или вопрос"></textarea> 
+                </div> 
+                <div class="request-field"> 
+                    <label for="requestFile">Прикрепить проект (PDF, DOC, JPG, PNG)</label> 
+                    <div class="request-file-control"> 
+                        <label class="request-file-button" for="requestFile">Выберите файл</label> 
+                        <input type="file" id="requestFile" name="attachment" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx,.ppt,.pptx,.zip,.rar"> 
+                        <div class="request-file-status" id="requestFileStatus">Файл не выбран</div> 
+                    </div> 
+                    <div class="request-progress" id="requestFileProgress" hidden> 
+                        <div class="request-progress-bar" id="requestFileProgressBar"></div> 
+                    </div> 
+                    <p class="field-error" id="requestFileError"></p> 
+                </div> 
+                <div class="request-actions"> 
+                    <button type="submit" class="request-submit" id="requestSubmit">Отправить заявку</button> 
+                    <p class="request-status" id="requestStatus"></p> 
+                </div> 
+            </form> 
+            <div class="request-footer">
+                <a href="mailto:etl@elektrokonstruktiv.ru" id="requestContactEmail">etl@elektrokonstruktiv.ru</a>
+                <a href="tel:+79135025246" id="requestContactPhone">+7 (913) 502-52-46</a> 
+            </div> 
+        </div> 
+    </div> 
+
+    <div class="request-toast" id="requestToast" role="status" aria-live="polite" aria-hidden="true"> 
+        <p class="request-toast-message" id="requestToastMessage">Ваша заявка отправлена, скоро с вами свяжутся наши специалисты.</p> 
+        <button type="button" class="request-toast-close" id="requestToastClose">Понятно</button> 
+    </div> 
+
+    <footer id="contacts"> 
+        <div class="container"> 
+            <div class="footer-container"> 
+                <div class="footer-col"> 
+                    <h3>О компании</h3> 
+                    <p>Профессиональные электромонтажные работы в Москве и Московской области. Качество, надежность, гарантия.</p> 
+                </div> 
+                <div class="footer-col"> 
+                    <h3>Услуги</h3> 
+                    <ul id="footerServices"> 
+                         
+                    </ul> 
+                </div> 
+                <div class="footer-col"> 
+                    <h3>Контакты</h3> 
+                    <div class="footer-contact"> 
+                        <p><i class="fas fa-map-marker-alt"></i> <span id="contactAddress">Адрес загружается...</span></p> 
+                        <p><i class="fas fa-phone"></i> <a href="tel:+74951234567" id="contactPhone">Телефон</a></p> 
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:etl@elektrokonstruktiv.ru" id="contactEmail">Email</a></p>
+                        <p><i class="fas fa-clock"></i> <span id="contactSchedule">График загружается...</span></p> 
+                    </div> 
+                </div> 
+            </div> 
+            <div class="footer-bottom"> 
+                <p>&copy; <span id="footerYear"></span> Электроконструктив. Все права защищены.</p>
+            </div> 
+        </div> 
+    </footer> 
+
+    <script> 
+        const contentEndpoint = new URL('/api/content', window.location.origin).toString(); 
+        const reviewsEndpoint = new URL('/api/reviews/external', window.location.origin).toString(); 
+        const defaultHeaderLogo = 'assets/logo-inline.svg'; 
+        const defaultHeroLogo = 'assets/logo-hero.svg'; 
+        const PARTNERS_VISIBLE_COUNT = 5; 
+        const DEFAULT_PARTNERS_INTERVAL_MS = 5000; 
+        const MIN_PARTNERS_INTERVAL_MS = 1000; 
+        const partnersPrevButton = document.getElementById('partnersPrev'); 
+        const partnersNextButton = document.getElementById('partnersNext'); 
+        let partnersAutoTimer = null; 
+        let partnersAutoInterval = DEFAULT_PARTNERS_INTERVAL_MS; 
+        const reviewsStatusElement = document.getElementById('reviewsStatus'); 
+        let reviewsData = []; 
+        let reviewsSource = 'content'; 
+        let currentReviewIndex = 0; 
+        let autoSlideTimer = null; 
+        const MAX_ATTACHMENT_SIZE_BYTES = 20 * 1024 * 1024; 
+        const requestOverlay = document.getElementById('requestOverlay'); 
+        const requestModal = document.getElementById('requestModal'); 
+        const requestCloseButton = document.getElementById('requestClose'); 
+        const requestForm = document.getElementById('requestForm'); 
+        const requestNameInput = document.getElementById('requestName'); 
+        const requestEmailInput = document.getElementById('requestEmail'); 
+        const requestPhoneInput = document.getElementById('requestPhone'); 
+        const requestCommentInput = document.getElementById('requestComment'); 
+        const requestFileInput = document.getElementById('requestFile'); 
+        const requestFileStatus = document.getElementById('requestFileStatus'); 
+        const requestFileError = document.getElementById('requestFileError'); 
+        const requestFileProgress = document.getElementById('requestFileProgress'); 
+        const requestFileProgressBar = document.getElementById('requestFileProgressBar'); 
+        const requestSubmitButton = document.getElementById('requestSubmit'); 
+        const requestStatus = document.getElementById('requestStatus'); 
+        const requestNameError = document.getElementById('requestNameError'); 
+        const requestEmailError = document.getElementById('requestEmailError'); 
+        const requestContactEmail = document.getElementById('requestContactEmail'); 
+        const requestContactPhone = document.getElementById('requestContactPhone'); 
+        const requestModalLogo = document.getElementById('requestModalLogo'); 
+        const requestToast = document.getElementById('requestToast'); 
+        const requestToastMessage = document.getElementById('requestToastMessage'); 
+        const requestToastClose = document.getElementById('requestToastClose'); 
+        const requestTriggers = document.querySelectorAll('[data-open-request="true"]'); 
+        const defaultRequestLogo = defaultHeaderLogo; 
+        const requestSubmitDefaultText = requestSubmitButton ? requestSubmitButton.textContent : 'Отправить заявку'; 
+        const requestToastDefaultMessage = requestToastMessage
+            ? requestToastMessage.textContent
+            : 'Ваша заявка отправлена, скоро с вами свяжутся наши специалисты.'; 
+        let requestToastTimer = null; 
+        let lastFocusedRequestTrigger = null; 
+
+        function resolveAssetUrl(value, fallback) { 
+            const candidate = (value || '').trim(); 
+            const fallbackValue = (fallback || '').trim(); 
+            const target = candidate || fallbackValue; 
+            if (!target) { 
+                return ''; 
+            } 
+            if (/^(data:|blob:|https?:|ftp:|\/\/)/i.test(target)) { 
+                return target; 
+            } 
+            try { 
+                return new URL(target, window.location.origin).toString(); 
+            } catch (error) { 
+                console.warn('Не удалось преобразовать путь к файлу:', target, error); 
+                return target; 
+            } 
+        } 
+
+        function sanitizePartnersInterval(value) { 
+            const parsed = Number(value); 
+            if (!Number.isFinite(parsed) || parsed < MIN_PARTNERS_INTERVAL_MS) { 
+                return DEFAULT_PARTNERS_INTERVAL_MS; 
+            } 
+            return Math.round(parsed); 
+        } 
+
+        function formatBytes(bytes) { 
+            if (!Number.isFinite(bytes) || bytes < 0) { 
+                return '0 Б'; 
+            } 
+            const units = ['Б', 'КБ', 'МБ', 'ГБ']; 
+            let value = bytes; 
+            let unitIndex = 0; 
+            while (value >= 1024 && unitIndex < units.length - 1) { 
+                value /= 1024; 
+                unitIndex += 1; 
+            } 
+            return `${value.toFixed(value >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`; 
+        } 
+
+        function clearRequestErrors() { 
+            [requestNameError, requestEmailError, requestFileError].forEach(node => {
+                if (node) {
+                    node.textContent = '';
+                }
+            });
+
+            [requestNameInput, requestEmailInput, requestPhoneInput, requestCommentInput, requestFileInput].forEach(input => {
+                if (!input) {
+                    return;
+                }
+                const container = input.closest('.request-field');
+                if (container) {
+                    container.classList.remove('has-error');
+                }
+            });
+        } 
+
+        function setRequestFieldError(input, errorNode, message) { 
+            if (errorNode) {
+                errorNode.textContent = message || '';
+            }
+            if (!input) {
+                return;
+            }
+            const container = input.closest('.request-field');
+            if (container) {
+                container.classList.toggle('has-error', Boolean(message));
+            }
+        } 
+
+        function updateRequestStatus(message, type = 'info') { 
+            if (!requestStatus) {
+                return;
+            }
+            requestStatus.textContent = message || '';
+            requestStatus.classList.remove('is-error', 'is-success');
+            if (!message) {
+                return;
+            }
+            if (type === 'error') {
+                requestStatus.classList.add('is-error');
+            } else if (type === 'success') {
+                requestStatus.classList.add('is-success');
+            }
+        } 
+
+        function updateRequestFileUI(file) { 
+            if (!requestFileStatus) {
+                return;
+            }
+
+            if (!file) {
+                requestFileStatus.textContent = 'Файл не выбран';
+                if (requestFileProgress) {
+                    requestFileProgress.hidden = true;
+                }
+                setRequestFieldError(requestFileInput, requestFileError, '');
+                return;
+            }
+
+            requestFileStatus.textContent = `${file.name} (${formatBytes(file.size)})`;
+            if (requestFileProgress && requestFileProgressBar) {
+                requestFileProgress.hidden = false;
+                requestFileProgressBar.style.width = '100%';
+            }
+        } 
+
+        function resetRequestForm() { 
+            if (requestForm) {
+                requestForm.reset();
+            }
+            updateRequestFileUI(null);
+            clearRequestErrors();
+            updateRequestStatus('');
+        } 
+
+        function setRequestLoadingState(isLoading) { 
+            if (!requestSubmitButton) {
+                return;
+            }
+            requestSubmitButton.disabled = Boolean(isLoading);
+            requestSubmitButton.textContent = isLoading ? 'Отправляем...' : requestSubmitDefaultText;
+        } 
+
+        function openRequestModal() { 
+            if (!requestOverlay || !requestModal) {
+                return;
+            }
+            clearRequestErrors();
+            updateRequestStatus('');
+            lastFocusedRequestTrigger = document.activeElement;
+            requestOverlay.classList.add('is-visible');
+            requestOverlay.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('modal-open');
+            if (requestNameInput) {
+                setTimeout(() => requestNameInput.focus(), 60);
+            }
+        } 
+
+        function closeRequestModal(options = {}) { 
+            if (!requestOverlay) {
+                return;
+            }
+            requestOverlay.classList.remove('is-visible');
+            requestOverlay.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('modal-open');
+            if (options.reset) {
+                resetRequestForm();
+            }
+            if (lastFocusedRequestTrigger && typeof lastFocusedRequestTrigger.focus === 'function') {
+                lastFocusedRequestTrigger.focus();
+            }
+        } 
+
+        function hideRequestToast() { 
+            if (!requestToast) {
+                return;
+            }
+            requestToast.classList.remove('is-visible');
+            requestToast.setAttribute('aria-hidden', 'true');
+            if (requestToastTimer) {
+                clearTimeout(requestToastTimer);
+                requestToastTimer = null;
+            }
+        } 
+
+        function showRequestToast(message) { 
+            if (!requestToast) {
+                return;
+            }
+            const text = message || requestToastDefaultMessage;
+            if (requestToastMessage) {
+                requestToastMessage.textContent = text;
+            }
+            requestToast.classList.add('is-visible');
+            requestToast.setAttribute('aria-hidden', 'false');
+            if (requestToastTimer) {
+                clearTimeout(requestToastTimer);
+            }
+            requestToastTimer = setTimeout(() => {
+                hideRequestToast();
+            }, 3000);
+        } 
+
+        const defaultRequestEmail = 'etl@elektrokonstruktiv.ru';
+
+        function updateRequestContacts(contacts = {}, requestConfig = {}) {
+            const configuredEmail = typeof requestConfig.targetEmail === 'string' && requestConfig.targetEmail.trim()
+                ? requestConfig.targetEmail.trim()
+                : null;
+            const email = configuredEmail
+                || (typeof contacts.email === 'string' && contacts.email.trim() ? contacts.email.trim() : null)
+                || defaultRequestEmail;
+            const phone = typeof contacts.phone === 'string' && contacts.phone.trim() ? contacts.phone.trim() : '+7 (913) 502-52-46';
+            if (requestContactEmail) {
+                requestContactEmail.textContent = email;
+                requestContactEmail.href = `mailto:${email}`;
+            }
+            if (requestContactPhone) {
+                requestContactPhone.textContent = phone;
+                const cleaned = phone.replace(/[^+\d]/g, '');
+                requestContactPhone.href = `tel:${cleaned || phone}`;
+            }
+        } 
+
+        function updateRequestLogo(branding = {}) { 
+            if (!requestModalLogo) {
+                return;
+            }
+            const source = resolveAssetUrl(branding.headerLogo, defaultRequestLogo);
+            requestModalLogo.src = source || defaultRequestLogo;
+        } 
+
+        function handleRequestOverlayClick(event) { 
+            if (event.target === requestOverlay) {
+                closeRequestModal();
+            }
+        } 
+
+        function handleRequestKeydown(event) { 
+            if (
+                event.key === 'Escape' &&
+                requestOverlay &&
+                requestOverlay.classList.contains('is-visible')
+            ) {
+                closeRequestModal();
+            }
+        } 
+
+        async function handleRequestSubmit(event) { 
+            if (!requestForm) {
+                return;
+            }
+            event.preventDefault();
+            clearRequestErrors();
+
+            const nameValue = requestNameInput ? requestNameInput.value.trim() : '';
+            const emailValue = requestEmailInput ? requestEmailInput.value.trim() : '';
+            const file = requestFileInput && requestFileInput.files ? requestFileInput.files[0] : null;
+            let hasError = false;
+
+            if (!nameValue) {
+                setRequestFieldError(requestNameInput, requestNameError, 'Заполните это поле');
+                hasError = true;
+            }
+
+            if (!emailValue) {
+                setRequestFieldError(requestEmailInput, requestEmailError, 'Заполните это поле');
+                hasError = true;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+                setRequestFieldError(requestEmailInput, requestEmailError, 'Введите корректный e-mail');
+                hasError = true;
+            }
+
+            if (file) {
+                updateRequestFileUI(file);
+                if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+                    setRequestFieldError(requestFileInput, requestFileError, 'Файл слишком большой');
+                    hasError = true;
+                }
+            } else {
+                updateRequestFileUI(null);
+            }
+
+            if (hasError) {
+                return;
+            }
+
+            const formData = new FormData(requestForm);
+            setRequestLoadingState(true);
+            updateRequestStatus('Отправляем заявку...', 'info');
+
+            try {
+                const response = await fetch(new URL('/api/request', window.location.origin).toString(), {
+                    method: 'POST',
+                    body: formData
+                });
+
+                let payload = {};
+                try {
+                    payload = await response.json();
+                } catch (parseError) {
+                    payload = {};
+                }
+
+                if (!response.ok) {
+                    if (response.status === 413 || payload.code === 'FILE_TOO_LARGE') {
+                        setRequestFieldError(requestFileInput, requestFileError, 'Файл слишком большой');
+                    }
+
+                    if (payload.errors) {
+                        if (payload.errors.name) {
+                            setRequestFieldError(requestNameInput, requestNameError, payload.errors.name);
+                        }
+                        if (payload.errors.email) {
+                            setRequestFieldError(requestEmailInput, requestEmailError, payload.errors.email);
+                        }
+                        if (payload.errors.attachment) {
+                            setRequestFieldError(requestFileInput, requestFileError, payload.errors.attachment);
+                        }
+                    }
+
+                    updateRequestStatus(payload.error || 'Не удалось отправить заявку.', 'error');
+                    return;
+                }
+
+                updateRequestStatus('', 'success');
+                closeRequestModal({ reset: true });
+                showRequestToast(payload.message || requestToastDefaultMessage);
+            } catch (requestError) {
+                console.error('Не удалось отправить заявку:', requestError);
+                updateRequestStatus('Не удалось отправить заявку. Попробуйте позже.', 'error');
+            } finally {
+                setRequestLoadingState(false);
+            }
+        } 
+
+        function stopPartnersAutoSlide() { 
+            if (partnersAutoTimer) { 
+                clearInterval(partnersAutoTimer); 
+                partnersAutoTimer = null; 
+            } 
+        } 
+
+        function startPartnersAutoSlide() { 
+            stopPartnersAutoSlide(); 
+            const section = document.getElementById('partners'); 
+            const track = document.getElementById('partnersTrack'); 
+            if (!section || !track || section.classList.contains('is-hidden')) { 
+                return; 
+            } 
+            if (track.dataset.hasMultiple !== 'true') { 
+                return; 
+            }
+            if (track.children.length <= 1) { 
+                return; 
+            } 
+            partnersAutoInterval = sanitizePartnersInterval(partnersAutoInterval); 
+            partnersAutoTimer = setInterval(() => advancePartners(), partnersAutoInterval); 
+        } 
+
+        function advancePartners() { 
+            const track = document.getElementById('partnersTrack'); 
+            if (!track || track.children.length === 0 || track.dataset.animating === 'true') { 
+                stopPartnersAutoSlide(); 
+                return; 
+            } 
+            track.dataset.animating = 'true'; 
+            const firstCard = track.firstElementChild; 
+            if (!firstCard) { 
+                track.dataset.animating = 'false'; 
+                return; 
+            } 
+            const style = window.getComputedStyle(track); 
+            const gap = parseFloat(style.columnGap || style.gap || '0'); 
+            const shift = firstCard.getBoundingClientRect().width + gap; 
+            track.style.transition = 'transform 0.6s ease'; 
+            track.style.transform = `translateX(-${shift}px)`; 
+            setTimeout(() => { 
+                track.style.transition = 'none'; 
+                track.appendChild(firstCard); 
+                track.style.transform = 'translateX(0)'; 
+                requestAnimationFrame(() => { 
+                    track.style.transition = 'transform 0.6s ease'; 
+                }); 
+                track.dataset.animating = 'false'; 
+            }, 650); 
+        } 
+
+        function retreatPartners() { 
+            const track = document.getElementById('partnersTrack'); 
+            if (!track || track.children.length === 0 || track.dataset.animating === 'true') { 
+                if (!track || track.children.length === 0) { 
+                    stopPartnersAutoSlide(); 
+                } 
+                return; 
+            } 
+            track.dataset.animating = 'true'; 
+            const style = window.getComputedStyle(track); 
+            const gap = parseFloat(style.columnGap || style.gap || '0'); 
+            const lastCard = track.lastElementChild; 
+            if (!lastCard) { 
+                track.dataset.animating = 'false'; 
+                return; 
+            } 
+            const cardWidth = lastCard.getBoundingClientRect().width; 
+            track.style.transition = 'none'; 
+            track.insertBefore(lastCard, track.firstElementChild); 
+            const shift = cardWidth + gap; 
+            track.style.transform = `translateX(-${shift}px)`; 
+            requestAnimationFrame(() => { 
+                track.style.transition = 'transform 0.6s ease'; 
+                track.style.transform = 'translateX(0)'; 
+                setTimeout(() => { 
+                    track.dataset.animating = 'false'; 
+                }, 650); 
+            }); 
+        } 
+
+        function renderPartners(partners) { 
+            const section = document.getElementById('partners'); 
+            const track = document.getElementById('partnersTrack'); 
+            const status = document.getElementById('partnersStatus'); 
+            const viewport = document.getElementById('partnersViewport'); 
+            if (!section || !track || !status || !viewport) { 
+                return; 
+            } 
+
+            stopPartnersAutoSlide(); 
+            track.innerHTML = ''; 
+            track.style.transition = 'none'; 
+            track.style.transform = 'translateX(0)'; 
+            track.dataset.animating = 'false'; 
+            track.dataset.hasMultiple = 'false'; 
+            status.textContent = ''; 
+            status.style.display = 'none'; 
+
+            const source = Array.isArray(partners) ? partners : []; 
+            const normalized = source 
+                .map((partner, index) => { 
+                    const name = typeof partner.name === 'string' ? partner.name.trim() : ''; 
+                    const logo = resolveAssetUrl(partner.logo); 
+                    const urlCandidate = typeof partner.url === 'string' ? partner.url.trim() : ''; 
+                    const safeUrl = /^(https?:\/\/)/i.test(urlCandidate) ? urlCandidate : '#'; 
+                    const fallbackName = `Партнёр ${index + 1}`; 
+                    return { 
+                        name: name || fallbackName, 
+                        logo, 
+                        url: safeUrl 
+                    }; 
+                }) 
+                .filter(partner => Boolean(partner.logo)); 
+
+            if (normalized.length === 0) { 
+                section.classList.add('is-hidden'); 
+                status.textContent = 'Партнёры пока не добавлены.'; 
+                status.style.display = 'block'; 
+                if (partnersPrevButton) { 
+                    partnersPrevButton.style.display = 'none';
+                    partnersPrevButton.disabled = true;
+                }
+                if (partnersNextButton) { 
+                    partnersNextButton.style.display = 'none';
+                    partnersNextButton.disabled = true;
+                }
+                return; 
+            } 
+
+            section.classList.remove('is-hidden'); 
+
+            const targetLength = Math.max(normalized.length, PARTNERS_VISIBLE_COUNT); 
+            const itemsToRender = [...normalized]; 
+            while (itemsToRender.length < targetLength && itemsToRender.length < normalized.length * PARTNERS_VISIBLE_COUNT) { 
+                itemsToRender.push(...normalized); 
+            } 
+            if (itemsToRender.length > targetLength) { 
+                itemsToRender.length = targetLength; 
+            } 
+
+            itemsToRender.forEach(partner => { 
+                const link = document.createElement('a'); 
+                link.className = 'partner-card'; 
+                link.href = partner.url; 
+                if (partner.url && partner.url !== '#') { 
+                    link.target = '_blank'; 
+                    link.rel = 'noopener noreferrer'; 
+                } 
+                link.setAttribute('aria-label', `Перейти на сайт: ${partner.name}`); 
+
+                const image = document.createElement('img'); 
+                image.src = partner.logo; 
+                image.alt = partner.name; 
+                image.loading = 'lazy'; 
+
+                link.appendChild(image); 
+                track.appendChild(link); 
+            }); 
+
+            const hasMultiplePartners = normalized.length > 1; 
+            track.dataset.hasMultiple = hasMultiplePartners ? 'true' : 'false'; 
+            if (partnersPrevButton) { 
+                partnersPrevButton.style.display = hasMultiplePartners ? 'flex' : 'none';
+                partnersPrevButton.disabled = !hasMultiplePartners;
+                partnersPrevButton.setAttribute('aria-hidden', hasMultiplePartners ? 'false' : 'true');
+            }
+            if (partnersNextButton) { 
+                partnersNextButton.style.display = hasMultiplePartners ? 'flex' : 'none';
+                partnersNextButton.disabled = !hasMultiplePartners;
+                partnersNextButton.setAttribute('aria-hidden', hasMultiplePartners ? 'false' : 'true');
+            }
+
+            if (!viewport.dataset.listenersAttached) { 
+                viewport.addEventListener('mouseenter', () => stopPartnersAutoSlide()); 
+                viewport.addEventListener('mouseleave', () => startPartnersAutoSlide()); 
+                viewport.dataset.listenersAttached = 'true'; 
+            } 
+
+            if (hasMultiplePartners) { 
+                startPartnersAutoSlide(); 
+            } else {
+                stopPartnersAutoSlide(); 
+            }
+        } 
+
+        async function loadContent() { 
+            try { 
+                const response = await fetch(contentEndpoint, { credentials: 'include' }); 
+                if (!response.ok) { 
+                    throw new Error('Не удалось загрузить данные контента'); 
+                } 
+                const data = await response.json(); 
+                applyContent(data); 
+                loadExternalReviews(); 
+            } catch (error) { 
+                console.error(error); 
+            } 
+        } 
+
+        function applyContent(data) { 
+            if (!data || typeof data !== 'object') { 
+                return; 
+            } 
+
+            const hero = data.hero || {}; 
+            const branding = data.branding || {}; 
+            const features = Array.isArray(data.features) ? data.features : []; 
+            const services = Array.isArray(data.services) ? data.services : []; 
+            const steps = Array.isArray(data.steps) ? data.steps : []; 
+            const about = data.about || {}; 
+            const partners = Array.isArray(data.partners) ? data.partners : []; 
+            partnersAutoInterval = sanitizePartnersInterval(data.partnersSettings?.autoScrollInterval); 
+            const portfolio = Array.isArray(data.portfolio) ? data.portfolio : []; 
+            const reviews = Array.isArray(data.reviews) ? data.reviews : []; 
+            const cta = data.cta || {}; 
+            const contacts = data.contacts || {}; 
+
+            const headerLogoImage = document.getElementById('headerLogoImage'); 
+            if (headerLogoImage) { 
+                headerLogoImage.src = resolveAssetUrl(branding.headerLogo, defaultHeaderLogo); 
+            } 
+
+            const heroLogoImage = document.getElementById('heroLogoImage'); 
+            if (heroLogoImage) { 
+                heroLogoImage.src = resolveAssetUrl(branding.heroLogo, defaultHeroLogo); 
+            } 
+
+            updateRequestLogo(branding); 
+
+            const heroSection = document.getElementById('hero'); 
+            if (heroSection) { 
+                const heroImageUrl = resolveAssetUrl(hero.image); 
+                heroSection.style.backgroundImage = heroImageUrl ? `url(${heroImageUrl})` : ''; 
+            } 
+            document.getElementById('heroTitle').textContent = hero.title || ''; 
+            document.getElementById('heroSubtitle').textContent = hero.subtitle || ''; 
+            document.getElementById('heroCta').textContent = hero.cta || ''; 
+
+            const featuresGrid = document.getElementById('featuresGrid'); 
+            featuresGrid.innerHTML = ''; 
+            features.forEach(feature => { 
+                const card = document.createElement('div'); 
+                card.className = 'feature-card'; 
+                card.innerHTML = `
+                    <i class="${feature.icon || ''}"></i>
+                    <h3>${feature.title || ''}</h3>
+                    <p>${feature.description || ''}</p>
+                `; 
+                featuresGrid.appendChild(card); 
+            }); 
+
+            const servicesGrid = document.getElementById('servicesGrid'); 
+            servicesGrid.innerHTML = ''; 
+            services.forEach(service => { 
+                const card = document.createElement('div'); 
+                card.className = 'service-card'; 
+                card.innerHTML = `
+                    <h3>${service.title || ''}</h3>
+                    <p>${service.description || ''}</p>
+                `; 
+                servicesGrid.appendChild(card); 
+            }); 
+
+            const stepsGrid = document.getElementById('stepsGrid'); 
+            stepsGrid.innerHTML = ''; 
+            steps.forEach((step, index) => { 
+                const card = document.createElement('div'); 
+                card.className = 'step-card'; 
+                card.setAttribute('data-step', index + 1); 
+                card.innerHTML = `
+                    <h3>${step.title || ''}</h3>
+                    <p>${step.description || ''}</p>
+                `; 
+                stepsGrid.appendChild(card); 
+            }); 
+
+            document.getElementById('aboutTitle').textContent = about.title || ''; 
+            document.getElementById('aboutDescription').textContent = about.description || ''; 
+            const aboutImage = document.getElementById('aboutImage'); 
+            const aboutImageUrl = resolveAssetUrl(about.image); 
+            if (aboutImageUrl) { 
+                aboutImage.src = aboutImageUrl; 
+            } else { 
+                aboutImage.removeAttribute('src'); 
+            } 
+            const aboutStats = Array.isArray(about.stats) ? about.stats : []; 
+            const statsContainer = document.getElementById('aboutStats'); 
+            statsContainer.innerHTML = ''; 
+            aboutStats.forEach(stat => { 
+                const card = document.createElement('div'); 
+                card.className = 'stat-card'; 
+                card.innerHTML = `
+                    <h3>${stat.value || ''}</h3>
+                    <p>${stat.label || ''}</p>
+                `; 
+                statsContainer.appendChild(card); 
+            }); 
+
+            renderPartners(partners); 
+
+            const portfolioGrid = document.getElementById('portfolioGrid'); 
+            portfolioGrid.innerHTML = ''; 
+            portfolio.forEach(item => { 
+                const card = document.createElement('div'); 
+                card.className = 'portfolio-card'; 
+                const projectTitle = escapeHtml(item.title || 'Проект'); 
+                const projectDescription = escapeHtml(item.description || ''); 
+                const projectImage = resolveAssetUrl(item.image); 
+                const safeImage = escapeHtml(projectImage || ''); 
+                const mediaBlock = safeImage
+                    ? `<img src="${safeImage}" alt="${projectTitle}">`
+                    : '<div class="portfolio-placeholder" aria-hidden="true"></div>'; 
+                card.innerHTML = `
+                    ${mediaBlock}
+                    <div class="portfolio-info">
+                        <h3>${projectTitle}</h3>
+                        <p>${projectDescription}</p>
+                    </div>
+                `; 
+                portfolioGrid.appendChild(card); 
+            }); 
+
+            reviewsSource = 'content'; 
+            reviewsData = reviews; 
+            renderReviews(); 
+
+            document.getElementById('ctaTitle').textContent = cta.title || ''; 
+            document.getElementById('ctaDescription').textContent = cta.description || ''; 
+            document.getElementById('ctaButton').textContent = cta.button || ''; 
+
+            const footerServices = document.getElementById('footerServices'); 
+            footerServices.innerHTML = ''; 
+            services.forEach(service => { 
+                const li = document.createElement('li'); 
+                const link = document.createElement('a'); 
+                link.href = '#services'; 
+                link.textContent = service.title || ''; 
+                li.appendChild(link); 
+                footerServices.appendChild(li); 
+            }); 
+
+            const phoneLink = document.getElementById('phoneLink'); 
+            const contactPhone = document.getElementById('contactPhone'); 
+            const callButton = document.getElementById('callButton'); 
+            const cleanedPhone = contacts.phone ? contacts.phone.replace(/[^+\d]/g, '') : '+74951234567'; 
+            if (contacts.phone) { 
+                phoneLink.textContent = contacts.phone; 
+                phoneLink.href = `tel:${cleanedPhone}`; 
+                contactPhone.textContent = contacts.phone; 
+                contactPhone.href = `tel:${cleanedPhone}`; 
+                if (callButton) { 
+                    callButton.href = `tel:${cleanedPhone}`; 
+                    callButton.classList.remove('hidden'); 
+                } 
+            } else if (callButton) { 
+                callButton.classList.add('hidden'); 
+            } 
+
+            const contactEmail = document.getElementById('contactEmail'); 
+            if (contacts.email) { 
+                contactEmail.textContent = contacts.email; 
+                contactEmail.href = `mailto:${contacts.email}`; 
+            } 
+
+            document.getElementById('contactAddress').textContent = contacts.address || '';
+            document.getElementById('contactSchedule').textContent = contacts.schedule || '';
+
+            const requestConfig = data.request || {};
+            updateRequestContacts(contacts, requestConfig);
+
+            document.getElementById('footerYear').textContent = '2005';
+        } 
+
+        async function loadExternalReviews() { 
+            if (reviewsStatusElement) { 
+                reviewsStatusElement.textContent = 'Пробуем загрузить отзывы с 2ГИС...'; 
+            }
+
+            try {
+                const response = await fetch(reviewsEndpoint, { credentials: 'include' }); 
+                let payload = {};
+                try {
+                    payload = await response.json(); 
+                } catch (parseError) {
+                    payload = {};
+                }
+
+                if (!response.ok) { 
+                    throw new Error(payload.error || 'Не удалось загрузить отзывы с 2ГИС');
+                }
+
+                const externalReviews = Array.isArray(payload.reviews) ? payload.reviews : []; 
+                if (externalReviews.length) { 
+                    reviewsData = externalReviews; 
+                    reviewsSource = payload.source === 'external' ? 'external' : 'fallback-external'; 
+                    currentReviewIndex = 0; 
+                    renderReviews(); 
+                    return;
+                }
+
+                if (payload.error) { 
+                    console.warn(payload.error); 
+                }
+
+                reviewsSource = 'fallback-external'; 
+                renderReviews(); 
+            } catch (error) {
+                console.warn('Не удалось загрузить отзывы с 2ГИС:', error); 
+                reviewsSource = 'fallback-external'; 
+                renderReviews(); 
+            }
+        } 
+
+        function escapeHtml(value) { 
+            if (typeof value !== 'string') { 
+                return ''; 
+            } 
+            const map = { 
+                "&": "&amp;", 
+                "<": "&lt;", 
+                ">": "&gt;", 
+                "\"": "&quot;", 
+                "'": "&#39;" 
+            }; 
+            return value.replace(/[&<>"']/g, char => map[char] || char); 
+        } 
+
+        function formatReviewDate(rawDate) { 
+            if (!rawDate) { 
+                return ''; 
+            } 
+            const parsed = new Date(rawDate); 
+            if (!Number.isNaN(parsed.getTime())) { 
+                return parsed.toLocaleDateString('ru-RU'); 
+            } 
+            const fallbackMatch = String(rawDate).match(/\d{4}-\d{2}-\d{2}/); 
+            if (fallbackMatch) { 
+                const fallbackDate = new Date(fallbackMatch[0]); 
+                if (!Number.isNaN(fallbackDate.getTime())) { 
+                    return fallbackDate.toLocaleDateString('ru-RU'); 
+                } 
+            } 
+            return ''; 
+        } 
+
+        function getReviewMeta(review, locationText) { 
+            const metaParts = []; 
+            if (locationText) { 
+                metaParts.push(locationText); 
+            } 
+            const formattedDate = formatReviewDate(review.date); 
+            if (formattedDate) { 
+                metaParts.push(formattedDate); 
+            } 
+            return metaParts.join(' • '); 
+        } 
+
+        function stopAutoSlide() { 
+            if (autoSlideTimer) { 
+                clearInterval(autoSlideTimer); 
+                autoSlideTimer = null; 
+            } 
+        } 
+
+        function updateSliderPosition() { 
+            const reviewsContainer = document.getElementById('reviewsContainer'); 
+            if (!reviewsContainer) { 
+                return; 
+            } 
+            const cards = Array.from(reviewsContainer.querySelectorAll('.review-card')); 
+            cards.forEach((card, index) => { 
+                if (index === currentReviewIndex) { 
+                    card.classList.add('active'); 
+                } else { 
+                    card.classList.remove('active'); 
+                } 
+            }); 
+            reviewsContainer.style.transform = `translateX(-${currentReviewIndex * 100}%)`; 
+        } 
+
+        function startAutoSlide() { 
+            stopAutoSlide(); 
+            if (reviewsData.length > 1) { 
+                autoSlideTimer = setInterval(() => advanceReview(1), 5000); 
+            } 
+        } 
+
+        function renderReviews() { 
+            const reviewsContainer = document.getElementById('reviewsContainer'); 
+            const statusElement = reviewsStatusElement; 
+            if (!reviewsContainer) { 
+                return; 
+            } 
+            reviewsContainer.innerHTML = ''; 
+            if (!reviewsData.length) { 
+                const placeholder = document.createElement('div'); 
+                placeholder.className = 'review-card active'; 
+                placeholder.innerHTML = `
+                    <div class="review-text">
+                        <p>Отзывы пока не добавлены. Добавьте их через панель управления.</p>
+                    </div>
+                `; 
+                reviewsContainer.appendChild(placeholder); 
+                if (statusElement) { 
+                    statusElement.textContent = 'Отзывы не найдены. Добавьте их в панели управления.'; 
+                } 
+                stopAutoSlide(); 
+                reviewsContainer.style.transform = 'translateX(0)'; 
+                return; 
+            } 
+            reviewsData.forEach((review, index) => { 
+                const card = document.createElement('div'); 
+                card.className = 'review-card'; 
+                if (index === currentReviewIndex) { 
+                    card.classList.add('active'); 
+                } 
+                const safeName = escapeHtml(review.name || 'Клиент'); 
+                const safeText = escapeHtml(review.text || ''); 
+                const safeLocation = escapeHtml(review.location || ''); 
+                const resolvedReviewImage = resolveAssetUrl(review.image); 
+                const safeImage = escapeHtml(resolvedReviewImage || ''); 
+                const meta = getReviewMeta(review, safeLocation); 
+                const ratingValue = typeof review.rating === 'number' ? Math.max(0, Math.min(5, review.rating)) : null; 
+                const ratingStars = ratingValue ? '★'.repeat(Math.round(ratingValue)) : ''; 
+                const ratingBlock = ratingValue ? `<div class="review-rating" aria-label="Оценка ${ratingValue.toFixed(1)} из 5">${ratingStars}</div>` : ''; 
+                card.innerHTML = `
+                    ${safeImage ? `<img src="${safeImage}" alt="${safeName}">` : '<div class="review-placeholder" aria-hidden="true"></div>'}
+                    <div class="review-text">
+                        <p>"${safeText}"</p>
+                    </div>
+                    <div class="review-author">${safeName}</div>
+                    ${meta ? `<div class="review-meta">${meta}</div>` : ''}
+                    ${ratingBlock}
+                `; 
+                reviewsContainer.appendChild(card); 
+            }); 
+            updateSliderPosition(); 
+            startAutoSlide(); 
+            if (statusElement) { 
+                let statusText = 'Отзывы отображаются из файла контента.'; 
+                if (reviewsSource === 'external') { 
+                    statusText = 'Отзывы загружены с 2ГИС.';
+                } else if (reviewsSource === 'fallback-external') { 
+                    statusText = 'Не удалось загрузить отзывы с 2ГИС, показаны данные с сайта.';
+                }
+                statusElement.textContent = statusText; 
+            } 
+        } 
+
+        function advanceReview(step) { 
+            if (!reviewsData.length) { 
+                return; 
+            } 
+            const total = reviewsData.length; 
+            currentReviewIndex = (currentReviewIndex + step + total) % total; 
+            updateSliderPosition(); 
+        } 
+
+        function showNextReview() { 
+            advanceReview(1); 
+        } 
+
+        function showPreviousReview() { 
+            advanceReview(-1); 
+        } 
+
+        const nextReviewButton = document.getElementById('nextReview'); 
+        const prevReviewButton = document.getElementById('prevReview'); 
+
+        if (nextReviewButton) { 
+            nextReviewButton.addEventListener('click', () => { 
+                showNextReview(); 
+                startAutoSlide(); 
+            }); 
+        } 
+
+        if (prevReviewButton) { 
+            prevReviewButton.addEventListener('click', () => { 
+                showPreviousReview(); 
+                startAutoSlide(); 
+            }); 
+        } 
+
+        if (requestTriggers.length) { 
+            requestTriggers.forEach(trigger => {
+                trigger.addEventListener('click', event => {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    openRequestModal();
+                });
+            });
+        }
+
+        if (requestCloseButton) { 
+            requestCloseButton.addEventListener('click', () => closeRequestModal());
+        }
+
+        if (requestOverlay) { 
+            requestOverlay.addEventListener('click', handleRequestOverlayClick);
+        }
+
+        document.addEventListener('keydown', handleRequestKeydown); 
+
+        if (requestForm) { 
+            requestForm.addEventListener('submit', handleRequestSubmit);
+        }
+
+        if (requestFileInput) { 
+            requestFileInput.addEventListener('change', () => {
+                const file = requestFileInput.files && requestFileInput.files[0] ? requestFileInput.files[0] : null;
+                updateRequestFileUI(file);
+            });
+        }
+
+        if (requestToastClose) { 
+            requestToastClose.addEventListener('click', () => hideRequestToast());
+        }
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => { 
+            anchor.addEventListener('click', event => { 
+                const target = document.querySelector(anchor.getAttribute('href')); 
+                if (target) { 
+                    event.preventDefault(); 
+                    target.scrollIntoView({ behavior: 'smooth' }); 
+                } 
+            }); 
+        }); 
+
+        if (partnersPrevButton) { 
+            partnersPrevButton.addEventListener('click', () => {
+                stopPartnersAutoSlide(); 
+                retreatPartners(); 
+                setTimeout(() => startPartnersAutoSlide(), 700); 
+            });
+        }
+
+        if (partnersNextButton) { 
+            partnersNextButton.addEventListener('click', () => {
+                stopPartnersAutoSlide(); 
+                advancePartners(); 
+                setTimeout(() => startPartnersAutoSlide(), 700); 
+            });
+        }
+
+        window.addEventListener('scroll', () => { 
+            const header = document.querySelector('header'); 
+            if (window.scrollY > 100) { 
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)'; 
+            } else { 
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)'; 
+            } 
+        }); 
+
+        window.addEventListener('resize', () => { 
+            startPartnersAutoSlide(); 
+        }); 
+
+        document.addEventListener('visibilitychange', () => { 
+            if (document.hidden) { 
+                stopPartnersAutoSlide(); 
+            } else { 
+                startPartnersAutoSlide(); 
+            } 
+        }); 
+
+        loadContent(); 
+    </script> 
+</body> 
+</html> 

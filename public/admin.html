@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления контентом</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #111111;
+            --secondary: #ffd400;
+            --accent: #ffe566;
+            --light: #f5f5f5;
+            --muted: #6c6c6c;
+            --border: #d7d7d7;
+            --card-bg: #ffffff;
+            --danger: #d64545;
+            --danger-dark: #bb3636;
+            --success: #2e7d32;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            color: var(--primary);
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        header p {
+            margin: 0;
+            max-width: 720px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .header-actions button,
+        .header-actions a {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .logout-button {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .logout-button:hover {
+            background-color: var(--danger-dark);
+        }
+
+        .site-link {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .site-link:hover {
+            background-color: rgba(255, 255, 255, 0.35);
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px 40px;
+        }
+
+        .section {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="url"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: white;
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            width: 180px;
+            max-width: 100%;
+            height: 120px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            object-fit: cover;
+            background: linear-gradient(135deg, rgba(17,17,17,0.9), rgba(255,212,0,0.35));
+        }
+
+        .image-preview[hidden] {
+            display: none;
+        }
+
+        .item-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            background-color: #ffffff;
+            position: relative;
+        }
+
+        .item-card button.remove {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: none;
+            color: var(--danger);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .controls button,
+        .controls a {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .primary {
+            background-color: var(--secondary);
+            color: var(--primary);
+        }
+
+        .secondary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .info {
+            background-color: var(--muted);
+            color: white;
+        }
+
+        .controls button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-weight: 600;
+        }
+
+        .hint {
+            font-size: 14px;
+            color: var(--muted);
+            margin-top: 5px;
+        }
+
+        .array-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 25px;
+        }
+
+        .array-header button {
+            background-color: var(--secondary);
+            color: var(--primary);
+            border: none;
+            border-radius: 6px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .array-header button:hover {
+            background-color: var(--accent);
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .controls button,
+            .controls a {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Панель управления контентом</h1>
+        <p>Редактируйте тексты, изображения и структуру лендинга. Для смены аккаунта используйте кнопку ниже.</p>
+        <div class="header-actions">
+            <button type="button" id="logoutButton" class="logout-button">Сменить аккаунт</button>
+            <a class="site-link" href="/" target="_blank" rel="noopener" data-site-link="landing">Открыть сайт</a>
+        </div>
+    </header>
+    <main>
+        <div class="section">
+            <h2>Hero</h2>
+            <label for="heroTitle">Заголовок</label>
+            <input type="text" id="heroTitle">
+            <label for="heroSubtitle">Подзаголовок</label>
+            <textarea id="heroSubtitle"></textarea>
+            <label for="heroCta">Текст кнопки</label>
+            <input type="text" id="heroCta">
+            <label for="heroImage">URL фонового изображения</label>
+            <input type="url" id="heroImage">
+        </div>
+
+        <div class="section">
+            <h2>Логотипы</h2>
+            <p class="hint">Укажите ссылки на изображения логотипов в шапке и в hero-блоке.</p>
+            <label for="brandingHeaderLogo">Логотип в шапке</label>
+            <input type="url" id="brandingHeaderLogo">
+            <label for="brandingHeroLogo">Логотип над заголовком</label>
+            <input type="url" id="brandingHeroLogo">
+        </div>
+
+        <div class="section">
+            <div class="array-header">
+                <h2>Преимущества</h2>
+                <button id="addFeature">Добавить преимущество</button>
+            </div>
+            <div id="featuresList"></div>
+        </div>
+
+        <div class="section">
+            <div class="array-header">
+                <h2>Услуги</h2>
+                <button id="addService">Добавить услугу</button>
+            </div>
+            <div id="servicesList"></div>
+        </div>
+
+        <div class="section">
+            <div class="array-header">
+                <h2>Этапы работы</h2>
+                <button id="addStep">Добавить этап</button>
+            </div>
+            <div id="stepsList"></div>
+        </div>
+
+        <div class="section">
+            <h2>О компании</h2>
+            <div class="two-columns">
+                <div>
+                    <label for="aboutTitle">Заголовок</label>
+                    <input type="text" id="aboutTitle">
+                    <label for="aboutDescription">Описание</label>
+                    <textarea id="aboutDescription"></textarea>
+                </div>
+                <div>
+                    <label for="aboutImage">URL изображения</label>
+                    <input type="url" id="aboutImage">
+                </div>
+            </div>
+            <div class="array-header">
+                <h3>Статистика</h3>
+                <button id="addStat">Добавить показатель</button>
+            </div>
+            <div id="statsList"></div>
+        </div>
+
+        <div class="section">
+            <div class="array-header">
+                <h2>Наши партнёры</h2>
+                <button id="addPartner">Добавить партнёра</button>
+            </div>
+            <p class="hint">Добавьте название, ссылку на сайт и логотип, который появится на лендинге.</p>
+            <label for="partnersAutoInterval">Интервал автопрокрутки (секунды)</label>
+            <input type="number" id="partnersAutoInterval" min="1" step="1" value="5">
+            <p class="hint">Укажите, как часто карусель партнёров будет переключать логотипы. Минимум — одна секунда.</p>
+            <div id="partnersList"></div>
+        </div>
+
+        <div class="section">
+            <div class="array-header">
+                <h2>Портфолио</h2>
+                <button id="addPortfolio">Добавить проект</button>
+            </div>
+            <div id="portfolioList"></div>
+        </div>
+
+        <div class="section">
+            <div class="array-header">
+                <h2>Отзывы</h2>
+                <button id="addReview">Добавить отзыв</button>
+            </div>
+            <div id="reviewsList"></div>
+        </div>
+
+        <div class="section">
+            <h2>CTA</h2>
+            <label for="ctaTitle">Заголовок</label>
+            <input type="text" id="ctaTitle">
+            <label for="ctaDescription">Описание</label>
+            <textarea id="ctaDescription"></textarea>
+            <label for="ctaButton">Текст кнопки</label>
+            <input type="text" id="ctaButton">
+        </div>
+
+        <div class="section">
+            <h2>Контакты</h2>
+            <label for="contactAddress">Адрес</label>
+            <input type="text" id="contactAddress">
+            <label for="contactPhone">Телефон</label>
+            <input type="text" id="contactPhone">
+            <label for="contactEmail">Email</label>
+            <input type="text" id="contactEmail">
+            <label for="contactSchedule">График работы</label>
+            <input type="text" id="contactSchedule">
+        </div>
+
+        <div class="section">
+            <h2>Заявки</h2>
+            <label for="requestEmail">E-mail для заявок</label>
+            <input type="text" id="requestEmail">
+        </div>
+
+        <div class="section">
+            <div class="controls">
+                <button class="primary" id="saveButton">Сохранить изменения</button>
+                <button class="info" id="reloadContent">Обновить данные</button>
+                <a class="secondary" href="/" target="_blank" rel="noopener" data-site-link="landing">Открыть лендинг</a>
+            </div>
+            <div class="status" id="statusMessage"></div>
+        </div>
+    </main>
+
+    <script>
+        const featuresList = document.getElementById('featuresList');
+        const servicesList = document.getElementById('servicesList');
+        const stepsList = document.getElementById('stepsList');
+        const statsList = document.getElementById('statsList');
+        const partnersList = document.getElementById('partnersList');
+        const partnersAutoIntervalInput = document.getElementById('partnersAutoInterval');
+        const portfolioList = document.getElementById('portfolioList');
+        const reviewsList = document.getElementById('reviewsList');
+        const requestEmailInput = document.getElementById('requestEmail');
+        const heroImageInput = document.getElementById('heroImage');
+        const aboutImageInput = document.getElementById('aboutImage');
+
+        const statusMessage = document.getElementById('statusMessage');
+        const saveButton = document.getElementById('saveButton');
+        const reloadButton = document.getElementById('reloadContent');
+        const logoutButton = document.getElementById('logoutButton');
+        const headerLogoInput = document.getElementById('brandingHeaderLogo');
+        const heroLogoInput = document.getElementById('brandingHeroLogo');
+
+        const siteOrigin = window.location.origin;
+        const routes = {
+            landing: new URL('/', siteOrigin).toString(),
+            login: new URL('/login', siteOrigin).toString(),
+            admin: new URL('/admin', siteOrigin).toString(),
+            content: new URL('/api/content', siteOrigin).toString(),
+            logout: new URL('/api/auth/logout', siteOrigin).toString()
+        };
+
+        const previewBindings = new Map();
+
+        function resolvePreviewUrl(value) {
+            const candidate = (value || '').trim();
+            if (!candidate) {
+                return '';
+            }
+            if (/^(data:|blob:|https?:|ftp:|\/\/)/i.test(candidate)) {
+                return candidate;
+            }
+            const normalized = candidate.replace(/^\/+/, '');
+            return `${siteOrigin}/${normalized}`;
+        }
+
+        function updateImagePreview(input) {
+            const preview = previewBindings.get(input);
+            if (!preview) {
+                return;
+            }
+            const value = (input.value || '').trim();
+            if (!value) {
+                preview.hidden = true;
+                preview.removeAttribute('src');
+                return;
+            }
+            preview.src = resolvePreviewUrl(value);
+            preview.hidden = false;
+        }
+
+        function attachImagePreview(input) {
+            if (!input || previewBindings.has(input)) {
+                if (input) {
+                    updateImagePreview(input);
+                }
+                return;
+            }
+            const preview = document.createElement('img');
+            preview.className = 'image-preview';
+            preview.alt = 'Превью изображения';
+            preview.hidden = true;
+            const parent = input.parentNode;
+            if (parent) {
+                parent.appendChild(preview);
+            } else {
+                input.insertAdjacentElement('afterend', preview);
+            }
+            previewBindings.set(input, preview);
+            input.addEventListener('input', () => updateImagePreview(input));
+            updateImagePreview(input);
+        }
+
+        function refreshAllImagePreviews() {
+            previewBindings.forEach((_, input) => updateImagePreview(input));
+        }
+
+        document.querySelectorAll('[data-site-link="landing"]').forEach(link => {
+            link.href = routes.landing;
+        });
+
+        const rootStyles = getComputedStyle(document.documentElement);
+        const palette = {
+            muted: rootStyles.getPropertyValue('--muted').trim() || '#6c6c6c',
+            success: rootStyles.getPropertyValue('--success').trim() || '#2e7d32',
+            error: rootStyles.getPropertyValue('--danger').trim() || '#d64545'
+        };
+
+        [heroImageInput, aboutImageInput, headerLogoInput, heroLogoInput].forEach(attachImagePreview);
+
+        const DEFAULT_PARTNERS_INTERVAL_MS = 5000;
+        const MIN_PARTNERS_INTERVAL_MS = 1000;
+        const MIN_PARTNERS_INTERVAL_SECONDS = MIN_PARTNERS_INTERVAL_MS / 1000;
+
+        if (partnersAutoIntervalInput) {
+            partnersAutoIntervalInput.min = String(MIN_PARTNERS_INTERVAL_SECONDS);
+            partnersAutoIntervalInput.step = '1';
+        }
+
+        let contentLoaded = false;
+        let isLoading = false;
+        let isSaving = false;
+        let lastLoadedRequest = {};
+
+        function setStatus(message, color = palette.muted) {
+            statusMessage.textContent = message;
+            statusMessage.style.color = color;
+        }
+
+        function updateActionButtons() {
+            saveButton.disabled = !contentLoaded || isLoading || isSaving;
+            reloadButton.disabled = isLoading || isSaving;
+        }
+
+        function redirectToLogin() {
+            const redirectTarget = `${window.location.pathname}${window.location.search}`; 
+            const loginUrl = new URL(routes.login); 
+            loginUrl.searchParams.set('redirect', redirectTarget); 
+            window.location.replace(loginUrl.toString()); 
+        }
+
+        function createInput(labelText, value = '', type = 'text') {
+            const label = document.createElement('label');
+            label.textContent = labelText;
+            const input = document.createElement(type === 'textarea' ? 'textarea' : 'input');
+            if (type !== 'textarea') {
+                input.type = type;
+            }
+            input.value = value;
+            label.appendChild(input);
+            return { label, input };
+        }
+
+        function createItemCard(fields, values = {}, container) {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            const remove = document.createElement('button');
+            remove.className = 'remove';
+            remove.innerHTML = '&times;';
+            remove.addEventListener('click', () => {
+                card.querySelectorAll('input, textarea').forEach(element => {
+                    const preview = previewBindings.get(element);
+                    if (preview) {
+                        preview.remove();
+                        previewBindings.delete(element);
+                    }
+                });
+                container.removeChild(card);
+            });
+            card.appendChild(remove);
+
+            fields.forEach(field => {
+                const { label, input } = createInput(field.label, values[field.name] || '', field.type || 'text');
+                input.dataset.field = field.name;
+                card.appendChild(label);
+                if (field.preview === 'image') {
+                    attachImagePreview(input);
+                }
+            });
+
+            container.appendChild(card);
+            return card;
+        }
+
+        function getItemsFromContainer(container) {
+            const items = [];
+            container.querySelectorAll('.item-card').forEach(card => {
+                const item = {};
+                card.querySelectorAll('[data-field]').forEach(input => {
+                    if (input.tagName.toLowerCase() === 'textarea') {
+                        item[input.dataset.field] = input.value.trim();
+                    } else {
+                        item[input.dataset.field] = input.value.trim();
+                    }
+                });
+                items.push(item);
+            });
+            return items;
+        }
+
+        function populateArray(container, items, fields) {
+            container.innerHTML = '';
+            items.forEach(item => createItemCard(fields, item, container));
+        }
+
+        function sanitizePartnersIntervalMs(value) {
+            const parsed = Number(value);
+            if (!Number.isFinite(parsed) || parsed < MIN_PARTNERS_INTERVAL_MS) {
+                return DEFAULT_PARTNERS_INTERVAL_MS;
+            }
+            return Math.round(parsed);
+        }
+
+        function getPartnersIntervalMsFromInput() {
+            if (!partnersAutoIntervalInput) {
+                return DEFAULT_PARTNERS_INTERVAL_MS;
+            }
+            const seconds = Number(partnersAutoIntervalInput.value);
+            if (!Number.isFinite(seconds) || seconds < MIN_PARTNERS_INTERVAL_SECONDS) {
+                return DEFAULT_PARTNERS_INTERVAL_MS;
+            }
+            return Math.max(Math.round(seconds), MIN_PARTNERS_INTERVAL_SECONDS) * 1000;
+        }
+
+        async function loadContent(options = {}) {
+            const { showStatus = true } = options;
+            if (isLoading) {
+                return;
+            }
+            isLoading = true;
+            contentLoaded = false;
+            updateActionButtons();
+            if (showStatus) {
+                setStatus('Загрузка контента...', palette.muted);
+            }
+            try {
+                const response = await fetch(routes.content, { credentials: 'include' });
+                if (response.status === 401 || response.status === 403) {
+                    redirectToLogin();
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error('Не удалось загрузить контент');
+                }
+                const data = await response.json();
+                applyContent(data);
+                contentLoaded = true;
+                if (showStatus) {
+                    setStatus('Контент загружен.', palette.success);
+                }
+            } catch (error) {
+                console.error(error);
+                const message = error.message || 'Не удалось загрузить контент';
+                setStatus(message, palette.error);
+            } finally {
+                isLoading = false;
+                updateActionButtons();
+            }
+        }
+
+        function applyContent(data) {
+            document.getElementById('heroTitle').value = data.hero?.title || '';
+            document.getElementById('heroSubtitle').value = data.hero?.subtitle || '';
+            document.getElementById('heroCta').value = data.hero?.cta || '';
+            if (heroImageInput) {
+                heroImageInput.value = data.hero?.image || '';
+            }
+
+            headerLogoInput.value = data.branding?.headerLogo || '';
+            heroLogoInput.value = data.branding?.heroLogo || '';
+
+            populateArray(featuresList, data.features || [], [
+                { name: 'icon', label: 'CSS-класс иконки' },
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' }
+            ]);
+
+            populateArray(servicesList, data.services || [], [
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' }
+            ]);
+
+            populateArray(stepsList, data.steps || [], [
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' }
+            ]);
+
+            document.getElementById('aboutTitle').value = data.about?.title || '';
+            document.getElementById('aboutDescription').value = data.about?.description || '';
+            if (aboutImageInput) {
+                aboutImageInput.value = data.about?.image || '';
+            }
+
+            populateArray(statsList, data.about?.stats || [], [
+                { name: 'value', label: 'Значение' },
+                { name: 'label', label: 'Описание' }
+            ]);
+
+            const partnersIntervalMs = sanitizePartnersIntervalMs(data.partnersSettings?.autoScrollInterval);
+            if (partnersAutoIntervalInput) {
+                partnersAutoIntervalInput.value = String(Math.max(Math.round(partnersIntervalMs / 1000), MIN_PARTNERS_INTERVAL_SECONDS));
+            }
+
+            populateArray(partnersList, data.partners || [], [
+                { name: 'name', label: 'Название партнёра' },
+                { name: 'url', label: 'Ссылка на сайт' },
+                { name: 'logo', label: 'URL логотипа', preview: 'image' }
+            ]);
+
+            populateArray(portfolioList, data.portfolio || [], [
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' },
+                { name: 'image', label: 'URL изображения', preview: 'image' }
+            ]);
+
+            populateArray(reviewsList, data.reviews || [], [
+                { name: 'name', label: 'Имя' },
+                { name: 'location', label: 'Город' },
+                { name: 'text', label: 'Текст отзыва', type: 'textarea' },
+                { name: 'image', label: 'URL изображения', preview: 'image' }
+            ]);
+
+            document.getElementById('ctaTitle').value = data.cta?.title || '';
+            document.getElementById('ctaDescription').value = data.cta?.description || '';
+            document.getElementById('ctaButton').value = data.cta?.button || '';
+
+            document.getElementById('contactAddress').value = data.contacts?.address || '';
+            document.getElementById('contactPhone').value = data.contacts?.phone || '';
+            document.getElementById('contactEmail').value = data.contacts?.email || '';
+            document.getElementById('contactSchedule').value = data.contacts?.schedule || '';
+            lastLoadedRequest = data.request && typeof data.request === 'object' ? { ...data.request } : {};
+            if (requestEmailInput) {
+                requestEmailInput.value = lastLoadedRequest.targetEmail || '';
+            }
+
+            refreshAllImagePreviews();
+        }
+
+        function collectData() {
+            const partnersIntervalMs = getPartnersIntervalMsFromInput();
+            return {
+                hero: {
+                    title: document.getElementById('heroTitle').value.trim(),
+                    subtitle: document.getElementById('heroSubtitle').value.trim(),
+                    cta: document.getElementById('heroCta').value.trim(),
+                    image: heroImageInput ? heroImageInput.value.trim() : ''
+                },
+                branding: {
+                    headerLogo: headerLogoInput.value.trim(),
+                    heroLogo: heroLogoInput.value.trim()
+                },
+                features: getItemsFromContainer(featuresList),
+                services: getItemsFromContainer(servicesList),
+                steps: getItemsFromContainer(stepsList),
+                about: {
+                    title: document.getElementById('aboutTitle').value.trim(),
+                    description: document.getElementById('aboutDescription').value.trim(),
+                    image: aboutImageInput ? aboutImageInput.value.trim() : '',
+                    stats: getItemsFromContainer(statsList)
+                },
+                partners: getItemsFromContainer(partnersList),
+                partnersSettings: {
+                    autoScrollInterval: partnersIntervalMs
+                },
+                portfolio: getItemsFromContainer(portfolioList),
+                reviews: getItemsFromContainer(reviewsList),
+                cta: {
+                    title: document.getElementById('ctaTitle').value.trim(),
+                    description: document.getElementById('ctaDescription').value.trim(),
+                    button: document.getElementById('ctaButton').value.trim()
+                },
+                contacts: {
+                    address: document.getElementById('contactAddress').value.trim(),
+                    phone: document.getElementById('contactPhone').value.trim(),
+                    email: document.getElementById('contactEmail').value.trim(),
+                    schedule: document.getElementById('contactSchedule').value.trim()
+                },
+                request: {
+                    ...lastLoadedRequest,
+                    targetEmail: requestEmailInput ? requestEmailInput.value.trim() : ''
+                }
+            };
+        }
+
+        async function saveContent() {
+            if (!contentLoaded) {
+                setStatus('Подождите, пока загрузится текущий контент.', palette.error);
+                return;
+            }
+            if (isSaving) {
+                return;
+            }
+            try {
+                isSaving = true;
+                updateActionButtons();
+                setStatus('Сохранение...', palette.muted);
+                const response = await fetch(routes.content, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        data: collectData()
+                    })
+                });
+                if (response.status === 401 || response.status === 403) {
+                    setStatus('Сессия истекла. Войдите снова.', palette.error);
+                    setTimeout(() => redirectToLogin(), 600);
+                    return;
+                }
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Не удалось сохранить данные');
+                }
+                await loadContent({ showStatus: false });
+                setStatus('Изменения сохранены.', palette.success);
+            } catch (error) {
+                const message = error.message || 'Не удалось сохранить данные';
+                setStatus(message, palette.error);
+            } finally {
+                isSaving = false;
+                updateActionButtons();
+            }
+        }
+
+        document.getElementById('addFeature').addEventListener('click', () => {
+            createItemCard([
+                { name: 'icon', label: 'CSS-класс иконки' },
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' }
+            ], {}, featuresList);
+        });
+
+        document.getElementById('addService').addEventListener('click', () => {
+            createItemCard([
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' }
+            ], {}, servicesList);
+        });
+
+        document.getElementById('addStep').addEventListener('click', () => {
+            createItemCard([
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' }
+            ], {}, stepsList);
+        });
+
+        document.getElementById('addStat').addEventListener('click', () => {
+            createItemCard([
+                { name: 'value', label: 'Значение' },
+                { name: 'label', label: 'Описание' }
+            ], {}, statsList);
+        });
+
+        document.getElementById('addPartner').addEventListener('click', () => {
+            createItemCard([
+                { name: 'name', label: 'Название партнёра' },
+                { name: 'url', label: 'Ссылка на сайт' },
+                { name: 'logo', label: 'URL логотипа', preview: 'image' }
+            ], {}, partnersList);
+        });
+
+        document.getElementById('addPortfolio').addEventListener('click', () => {
+            createItemCard([
+                { name: 'title', label: 'Заголовок' },
+                { name: 'description', label: 'Описание', type: 'textarea' },
+                { name: 'image', label: 'URL изображения', preview: 'image' }
+            ], {}, portfolioList);
+        });
+
+        document.getElementById('addReview').addEventListener('click', () => {
+            createItemCard([
+                { name: 'name', label: 'Имя' },
+                { name: 'location', label: 'Город' },
+                { name: 'text', label: 'Текст отзыва', type: 'textarea' },
+                { name: 'image', label: 'URL изображения', preview: 'image' }
+            ], {}, reviewsList);
+        });
+
+        saveButton.addEventListener('click', saveContent);
+        reloadButton.addEventListener('click', () => loadContent());
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await fetch(routes.logout, { method: 'POST', credentials: 'include' });
+            } catch (error) {
+                console.error('Logout failed', error);
+            } finally {
+                redirectToLogin();
+            }
+        });
+        updateActionButtons();
+        loadContent();
+    </script>
+</body>
+</html>
