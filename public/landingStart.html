@@ -103,7 +103,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: clamp(16px, 2.6vw, 48px);
+            gap: clamp(20px, 3vw, 64px);
             flex-wrap: wrap;
         }
 
@@ -113,7 +113,8 @@
             gap: clamp(12px, 2vw, 24px);
             min-width: 0;
             flex: 0 0 auto;
-            margin-right: clamp(16px, 4vw, 72px);
+            margin-right: clamp(32px, 8vw, 180px);
+            padding-right: clamp(12px, 2vw, 36px);
         }
 
         .header-nav {
@@ -253,14 +254,14 @@
         }
 
         .logo-text {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            display: grid;
+            justify-items: center;
             text-align: center;
             gap: 4px;
             line-height: 1.05;
             min-width: 0;
             max-width: clamp(160px, 18vw, 220px);
+            margin-inline: auto;
         }
 
         .logo-name {
@@ -1645,6 +1646,7 @@
                 width: 100%;
                 justify-content: space-between;
                 margin-right: 0;
+                padding-right: 0;
             }
 
             .nav-toggle {
