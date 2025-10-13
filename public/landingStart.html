@@ -140,40 +140,53 @@
             position: relative;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: clamp(20px, 3vw, 52px);
-            column-gap: clamp(24px, 3.2vw, 80px);
-            row-gap: clamp(12px, 3vw, 24px);
+            justify-content: flex-start;
+            gap: clamp(14px, 2vw, 28px);
             flex-wrap: nowrap;
         }
 
         .header-brand {
             display: flex;
             align-items: center;
-            gap: clamp(14px, 2.2vw, 26px);
-            min-width: clamp(210px, 22.5vw, 288px);
-            flex: 0 0 clamp(210px, 22.5vw, 288px);
-            margin-right: 0;
-            padding-right: clamp(16px, 2vw, 32px);
+            gap: clamp(10px, 1.6vw, 18px);
+            flex: 0 0 auto;
+            min-width: clamp(170px, 16vw, 220px);
             isolation: isolate;
+        }
+
+        .header-tagline {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 clamp(8px, 1.6vw, 18px);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.78);
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: clamp(11px, 0.4vw + 10px, 13px);
         }
 
         .header-nav {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 1 1 clamp(340px, 42vw, 560px);
-            min-width: 220px;
+            flex: 1 1 auto;
+            min-width: 0;
+            margin-left: clamp(18px, 3vw, 48px);
+            margin-right: clamp(12px, 2vw, 32px);
         }
 
         .header-nav__list {
             display: flex;
             list-style: none;
-            gap: clamp(18px, 2vw, 32px);
+            gap: clamp(16px, 1.8vw, 28px);
             text-transform: uppercase;
             letter-spacing: 0.06em;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            min-width: 0;
         }
 
         .header-nav.is-collapsible {
@@ -246,6 +259,8 @@
             gap: 6px;
             cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
+            margin-left: clamp(4px, 1vw, 16px);
+            flex-shrink: 0;
         }
 
         .nav-toggle:focus-visible {
@@ -298,13 +313,12 @@
 
         .logo-text {
             display: grid;
-            justify-items: center;
-            text-align: center;
+            justify-items: flex-start;
+            text-align: left;
             gap: 4px;
             line-height: 1.05;
             min-width: 0;
             max-width: clamp(168px, 16vw, 224px);
-            margin-inline: auto;
             padding-inline: clamp(4px, 1vw, 12px);
             align-content: center;
         }
@@ -338,31 +352,39 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: clamp(10px, 1.5vw, 20px);
+            gap: clamp(12px, 1.6vw, 22px);
             justify-content: flex-end;
-            margin-left: auto;
+            margin-left: clamp(12px, 2vw, 32px);
             flex: 0 0 auto;
-            min-width: clamp(220px, 24vw, 320px);
+            min-width: clamp(210px, 20vw, 280px);
         }
 
         @media (max-width: 1320px) {
             .header-container {
                 flex-wrap: wrap;
+                justify-content: center;
+                gap: clamp(16px, 3vw, 28px);
             }
 
             .header-brand {
-                flex: 1 1 100%;
-                min-width: min(100%, 360px);
+                order: 1;
                 justify-content: center;
-                padding-right: clamp(12px, 2vw, 24px);
+            }
+
+            .header-tagline {
+                order: 2;
+                flex: 1 1 100%;
+                justify-content: center;
             }
 
             .header-nav {
-                flex: 1 1 100%;
                 order: 3;
+                flex: 1 1 100%;
+                margin-inline: 0;
             }
 
             .header-actions {
+                order: 4;
                 width: 100%;
                 justify-content: center;
                 margin-left: 0;
@@ -1693,7 +1715,7 @@
         }
 
         @media (max-width: 1200px) {
-            .logo-tagline {
+            .header-tagline {
                 display: none;
             }
 
@@ -1709,40 +1731,44 @@
             }
 
             .header-container {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 18px;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 16px 18px;
             }
 
             .header-brand {
-                gap: 14px;
-                width: 100%;
-                justify-content: space-between;
-                margin-right: 0;
-                padding-right: 0;
+                order: 1;
+                width: auto;
+                justify-content: flex-start;
+                min-width: 0;
             }
 
             .nav-toggle {
                 display: inline-flex;
+                order: 2;
+                margin-left: auto;
+            }
+
+            .header-actions {
+                order: 3;
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 14px;
+                margin-left: 0;
             }
 
             .header-nav {
+                order: 4;
                 width: 100%;
-                order: 3;
                 justify-content: flex-start;
+                margin-inline: 0;
             }
 
             .header-nav__list {
                 align-items: flex-start;
                 justify-content: flex-start;
-            }
-
-            .header-actions {
-                order: 2;
-                width: 100%;
-                justify-content: space-between;
                 flex-wrap: wrap;
-                gap: 14px;
             }
 
             .phone {
@@ -1917,14 +1943,11 @@
                     <img src="assets/logo-inline.svg" alt="Логотип Электроконструктив" loading="lazy" id="headerLogoImage">
                     <div class="logo-text">
                         <span class="logo-name">ЭЛЕКТРОКОНСТРУКТИВ</span>
-                        <span class="logo-tagline">энергия надежных решений</span>
                     </div>
                 </a>
-                <button class="nav-toggle" type="button" aria-label="Переключить меню" aria-expanded="false" aria-controls="siteNav" aria-hidden="true">
-                    <span class="nav-toggle__line"></span>
-                    <span class="nav-toggle__line"></span>
-                    <span class="nav-toggle__line"></span>
-                </button>
+            </div>
+            <div class="header-tagline">
+                <span class="logo-tagline">энергия надежных решений</span>
             </div>
             <nav class="header-nav" id="siteNav" aria-hidden="false">
                 <ul class="header-nav__list">
@@ -1944,6 +1967,11 @@
                 </div>
                 <a href="#request" class="header-cta" data-open-request="true">Заказать звонок</a>
             </div>
+            <button class="nav-toggle" type="button" aria-label="Переключить меню" aria-expanded="false" aria-controls="siteNav" aria-hidden="true">
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+                <span class="nav-toggle__line"></span>
+            </button>
         </div>
     </header>
 
