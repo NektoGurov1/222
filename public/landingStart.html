@@ -204,10 +204,17 @@
             display: none;
         }
 
+        .header-nav__list li {
+            display: flex;
+            flex: 0 auto;
+        }
+
         .header-nav__list a {
-            display: block;
-            padding: clamp(6px, 0.8vw, 10px) clamp(10px, 1.1vw, 16px);
-            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(2px, 0.25vw, 4px) clamp(6px, 0.65vw, 10px);
+            border-radius: clamp(6px, 0.7vw, 12px);
             text-decoration: none;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -425,6 +432,11 @@
                 white-space: normal;
                 gap: clamp(12px, 1.8vw, 20px);
                 padding: clamp(12px, 2vw, 20px);
+            }
+
+            .header-nav__list li,
+            .header-nav__list a {
+                width: 100%;
             }
 
             .header-nav__list a {
