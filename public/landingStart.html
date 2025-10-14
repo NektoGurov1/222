@@ -139,14 +139,15 @@
         .header-container {
             position: relative;
             display: grid;
-            width: min(100%, clamp(320px, 96vw, 1480px));
-            padding-inline: clamp(12px, 2vw, 28px);
+            width: min(100%, clamp(320px, 98vw, 1500px));
+            padding-inline: clamp(8px, 1.6vw, 20px);
             grid-template-columns: auto minmax(200px, 1fr) minmax(520px, 2.6fr) minmax(164px, 0.9fr) auto;
             grid-template-areas:
                 "brand tagline nav phone toggle"
                 "brand tagline nav cta toggle";
             align-items: start;
-            gap: clamp(8px, 1.2vw, 16px);
+            column-gap: clamp(8px, 1.2vw, 16px);
+            row-gap: clamp(4px, 0.8vw, 12px);
             grid-auto-rows: auto;
         }
 
@@ -161,20 +162,24 @@
 
         .header-tagline {
             grid-area: tagline;
-            display: grid;
-            gap: clamp(2px, 0.4vw, 6px);
-            justify-items: start;
-            text-align: left;
-            min-width: clamp(180px, 16vw, 240px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(1px, 0.2vw, 3px);
+            text-align: center;
+            min-width: clamp(180px, 15vw, 230px);
             color: rgba(255, 255, 255, 0.88);
             align-self: center;
         }
 
         .header-tagline__link {
-            display: grid;
-            gap: clamp(2px, 0.4vw, 6px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: clamp(1px, 0.2vw, 3px);
             color: inherit;
             text-decoration: none;
+            text-align: inherit;
         }
 
         .header-nav {
@@ -295,14 +300,12 @@
             color: white;
             min-width: 0;
             flex-wrap: nowrap;
-            padding-right: clamp(4px, 1vw, 12px);
         }
 
         .logo img {
-            width: clamp(36px, 2.8vw, 46px);
-            height: clamp(36px, 2.8vw, 46px);
+            width: 36px;
+            height: 36px;
             flex-shrink: 0;
-            transform: translateX(clamp(-4px, -0.6vw, -10px));
         }
 
         .logo-name {
@@ -314,11 +317,13 @@
         }
 
         .logo-tagline {
-            font-size: clamp(10px, 0.34vw + 9px, 12px);
+            font-size: clamp(15px, 0.7vw + 13px, 21px);
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.78);
+            color: rgba(255, 255, 255, 0.82);
             text-transform: none;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+            line-height: 1.05;
         }
 
         main section h1,
@@ -337,8 +342,9 @@
             align-items: center;
             justify-content: flex-end;
             justify-self: end;
-            align-self: start;
-            min-width: clamp(170px, 13vw, 220px);
+            align-self: center;
+            min-width: clamp(150px, 12vw, 200px);
+            max-width: clamp(170px, 13vw, 220px);
             white-space: nowrap;
         }
 
@@ -347,12 +353,12 @@
             justify-self: end;
             align-self: start;
             white-space: nowrap;
-            margin-top: clamp(4px, 0.6vw, 10px);
+            margin-top: clamp(2px, 0.4vw, 6px);
         }
 
         @media (max-width: 1280px) {
             .header-container {
-                padding-inline: clamp(10px, 2.6vw, 24px);
+                padding-inline: clamp(8px, 2.2vw, 22px);
             }
 
             .header-tagline {
@@ -375,12 +381,13 @@
                     "brand tagline phone cta toggle"
                     "nav nav nav nav nav";
                 align-items: center;
-                row-gap: clamp(10px, 2vw, 18px);
+                column-gap: clamp(8px, 1.6vw, 18px);
+                row-gap: clamp(6px, 1.4vw, 14px);
             }
 
             .header-tagline {
                 min-width: clamp(200px, 42vw, 280px);
-                padding-inline: clamp(4px, 1.4vw, 12px);
+                padding-inline: clamp(2px, 1vw, 10px);
             }
 
             .header-nav {
@@ -427,13 +434,14 @@
             }
 
             .header-phone {
-                min-width: clamp(170px, 26vw, 220px);
+                min-width: clamp(160px, 28vw, 210px);
+                max-width: clamp(180px, 30vw, 220px);
             }
 
             .header-cta {
                 font-size: clamp(11px, 0.4vw + 10px, 13px);
-                padding-inline: clamp(14px, 2.6vw, 22px);
-                margin-top: 0;
+                padding-inline: clamp(12px, 2.4vw, 20px);
+                margin-top: clamp(2px, 0.4vw, 6px);
                 align-self: center;
             }
 
@@ -450,7 +458,7 @@
                     "tagline tagline tagline"
                     "cta cta cta"
                     "nav nav nav";
-                row-gap: clamp(8px, 2.6vw, 18px);
+                row-gap: clamp(6px, 2.2vw, 16px);
             }
 
             .header-tagline {
@@ -486,8 +494,9 @@
         .phone {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: clamp(6px, 0.7vw, 9px) clamp(14px, 1.4vw, 20px);
+            justify-content: center;
+            gap: clamp(4px, 0.5vw, 8px);
+            padding: clamp(6px, 0.6vw + 4px, 10px) clamp(12px, 1.1vw + 10px, 18px);
             border-radius: 999px;
             border: 1px solid rgba(255, 255, 255, 0.18);
             background: rgba(255, 255, 255, 0.08);
@@ -503,15 +512,15 @@
             color: white;
             text-decoration: none;
             font-weight: 700;
-            font-size: clamp(11px, 0.24vw + 9.6px, 12.4px);
+            font-size: clamp(10px, 0.2vw + 9.2px, 11.6px);
         }
 
         .header-cta {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
+            gap: clamp(6px, 0.6vw, 10px);
+            padding: clamp(8px, 0.7vw + 6px, 12px) clamp(16px, 1.2vw + 12px, 22px);
             border-radius: 999px;
             background: var(--secondary);
             color: var(--dark);
