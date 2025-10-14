@@ -2,6 +2,7 @@ import os
 import json
 import hashlib
 import re
+import shutil
 import smtplib
 import subprocess
 from collections import deque
@@ -450,11 +451,27 @@ def send_email(message: EmailMessage) -> None:
                 server.send_message(message)
         return
 
-    sendmail_path = os.getenv("SENDMAIL_PATH", "/usr/sbin/sendmail")
-    process = subprocess.Popen([sendmail_path, "-t", "-i"], stdin=subprocess.PIPE)
+    configured_path = os.getenv("SENDMAIL_PATH", "/usr/sbin/sendmail")
+    sendmail_path = configured_path
+    if not Path(sendmail_path).exists():
+        resolved = shutil.which(sendmail_path)
+        if resolved:
+            sendmail_path = resolved
+        else:
+            raise RuntimeError(
+                f"Не найден sendmail по пути '{configured_path}'. Убедитесь, что пакет sendmail установлен в образе."
+            )
+
+    try:
+        process = subprocess.Popen([sendmail_path, "-t", "-i"], stdin=subprocess.PIPE)
+    except FileNotFoundError as exc:
+        raise RuntimeError(
+            f"Не удалось запустить sendmail по пути '{sendmail_path}': {exc}"
+        ) from exc
+
     process.communicate(message.as_bytes())
     if process.returncode not in (0, None):
-        raise RuntimeError("Sendmail returned non-zero exit code")
+        raise RuntimeError("Sendmail вернул ненулевой код завершения")
 
 
 @app.errorhandler(RequestEntityTooLarge)
