@@ -193,6 +193,10 @@
             min-width: 0;
         }
 
+        .header-nav__list li.is-hidden {
+            display: none;
+        }
+
         .header-nav.is-collapsible {
             display: block;
             width: 100%;
@@ -475,6 +479,10 @@
 
         main section {
             padding: var(--section-padding-block) 0;
+        }
+
+        main section[data-empty="true"] {
+            display: none;
         }
 
         .section-title {
@@ -1673,6 +1681,10 @@
             gap: 12px;
         }
 
+        .footer-col.is-hidden {
+            display: none;
+        }
+
         .footer-col h3 { 
             margin-bottom: 15px; 
         } 
@@ -1994,12 +2006,12 @@
             </div>
             <nav class="header-nav" id="siteNav" aria-hidden="false">
                 <ul class="header-nav__list">
-                    <li><a href="#services">Услуги</a></li>
-                    <li><a href="#process">Этапы</a></li>
-                    <li><a href="#about">О компании</a></li>
-                    <li><a href="#partners">Партнёры</a></li>
-                    <li><a href="#portfolio">Проекты</a></li>
-                    <li><a href="#reviews">Отзывы</a></li>
+                    <li class="is-hidden"><a href="#services">Услуги</a></li>
+                    <li class="is-hidden"><a href="#process">Этапы</a></li>
+                    <li class="is-hidden"><a href="#about">О компании</a></li>
+                    <li class="is-hidden"><a href="#partners">Партнёры</a></li>
+                    <li class="is-hidden"><a href="#portfolio">Проекты</a></li>
+                    <li class="is-hidden"><a href="#reviews">Отзывы</a></li>
                     <li><a href="#contacts">Контакты</a></li>
                 </ul>
             </nav>
@@ -2041,7 +2053,7 @@
             </div>
         </section>
 
-        <section class="features" id="features"> 
+        <section class="features" id="features" data-empty="true">
             <div class="container"> 
                 <div class="section-title"> 
                     <h2>Почему выбирают нас</h2> 
@@ -2052,7 +2064,7 @@
             </div> 
         </section> 
 
-        <section class="services" id="services"> 
+        <section class="services" id="services" data-empty="true">
             <div class="container"> 
                 <div class="section-title"> 
                     <h2>Наши услуги</h2> 
@@ -2063,7 +2075,7 @@
             </div> 
         </section> 
 
-        <section class="process" id="process"> 
+        <section class="process" id="process" data-empty="true">
             <div class="container"> 
                 <div class="section-title"> 
                     <h2>Как мы работаем</h2> 
@@ -2074,7 +2086,7 @@
             </div> 
         </section> 
 
-        <section class="about" id="about"> 
+        <section class="about" id="about" data-empty="true">
             <div class="container"> 
                 <div class="section-title"> 
                     <h2>О компании</h2> 
@@ -2094,7 +2106,7 @@
             </div>
         </section>
 
-        <section class="partners is-hidden" id="partners"> 
+        <section class="partners is-hidden" id="partners" data-empty="true">
             <div class="container"> 
                 <div class="section-title"> 
                     <h2>Наши партнёры</h2> 
@@ -2116,7 +2128,7 @@
             </div> 
         </section> 
 
-        <section class="portfolio" id="portfolio"> 
+        <section class="portfolio" id="portfolio" data-empty="true">
             <div class="container"> 
                 <div class="section-title"> 
                     <h2>Недавние проекты</h2> 
@@ -2127,7 +2139,7 @@
             </div> 
         </section> 
 
-        <section class="reviews" id="reviews"> 
+        <section class="reviews" id="reviews" data-empty="true">
             <div class="container"> 
                 <div class="section-title"> 
                     <h2>Отзывы клиентов</h2> 
@@ -2296,10 +2308,34 @@
         const requestSubmitDefaultText = requestSubmitButton ? requestSubmitButton.textContent : 'Отправить заявку'; 
         const requestToastDefaultMessage = requestToastMessage
             ? requestToastMessage.textContent
-            : 'Ваша заявка отправлена, скоро с вами свяжутся наши специалисты.'; 
+            : 'Ваша заявка отправлена, скоро с вами свяжутся наши специалисты.';
         let requestToastTimer = null;
         let lastFocusedRequestTrigger = null;
         const NAV_BREAKPOINT = window.matchMedia('(max-width: 992px)');
+
+        function updateSectionEmptyState(sectionId, hasContent) {
+            const section = document.getElementById(sectionId);
+            if (!section) {
+                return;
+            }
+            section.dataset.empty = hasContent ? 'false' : 'true';
+            toggleNavLinkVisibility(sectionId, hasContent);
+        }
+
+        function toggleNavLinkVisibility(sectionId, shouldShow) {
+            if (!sectionId) {
+                return;
+            }
+            const navLink = document.querySelector(`.header-nav__list a[href="#${sectionId}"]`);
+            if (!navLink) {
+                return;
+            }
+            const navItem = navLink.closest('li');
+            if (!navItem) {
+                return;
+            }
+            navItem.classList.toggle('is-hidden', !shouldShow);
+        }
 
         function updateHeaderNavAria() {
             if (!headerNav) {
@@ -2791,17 +2827,18 @@
             }); 
         } 
 
-        function renderPartners(partners) { 
-            const section = document.getElementById('partners'); 
-            const track = document.getElementById('partnersTrack'); 
-            const status = document.getElementById('partnersStatus'); 
-            const viewport = document.getElementById('partnersViewport'); 
-            if (!section || !track || !status || !viewport) { 
-                return; 
-            } 
+        function renderPartners(partners) {
+            const section = document.getElementById('partners');
+            const track = document.getElementById('partnersTrack');
+            const status = document.getElementById('partnersStatus');
+            const viewport = document.getElementById('partnersViewport');
+            if (!section || !track || !status || !viewport) {
+                updateSectionEmptyState('partners', false);
+                return;
+            }
 
-            stopPartnersAutoSlide(); 
-            track.innerHTML = ''; 
+            stopPartnersAutoSlide();
+            track.innerHTML = '';
             track.style.transition = 'none'; 
             track.style.transform = 'translateX(0)'; 
             track.dataset.animating = 'false'; 
@@ -2810,11 +2847,11 @@
             status.style.display = 'none'; 
 
             const source = Array.isArray(partners) ? partners : []; 
-            const normalized = source 
-                .map((partner, index) => { 
-                    const name = typeof partner.name === 'string' ? partner.name.trim() : ''; 
-                    const logo = resolveAssetUrl(partner.logo); 
-                    const urlCandidate = typeof partner.url === 'string' ? partner.url.trim() : ''; 
+            const normalized = source
+                .map((partner, index) => {
+                    const name = typeof partner.name === 'string' ? partner.name.trim() : '';
+                    const logo = resolveAssetUrl(partner.logo);
+                    const urlCandidate = typeof partner.url === 'string' ? partner.url.trim() : '';
                     const safeUrl = /^(https?:\/\/)/i.test(urlCandidate) ? urlCandidate : '#'; 
                     const fallbackName = `Партнёр ${index + 1}`; 
                     return { 
@@ -2823,13 +2860,14 @@
                         url: safeUrl 
                     }; 
                 }) 
-                .filter(partner => Boolean(partner.logo)); 
+                .filter(partner => Boolean(partner.logo));
 
-            if (normalized.length === 0) { 
-                section.classList.add('is-hidden'); 
-                status.textContent = 'Партнёры пока не добавлены.'; 
-                status.style.display = 'block'; 
-                if (partnersPrevButton) { 
+            if (normalized.length === 0) {
+                section.classList.add('is-hidden');
+                updateSectionEmptyState('partners', false);
+                status.textContent = 'Партнёры пока не добавлены.';
+                status.style.display = 'block';
+                if (partnersPrevButton) {
                     partnersPrevButton.style.display = 'none';
                     partnersPrevButton.disabled = true;
                 }
@@ -2837,12 +2875,13 @@
                     partnersNextButton.style.display = 'none';
                     partnersNextButton.disabled = true;
                 }
-                return; 
-            } 
+                return;
+            }
 
-            section.classList.remove('is-hidden'); 
+            section.classList.remove('is-hidden');
+            updateSectionEmptyState('partners', true);
 
-            const targetLength = Math.max(normalized.length, PARTNERS_VISIBLE_COUNT); 
+            const targetLength = Math.max(normalized.length, PARTNERS_VISIBLE_COUNT);
             const itemsToRender = [...normalized]; 
             while (itemsToRender.length < targetLength && itemsToRender.length < normalized.length * PARTNERS_VISIBLE_COUNT) { 
                 itemsToRender.push(...normalized); 
@@ -3006,53 +3045,83 @@
             }
 
             const featuresGrid = document.getElementById('featuresGrid');
-            featuresGrid.innerHTML = '';
-            features.forEach(feature => {
-                const card = document.createElement('div');
-                card.className = 'feature-card';
+            if (featuresGrid) {
+                featuresGrid.innerHTML = '';
+                features.forEach(feature => {
+                    const card = document.createElement('div');
+                    card.className = 'feature-card';
 
-                const iconElement = document.createElement('i');
-                iconElement.className = feature.icon || 'fas fa-bolt';
+                    const iconElement = document.createElement('i');
+                    iconElement.className = feature.icon || 'fas fa-bolt';
 
-                const titleElement = document.createElement('h3');
-                titleElement.textContent = feature.title || '';
+                    const titleElement = document.createElement('h3');
+                    titleElement.textContent = feature.title || '';
 
-                const descriptionElement = document.createElement('p');
-                descriptionElement.textContent = feature.description || '';
+                    const descriptionElement = document.createElement('p');
+                    descriptionElement.textContent = feature.description || '';
 
-                card.appendChild(iconElement);
-                card.appendChild(titleElement);
-                card.appendChild(descriptionElement);
-                featuresGrid.appendChild(card);
-            });
+                    card.appendChild(iconElement);
+                    card.appendChild(titleElement);
+                    card.appendChild(descriptionElement);
+                    featuresGrid.appendChild(card);
+                });
+                updateSectionEmptyState('features', featuresGrid.children.length > 0);
+            } else {
+                updateSectionEmptyState('features', false);
+            }
 
-            const servicesGrid = document.getElementById('servicesGrid'); 
-            servicesGrid.innerHTML = ''; 
-            services.forEach(service => { 
-                const card = document.createElement('div'); 
-                card.className = 'service-card'; 
-                card.innerHTML = `
-                    <h3>${service.title || ''}</h3>
-                    <p>${service.description || ''}</p>
-                `; 
-                servicesGrid.appendChild(card); 
-            }); 
+            const servicesGrid = document.getElementById('servicesGrid');
+            if (servicesGrid) {
+                servicesGrid.innerHTML = '';
+                services.forEach(service => {
+                    const card = document.createElement('div');
+                    card.className = 'service-card';
+                    card.innerHTML = `
+                        <h3>${service.title || ''}</h3>
+                        <p>${service.description || ''}</p>
+                    `;
+                    servicesGrid.appendChild(card);
+                });
+                updateSectionEmptyState('services', servicesGrid.children.length > 0);
+            } else {
+                updateSectionEmptyState('services', false);
+            }
 
-            const stepsGrid = document.getElementById('stepsGrid'); 
-            stepsGrid.innerHTML = ''; 
-            steps.forEach((step, index) => { 
-                const card = document.createElement('div'); 
-                card.className = 'step-card'; 
-                card.setAttribute('data-step', index + 1); 
-                card.innerHTML = `
-                    <h3>${step.title || ''}</h3>
-                    <p>${step.description || ''}</p>
-                `; 
-                stepsGrid.appendChild(card); 
-            }); 
+            const stepsGrid = document.getElementById('stepsGrid');
+            if (stepsGrid) {
+                stepsGrid.innerHTML = '';
+                steps.forEach((step, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'step-card';
+                    card.setAttribute('data-step', index + 1);
+                    card.innerHTML = `
+                        <h3>${step.title || ''}</h3>
+                        <p>${step.description || ''}</p>
+                    `;
+                    stepsGrid.appendChild(card);
+                });
+                updateSectionEmptyState('process', stepsGrid.children.length > 0);
+            } else {
+                updateSectionEmptyState('process', false);
+            }
 
-            document.getElementById('aboutTitle').textContent = about.title || ''; 
-            document.getElementById('aboutDescription').textContent = about.description || ''; 
+            const aboutTitleElement = document.getElementById('aboutTitle');
+            const aboutDescriptionElement = document.getElementById('aboutDescription');
+            let hasAboutContent = false;
+            if (aboutTitleElement) {
+                const safeTitle = typeof about.title === 'string' ? about.title.trim() : '';
+                aboutTitleElement.textContent = safeTitle;
+                if (safeTitle) {
+                    hasAboutContent = true;
+                }
+            }
+            if (aboutDescriptionElement) {
+                const safeDescription = typeof about.description === 'string' ? about.description.trim() : '';
+                aboutDescriptionElement.textContent = safeDescription;
+                if (safeDescription) {
+                    hasAboutContent = true;
+                }
+            }
             const aboutImage = document.getElementById('aboutImage');
             const aboutImageContainer = aboutImage ? aboutImage.closest('.about-image') : null;
             const aboutImageUrl = resolveAssetUrl(about.image);
@@ -3062,6 +3131,7 @@
                 if (aboutImageContainer) {
                     aboutImageContainer.classList.remove('is-hidden');
                 }
+                hasAboutContent = true;
             } else if (aboutImage) {
                 aboutImage.removeAttribute('src');
                 aboutImage.setAttribute('hidden', 'true');
@@ -3069,42 +3139,53 @@
                     aboutImageContainer.classList.add('is-hidden');
                 }
             }
-            const aboutStats = Array.isArray(about.stats) ? about.stats : []; 
-            const statsContainer = document.getElementById('aboutStats'); 
-            statsContainer.innerHTML = ''; 
-            aboutStats.forEach(stat => { 
-                const card = document.createElement('div'); 
-                card.className = 'stat-card'; 
-                card.innerHTML = `
-                    <h3>${stat.value || ''}</h3>
-                    <p>${stat.label || ''}</p>
-                `; 
-                statsContainer.appendChild(card); 
-            }); 
+            const aboutStats = Array.isArray(about.stats) ? about.stats : [];
+            const statsContainer = document.getElementById('aboutStats');
+            if (statsContainer) {
+                statsContainer.innerHTML = '';
+                aboutStats.forEach(stat => {
+                    const card = document.createElement('div');
+                    card.className = 'stat-card';
+                    card.innerHTML = `
+                        <h3>${stat.value || ''}</h3>
+                        <p>${stat.label || ''}</p>
+                    `;
+                    statsContainer.appendChild(card);
+                });
+                if (statsContainer.children.length > 0) {
+                    hasAboutContent = true;
+                }
+            }
+            updateSectionEmptyState('about', hasAboutContent);
 
-            renderPartners(partners); 
+            renderPartners(partners);
 
-            const portfolioGrid = document.getElementById('portfolioGrid'); 
-            portfolioGrid.innerHTML = ''; 
-            portfolio.forEach(item => { 
-                const card = document.createElement('div'); 
-                card.className = 'portfolio-card'; 
-                const projectTitle = escapeHtml(item.title || 'Проект'); 
-                const projectDescription = escapeHtml(item.description || ''); 
-                const projectImage = resolveAssetUrl(item.image); 
-                const safeImage = escapeHtml(projectImage || ''); 
-                const mediaBlock = safeImage
-                    ? `<img src="${safeImage}" alt="${projectTitle}">`
-                    : '<div class="portfolio-placeholder" aria-hidden="true"></div>'; 
-                card.innerHTML = `
-                    ${mediaBlock}
-                    <div class="portfolio-info">
-                        <h3>${projectTitle}</h3>
-                        <p>${projectDescription}</p>
-                    </div>
-                `; 
-                portfolioGrid.appendChild(card); 
-            }); 
+            const portfolioGrid = document.getElementById('portfolioGrid');
+            if (portfolioGrid) {
+                portfolioGrid.innerHTML = '';
+                portfolio.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'portfolio-card';
+                    const projectTitle = escapeHtml(item.title || 'Проект');
+                    const projectDescription = escapeHtml(item.description || '');
+                    const projectImage = resolveAssetUrl(item.image);
+                    const safeImage = escapeHtml(projectImage || '');
+                    const mediaBlock = safeImage
+                        ? `<img src="${safeImage}" alt="${projectTitle}">`
+                        : '<div class="portfolio-placeholder" aria-hidden="true"></div>';
+                    card.innerHTML = `
+                        ${mediaBlock}
+                        <div class="portfolio-info">
+                            <h3>${projectTitle}</h3>
+                            <p>${projectDescription}</p>
+                        </div>
+                    `;
+                    portfolioGrid.appendChild(card);
+                });
+                updateSectionEmptyState('portfolio', portfolioGrid.children.length > 0);
+            } else {
+                updateSectionEmptyState('portfolio', false);
+            }
 
             reviewsSource = 'content'; 
             reviewsData = reviews; 
@@ -3114,16 +3195,22 @@
             document.getElementById('ctaDescription').textContent = cta.description || ''; 
             document.getElementById('ctaButton').textContent = cta.button || ''; 
 
-            const footerServices = document.getElementById('footerServices'); 
-            footerServices.innerHTML = ''; 
-            services.forEach(service => { 
-                const li = document.createElement('li'); 
-                const link = document.createElement('a'); 
-                link.href = '#services'; 
-                link.textContent = service.title || ''; 
-                li.appendChild(link); 
-                footerServices.appendChild(li); 
-            }); 
+            const footerServices = document.getElementById('footerServices');
+            if (footerServices) {
+                footerServices.innerHTML = '';
+                services.forEach(service => {
+                    const li = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = '#services';
+                    link.textContent = service.title || '';
+                    li.appendChild(link);
+                    footerServices.appendChild(li);
+                });
+                const footerServicesColumn = footerServices.closest('.footer-col');
+                if (footerServicesColumn) {
+                    footerServicesColumn.classList.toggle('is-hidden', footerServices.children.length === 0);
+                }
+            }
 
             const phoneLink = document.getElementById('phoneLink'); 
             const contactPhone = document.getElementById('contactPhone'); 
@@ -3271,32 +3358,34 @@
             } 
         } 
 
-        function renderReviews() { 
-            const reviewsContainer = document.getElementById('reviewsContainer'); 
-            const statusElement = reviewsStatusElement; 
-            if (!reviewsContainer) { 
-                return; 
-            } 
-            reviewsContainer.innerHTML = ''; 
-            if (!reviewsData.length) { 
-                const placeholder = document.createElement('div'); 
-                placeholder.className = 'review-card active'; 
+        function renderReviews() {
+            const reviewsContainer = document.getElementById('reviewsContainer');
+            const statusElement = reviewsStatusElement;
+            if (!reviewsContainer) {
+                updateSectionEmptyState('reviews', false);
+                return;
+            }
+            reviewsContainer.innerHTML = '';
+            if (!reviewsData.length) {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'review-card active';
                 placeholder.innerHTML = `
                     <div class="review-text">
                         <p>Отзывы пока не добавлены. Добавьте их через панель управления.</p>
                     </div>
-                `; 
-                reviewsContainer.appendChild(placeholder); 
-                if (statusElement) { 
-                    statusElement.textContent = 'Отзывы не найдены. Добавьте их в панели управления.'; 
-                } 
-                stopAutoSlide(); 
-                reviewsContainer.style.transform = 'translateX(0)'; 
-                return; 
-            } 
-            reviewsData.forEach((review, index) => { 
-                const card = document.createElement('div'); 
-                card.className = 'review-card'; 
+                `;
+                reviewsContainer.appendChild(placeholder);
+                if (statusElement) {
+                    statusElement.textContent = 'Отзывы не найдены. Добавьте их в панели управления.';
+                }
+                stopAutoSlide();
+                reviewsContainer.style.transform = 'translateX(0)';
+                updateSectionEmptyState('reviews', false);
+                return;
+            }
+            reviewsData.forEach((review, index) => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
                 if (index === currentReviewIndex) { 
                     card.classList.add('active'); 
                 } 
@@ -3318,15 +3407,16 @@
                     ${meta ? `<div class="review-meta">${meta}</div>` : ''}
                     ${ratingBlock}
                 `; 
-                reviewsContainer.appendChild(card); 
-            }); 
-            updateSliderPosition(); 
-            startAutoSlide(); 
-            if (statusElement) { 
-                let statusText = 'Отзывы отображаются из файла контента.'; 
-                if (reviewsSource === 'external') { 
+                reviewsContainer.appendChild(card);
+            });
+            updateSliderPosition();
+            startAutoSlide();
+            updateSectionEmptyState('reviews', reviewsData.length > 0);
+            if (statusElement) {
+                let statusText = 'Отзывы отображаются из файла контента.';
+                if (reviewsSource === 'external') {
                     statusText = 'Отзывы загружены с 2ГИС.';
-                } else if (reviewsSource === 'fallback-external') { 
+                } else if (reviewsSource === 'fallback-external') {
                     statusText = 'Не удалось загрузить отзывы с 2ГИС, показаны данные с сайта.';
                 }
                 statusElement.textContent = statusText; 
