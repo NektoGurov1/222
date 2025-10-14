@@ -116,7 +116,7 @@
         header {
             background: #050505;
             color: white;
-            padding: 12px 0;
+            padding: clamp(10px, 1.5vw, 16px) 0;
             position: fixed;
             width: 100%;
             top: 0;
@@ -142,7 +142,7 @@
             grid-template-columns: auto auto minmax(0, 1fr) auto auto;
             grid-template-areas: "brand tagline nav phone cta";
             align-items: center;
-            column-gap: clamp(16px, 2.6vw, 36px);
+            column-gap: clamp(20px, 3vw, 44px);
         }
 
         .header-brand {
@@ -151,25 +151,27 @@
             align-items: center;
             justify-self: flex-start;
             isolation: isolate;
+            margin-right: clamp(6px, 1.1vw, 18px);
         }
 
         .header-tagline {
             grid-area: tagline;
             display: grid;
-            justify-items: flex-start;
+            justify-items: center;
             align-items: center;
-            text-align: left;
+            text-align: center;
             row-gap: 4px;
-            min-width: clamp(190px, 18vw, 260px);
-            padding-inline: clamp(6px, 1.4vw, 18px);
+            min-width: clamp(160px, 17vw, 240px);
+            max-width: clamp(180px, 22vw, 280px);
+            padding-inline: clamp(6px, 1.2vw, 16px);
             color: rgba(255, 255, 255, 0.86);
         }
 
         .header-tagline__link {
             display: grid;
             gap: 4px;
-            justify-items: inherit;
-            text-align: inherit;
+            justify-items: center;
+            text-align: center;
             color: inherit;
             text-decoration: none;
         }
@@ -178,17 +180,17 @@
             grid-area: nav;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             min-width: 0;
         }
 
         .header-nav__list {
             display: flex;
             list-style: none;
-            gap: clamp(12px, 1.5vw, 24px);
+            gap: clamp(12px, 1.8vw, 28px);
             text-transform: uppercase;
-            letter-spacing: 0.06em;
-            justify-content: center;
+            letter-spacing: 0.05em;
+            justify-content: flex-start;
             flex-wrap: nowrap;
             min-width: 0;
         }
@@ -223,7 +225,7 @@
             color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             font-weight: 600;
-            font-size: clamp(12px, 0.35vw + 11px, 14px);
+            font-size: clamp(11px, 0.3vw + 10.2px, 13.4px);
             position: relative;
             transition: color var(--transition-base);
         }
@@ -315,27 +317,28 @@
         }
 
         .logo img {
-            width: clamp(40px, 3.2vw, 48px);
-            height: clamp(40px, 3.2vw, 48px);
+            width: clamp(36px, 2.8vw, 46px);
+            height: clamp(36px, 2.8vw, 46px);
             flex-shrink: 0;
             transform: translateX(clamp(-4px, -0.6vw, -10px));
         }
 
         .logo-name {
-            font-size: clamp(16px, 0.9vw + 14px, 22px);
+            font-size: clamp(15px, 0.7vw + 13px, 21px);
             font-weight: 700;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.06em;
             white-space: nowrap;
             color: #ffffff;
         }
 
         .logo-tagline {
-            font-size: clamp(10px, 0.42vw + 9px, 13px);
+            font-size: clamp(10px, 0.34vw + 9px, 12px);
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.72);
+            color: rgba(255, 255, 255, 0.78);
             text-transform: none;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.05em;
             white-space: normal;
+            text-align: center;
         }
 
         main section h1,
@@ -353,67 +356,75 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            min-width: clamp(160px, 16vw, 220px);
+            min-width: clamp(150px, 14vw, 210px);
+            white-space: nowrap;
         }
 
         .header-cta {
             grid-area: cta;
             justify-self: flex-end;
             align-self: center;
+            white-space: nowrap;
         }
 
-        @media (max-width: 1320px) {
+        @media (max-width: 1360px) {
             .header-container {
-                column-gap: clamp(14px, 2.2vw, 28px);
+                column-gap: clamp(16px, 2.4vw, 34px);
             }
 
             .header-tagline {
-                min-width: clamp(170px, 22vw, 220px);
-                padding-inline: clamp(4px, 1vw, 10px);
-                justify-items: center;
-                text-align: center;
+                min-width: clamp(150px, 20vw, 220px);
+                max-width: clamp(170px, 24vw, 250px);
             }
 
             .header-nav__list {
-                gap: clamp(10px, 1.3vw, 18px);
+                gap: clamp(11px, 1.6vw, 24px);
             }
 
             .header-nav__list a {
-                font-size: clamp(11px, 0.3vw + 10px, 13px);
+                font-size: clamp(11px, 0.28vw + 10px, 13px);
+            }
+        }
+
+        @media (max-width: 1180px) {
+            .header-container {
+                column-gap: clamp(12px, 2vw, 24px);
+            }
+
+            .header-tagline {
+                min-width: clamp(140px, 26vw, 210px);
+                padding-inline: clamp(4px, 1vw, 12px);
+            }
+
+            .logo-name {
+                font-size: clamp(14px, 0.6vw + 12px, 19px);
+            }
+
+            .logo-tagline {
+                font-size: clamp(9px, 0.32vw + 8.6px, 11.5px);
+            }
+
+            .header-nav__list {
+                gap: clamp(10px, 1.4vw, 20px);
+            }
+
+            .header-nav__list a {
+                font-size: clamp(10.5px, 0.26vw + 9.6px, 12.4px);
+            }
+
+            .phone {
+                padding: 8px 16px;
             }
         }
 
         @media (max-width: 1100px) {
-            .header-container {
-                grid-template-columns: auto minmax(0, 1fr) auto;
-                grid-template-areas:
-                    "brand nav nav"
-                    "tagline nav nav"
-                    "phone phone cta";
-                row-gap: clamp(12px, 2.4vw, 20px);
-            }
-
-            .header-brand {
-                justify-self: flex-start;
-            }
-
-            .header-tagline {
-                justify-self: flex-start;
-                justify-items: flex-start;
-                text-align: left;
-            }
-
-            .header-nav {
-                justify-content: flex-start;
-            }
-
             .header-phone {
-                justify-content: flex-start;
-                min-width: auto;
+                min-width: clamp(140px, 22vw, 190px);
             }
 
             .header-cta {
-                justify-self: flex-end;
+                font-size: clamp(10px, 0.24vw + 9.4px, 11.6px);
+                padding-inline: clamp(14px, 2.6vw, 20px);
             }
         }
 
@@ -423,8 +434,8 @@
             gap: 8px;
             padding: 8px 18px;
             border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.08);
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
         }
 
@@ -437,7 +448,7 @@
             color: white;
             text-decoration: none;
             font-weight: 700;
-            font-size: 13px;
+            font-size: clamp(12px, 0.3vw + 10.2px, 13.5px);
         }
 
         .header-cta {
@@ -452,7 +463,7 @@
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            font-size: 11px;
+            font-size: clamp(10px, 0.3vw + 9.4px, 12px);
             text-decoration: none;
             box-shadow: 0 16px 32px rgba(255, 212, 0, 0.35);
             transition: transform var(--transition-base), box-shadow var(--transition-base), background-color var(--transition-base);
@@ -1744,16 +1755,6 @@
             .about-content {
                 gap: clamp(40px, 5vw, 80px);
                 grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .header-tagline {
-                min-width: clamp(150px, 24vw, 210px);
-            }
-
-            .header-nav__list {
-                gap: clamp(12px, 1.8vw, 22px);
             }
         }
 
