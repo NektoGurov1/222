@@ -164,6 +164,13 @@ cd "$VENDOR_DIR"/beautifulsoup4-4.10.0 && python3.6 setup.py install --user
 - `REQUEST_TARGET_EMAIL` — адрес получателя (по умолчанию `etl@elektrokonstruktiv.ru`).
 - `SENDMAIL_PATH` — путь к `sendmail`, если он отличается от `/usr/sbin/sendmail`. Приложение проверяет наличие бинарника перед отправкой и вернёт понятное сообщение, если утилита недоступна.
 
+### Настройка отправки через sendmail
+1. Убедитесь, что пакет установлен: в контейнере он добавляется автоматически, на сервере выполните `sudo apt-get update && sudo apt-get install -y sendmail`.
+2. Откройте конфигурацию `sendmail.mc`, обновите домен/SMTP-реле при необходимости и пересоберите конфигурацию командой `sudo sendmailconfig` (или `sudo m4 /etc/mail/sendmail.mc > /etc/mail/sendmail.cf` с последующим перезапуском `sudo service sendmail restart`).
+3. В файле `/etc/aliases` задайте системные алиасы (например, `root: admin@example.com`) и примените изменения `sudo newaliases`.
+4. Убедитесь, что `sendmail` доступен по пути `/usr/sbin/sendmail` или задайте альтернативный путь переменной окружения `SENDMAIL_PATH`.
+5. В панели управления на вкладке «Заявки» укажите актуальный почтовый адрес: сервер возьмёт его из `REQUEST_TARGET_EMAIL` в `content.json`. После сохранения данных и перезапуска страницы форма будет отправлять письма через локальный `sendmail` без дополнительной настройки SMTP.
+
 ## Проверка на конфликтные маркеры
 ```bash
 python scripts/check_conflicts.py

@@ -873,6 +873,13 @@
             align-items: center;
             gap: 24px;
             padding: clamp(28px, 4vw, 40px);
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .request-modal::-webkit-scrollbar {
+            width: 0;
+            height: 0;
         }
 
         .request-logo {
