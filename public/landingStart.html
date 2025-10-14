@@ -2046,7 +2046,7 @@
                             <p id="heroSubtitle">Описание загружается...</p>
                         </div>
                         <div class="hero-actions">
-                            <a href="#request" class="btn" id="heroCta" data-open-request="true">Связаться</a>
+                            <a href="#request" class="btn" id="heroCta" data-open-request="true">Получить консультацию</a>
                             <a href="#portfolio" class="btn-secondary">Наши проекты</a>
                         </div>
                         <ul class="hero-highlights is-hidden" id="heroHighlights" aria-live="polite" aria-label="Ключевые преимущества"></ul>
@@ -2183,25 +2183,27 @@
             <div class="request-tabs" role="tablist" aria-label="Варианты заявки"> 
                 <button type="button" class="request-tab is-active" id="requestPrimaryTab" aria-selected="true">Получить коммерческое предложение</button> 
             </div> 
-            <form class="request-form" id="requestForm" novalidate> 
-                <div class="request-field"> 
-                    <label for="requestName">Ваше имя</label> 
-                    <input type="text" id="requestName" name="name" placeholder="Введите ваше имя" autocomplete="name" required> 
-                    <p class="field-error" id="requestNameError"></p> 
-                </div> 
-                <div class="request-field"> 
-                    <label for="requestEmail">E-mail</label> 
-                    <input type="email" id="requestEmail" name="email" placeholder="Введите ваш e-mail" autocomplete="email" required> 
-                    <p class="field-error" id="requestEmailError"></p> 
-                </div> 
-                <div class="request-field"> 
-                    <label for="requestPhone">Телефон</label> 
-                    <input type="tel" id="requestPhone" name="phone" placeholder="Введите номер телефона" autocomplete="tel"> 
-                </div> 
-                <div class="request-field"> 
-                    <label for="requestComment">Комментарий</label> 
-                    <textarea id="requestComment" name="comment" placeholder="Опишите ваш проект или вопрос"></textarea> 
-                </div> 
+            <form class="request-form" id="requestForm" novalidate>
+                <div class="request-field">
+                    <label for="requestName">Ваше имя</label>
+                    <input type="text" id="requestName" name="name" placeholder="Введите ваше имя" autocomplete="name" required>
+                    <p class="field-error" id="requestNameError"></p>
+                </div>
+                <div class="request-field">
+                    <label for="requestEmail">E-mail</label>
+                    <input type="email" id="requestEmail" name="email" placeholder="Введите ваш e-mail" autocomplete="email">
+                    <p class="field-error" id="requestEmailError"></p>
+                </div>
+                <div class="request-field">
+                    <label for="requestPhone">Телефон</label>
+                    <input type="tel" id="requestPhone" name="phone" placeholder="Введите номер телефона" autocomplete="tel">
+                    <p class="field-error" id="requestPhoneError"></p>
+                </div>
+                <div class="request-field">
+                    <label for="requestComment">Комментарий</label>
+                    <textarea id="requestComment" name="comment" placeholder="Опишите ваш проект или вопрос"></textarea>
+                    <p class="field-error" id="requestCommentError"></p>
+                </div>
                 <div class="request-field"> 
                     <label for="requestFile">Прикрепить проект (PDF, DOC, JPG, PNG)</label> 
                     <div class="request-file-control"> 
@@ -2214,11 +2216,11 @@
                     </div> 
                     <p class="field-error" id="requestFileError"></p> 
                 </div> 
-                <div class="request-actions"> 
-                    <button type="submit" class="request-submit" id="requestSubmit">Отправить заявку</button> 
-                    <p class="request-status" id="requestStatus"></p> 
-                </div> 
-            </form> 
+                <div class="request-actions">
+                    <button type="submit" class="request-submit" id="requestSubmit">Заказать консультацию</button>
+                    <p class="request-status" id="requestStatus"></p>
+                </div>
+            </form>
             <div class="request-footer">
                 <a href="mailto:etl@elektrokonstruktiv.ru" id="requestContactEmail">etl@elektrokonstruktiv.ru</a>
                 <a href="tel:+79135025246" id="requestContactPhone">+7 (913) 502-52-46</a> 
@@ -2291,22 +2293,24 @@
         const requestCommentInput = document.getElementById('requestComment'); 
         const requestFileInput = document.getElementById('requestFile'); 
         const requestFileStatus = document.getElementById('requestFileStatus'); 
-        const requestFileError = document.getElementById('requestFileError'); 
-        const requestFileProgress = document.getElementById('requestFileProgress'); 
-        const requestFileProgressBar = document.getElementById('requestFileProgressBar'); 
-        const requestSubmitButton = document.getElementById('requestSubmit'); 
-        const requestStatus = document.getElementById('requestStatus'); 
-        const requestNameError = document.getElementById('requestNameError'); 
-        const requestEmailError = document.getElementById('requestEmailError'); 
-        const requestContactEmail = document.getElementById('requestContactEmail'); 
-        const requestContactPhone = document.getElementById('requestContactPhone'); 
-        const requestModalLogo = document.getElementById('requestModalLogo'); 
-        const requestToast = document.getElementById('requestToast'); 
-        const requestToastMessage = document.getElementById('requestToastMessage'); 
-        const requestToastClose = document.getElementById('requestToastClose'); 
-        const requestTriggers = document.querySelectorAll('[data-open-request="true"]'); 
-        const defaultRequestLogo = defaultHeaderLogo; 
-        const requestSubmitDefaultText = requestSubmitButton ? requestSubmitButton.textContent : 'Отправить заявку'; 
+        const requestFileError = document.getElementById('requestFileError');
+        const requestFileProgress = document.getElementById('requestFileProgress');
+        const requestFileProgressBar = document.getElementById('requestFileProgressBar');
+        const requestSubmitButton = document.getElementById('requestSubmit');
+        const requestStatus = document.getElementById('requestStatus');
+        const requestNameError = document.getElementById('requestNameError');
+        const requestEmailError = document.getElementById('requestEmailError');
+        const requestPhoneError = document.getElementById('requestPhoneError');
+        const requestCommentError = document.getElementById('requestCommentError');
+        const requestContactEmail = document.getElementById('requestContactEmail');
+        const requestContactPhone = document.getElementById('requestContactPhone');
+        const requestModalLogo = document.getElementById('requestModalLogo');
+        const requestToast = document.getElementById('requestToast');
+        const requestToastMessage = document.getElementById('requestToastMessage');
+        const requestToastClose = document.getElementById('requestToastClose');
+        const requestTriggers = document.querySelectorAll('[data-open-request="true"]');
+        const defaultRequestLogo = defaultHeaderLogo;
+        const requestSubmitDefaultText = requestSubmitButton ? requestSubmitButton.textContent : 'Заказать консультацию';
         const requestToastDefaultMessage = requestToastMessage
             ? requestToastMessage.textContent
             : 'Ваша заявка отправлена, скоро с вами свяжутся наши специалисты.';
@@ -2463,7 +2467,13 @@
         } 
 
         function clearRequestErrors() { 
-            [requestNameError, requestEmailError, requestFileError].forEach(node => {
+            [
+                requestNameError,
+                requestEmailError,
+                requestPhoneError,
+                requestCommentError,
+                requestFileError
+            ].forEach(node => {
                 if (node) {
                     node.textContent = '';
                 }
@@ -2662,7 +2672,12 @@
 
             const nameValue = requestNameInput ? requestNameInput.value.trim() : '';
             const emailValue = requestEmailInput ? requestEmailInput.value.trim() : '';
+            const phoneValue = requestPhoneInput ? requestPhoneInput.value.trim() : '';
+            const commentValue = requestCommentInput ? requestCommentInput.value.trim() : '';
             const file = requestFileInput && requestFileInput.files ? requestFileInput.files[0] : null;
+
+            updateRequestFileUI(file);
+
             let hasError = false;
 
             if (!nameValue) {
@@ -2670,22 +2685,27 @@
                 hasError = true;
             }
 
-            if (!emailValue) {
-                setRequestFieldError(requestEmailInput, requestEmailError, 'Заполните это поле');
+            const hasContact = Boolean(emailValue) || Boolean(phoneValue);
+            if (!hasContact) {
+                const contactMessage = 'Укажите e-mail или телефон';
+                setRequestFieldError(requestEmailInput, requestEmailError, contactMessage);
+                setRequestFieldError(requestPhoneInput, requestPhoneError, contactMessage);
                 hasError = true;
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+            } else if (emailValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
                 setRequestFieldError(requestEmailInput, requestEmailError, 'Введите корректный e-mail');
                 hasError = true;
             }
 
-            if (file) {
-                updateRequestFileUI(file);
-                if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
-                    setRequestFieldError(requestFileInput, requestFileError, 'Файл слишком большой');
-                    hasError = true;
-                }
-            } else {
-                updateRequestFileUI(null);
+            if (file && file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+                setRequestFieldError(requestFileInput, requestFileError, 'Файл слишком большой');
+                hasError = true;
+            }
+
+            if (!commentValue && !file) {
+                const commentMessage = 'Добавьте комментарий или приложите файл';
+                setRequestFieldError(requestCommentInput, requestCommentError, commentMessage);
+                setRequestFieldError(requestFileInput, requestFileError, commentMessage);
+                hasError = true;
             }
 
             if (hasError) {
@@ -2720,6 +2740,12 @@
                         }
                         if (payload.errors.email) {
                             setRequestFieldError(requestEmailInput, requestEmailError, payload.errors.email);
+                        }
+                        if (payload.errors.phone) {
+                            setRequestFieldError(requestPhoneInput, requestPhoneError, payload.errors.phone);
+                        }
+                        if (payload.errors.comment) {
+                            setRequestFieldError(requestCommentInput, requestCommentError, payload.errors.comment);
                         }
                         if (payload.errors.attachment) {
                             setRequestFieldError(requestFileInput, requestFileError, payload.errors.attachment);
@@ -3446,10 +3472,47 @@
             requestForm.addEventListener('submit', handleRequestSubmit);
         }
 
-        if (requestFileInput) { 
+        if (requestFileInput) {
             requestFileInput.addEventListener('change', () => {
                 const file = requestFileInput.files && requestFileInput.files[0] ? requestFileInput.files[0] : null;
                 updateRequestFileUI(file);
+                if (file) {
+                    if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+                        setRequestFieldError(requestFileInput, requestFileError, 'Файл слишком большой');
+                    } else {
+                        setRequestFieldError(requestFileInput, requestFileError, '');
+                        setRequestFieldError(requestCommentInput, requestCommentError, '');
+                    }
+                } else {
+                    setRequestFieldError(requestFileInput, requestFileError, '');
+                }
+            });
+        }
+
+        if (requestEmailInput) {
+            requestEmailInput.addEventListener('input', () => {
+                if (requestEmailInput.value.trim()) {
+                    setRequestFieldError(requestEmailInput, requestEmailError, '');
+                    setRequestFieldError(requestPhoneInput, requestPhoneError, '');
+                }
+            });
+        }
+
+        if (requestPhoneInput) {
+            requestPhoneInput.addEventListener('input', () => {
+                if (requestPhoneInput.value.trim()) {
+                    setRequestFieldError(requestPhoneInput, requestPhoneError, '');
+                    setRequestFieldError(requestEmailInput, requestEmailError, '');
+                }
+            });
+        }
+
+        if (requestCommentInput) {
+            requestCommentInput.addEventListener('input', () => {
+                if (requestCommentInput.value.trim()) {
+                    setRequestFieldError(requestCommentInput, requestCommentError, '');
+                    setRequestFieldError(requestFileInput, requestFileError, '');
+                }
             });
         }
 

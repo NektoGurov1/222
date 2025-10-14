@@ -563,14 +563,17 @@ def send_request():
     if not name:
         errors["name"] = "Заполните это поле"
 
-    if not email:
-        errors["email"] = "Заполните это поле"
-    else:
-        if "@" not in email or "." not in email.split("@")[-1]:
-            errors["email"] = "Введите корректный e-mail"
+    has_contact = bool(email) or bool(phone)
+    if not has_contact:
+        contact_message = "Укажите e-mail или телефон"
+        errors["email"] = contact_message
+        errors["phone"] = contact_message
+    elif email and ("@" not in email or "." not in email.split("@")[-1]):
+        errors["email"] = "Введите корректный e-mail"
 
     file_storage = request.files.get("attachment")
     attachment_tuple = None
+    has_attachment = False
     if file_storage and file_storage.filename:
         file_storage.stream.seek(0, os.SEEK_END)
         size = file_storage.stream.tell()
@@ -583,11 +586,20 @@ def send_request():
                 file_storage.read(),
                 file_storage.mimetype or "application/octet-stream",
             )
+            has_attachment = True
+
+    if not comment and not has_attachment:
+        requirement_message = "Добавьте комментарий или приложите файл"
+        errors["comment"] = requirement_message
+        if "attachment" not in errors:
+            errors["attachment"] = requirement_message
 
     if errors:
         return jsonify({"error": "Некорректные данные", "errors": errors}), 400
 
-    parts = [f"Имя: {name}", f"E-mail: {email}"]
+    parts = [f"Имя: {name}"]
+    if email:
+        parts.append(f"E-mail: {email}")
     if phone:
         parts.append(f"Телефон: {phone}")
     if comment:
