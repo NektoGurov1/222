@@ -139,10 +139,13 @@
         .header-container {
             position: relative;
             display: grid;
-            grid-template-columns: auto minmax(220px, 1.2fr) minmax(480px, 2fr) auto auto auto;
-            grid-template-areas: "brand tagline nav phone cta toggle";
-            align-items: center;
+            grid-template-columns: auto minmax(220px, 1.2fr) minmax(480px, 2fr) auto auto;
+            grid-template-areas:
+                "brand tagline nav phone toggle"
+                "brand tagline nav cta toggle";
+            align-items: start;
             gap: clamp(8px, 1.2vw, 16px);
+            grid-auto-rows: auto;
         }
 
         .header-brand {
@@ -151,6 +154,7 @@
             align-items: center;
             justify-self: flex-start;
             min-width: 0;
+            align-self: center;
         }
 
         .header-tagline {
@@ -161,6 +165,7 @@
             text-align: left;
             min-width: clamp(200px, 18vw, 260px);
             color: rgba(255, 255, 255, 0.88);
+            align-self: center;
         }
 
         .header-tagline__link {
@@ -173,6 +178,9 @@
         .header-nav {
             grid-area: nav;
             min-width: 0;
+            justify-self: center;
+            align-self: center;
+            width: min(100%, clamp(520px, 58vw, 760px));
         }
 
         .header-nav__list {
@@ -327,15 +335,17 @@
             align-items: center;
             justify-content: flex-end;
             justify-self: end;
-            min-width: clamp(180px, 15vw, 240px);
+            align-self: start;
+            min-width: clamp(190px, 15vw, 240px);
             white-space: nowrap;
         }
 
         .header-cta {
             grid-area: cta;
             justify-self: end;
-            align-self: center;
+            align-self: start;
             white-space: nowrap;
+            margin-top: clamp(4px, 0.6vw, 10px);
         }
 
         @media (max-width: 1280px) {
@@ -417,6 +427,8 @@
             .header-cta {
                 font-size: clamp(11px, 0.4vw + 10px, 13px);
                 padding-inline: clamp(14px, 2.6vw, 22px);
+                margin-top: 0;
+                align-self: center;
             }
 
             .nav-toggle {
