@@ -138,50 +138,54 @@
 
         .header-container {
             position: relative;
-            display: flex;
+            display: grid;
+            grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+            grid-template-areas: "brand tagline nav phone cta";
             align-items: center;
-            justify-content: flex-start;
-            gap: clamp(14px, 2vw, 28px);
-            flex-wrap: nowrap;
+            column-gap: clamp(16px, 2.6vw, 36px);
         }
 
         .header-brand {
+            grid-area: brand;
             display: flex;
             align-items: center;
-            gap: clamp(10px, 1.6vw, 18px);
-            flex: 0 0 auto;
-            min-width: clamp(170px, 16vw, 220px);
+            justify-self: flex-start;
             isolation: isolate;
         }
 
         .header-tagline {
-            flex: 0 0 auto;
-            display: flex;
+            grid-area: tagline;
+            display: grid;
+            justify-items: flex-start;
             align-items: center;
-            justify-content: center;
-            padding: 0 clamp(8px, 1.6vw, 18px);
-            text-align: center;
-            color: rgba(255, 255, 255, 0.78);
-            letter-spacing: 0.06em;
-            white-space: nowrap;
-            font-weight: 600;
-            font-size: clamp(11px, 0.4vw + 10px, 13px);
+            text-align: left;
+            row-gap: 4px;
+            min-width: clamp(190px, 18vw, 260px);
+            padding-inline: clamp(6px, 1.4vw, 18px);
+            color: rgba(255, 255, 255, 0.86);
+        }
+
+        .header-tagline__link {
+            display: grid;
+            gap: 4px;
+            justify-items: inherit;
+            text-align: inherit;
+            color: inherit;
+            text-decoration: none;
         }
 
         .header-nav {
+            grid-area: nav;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 1 1 auto;
             min-width: 0;
-            margin-left: clamp(18px, 3vw, 48px);
-            margin-right: clamp(12px, 2vw, 32px);
         }
 
         .header-nav__list {
             display: flex;
             list-style: none;
-            gap: clamp(16px, 1.8vw, 28px);
+            gap: clamp(12px, 1.5vw, 24px);
             text-transform: uppercase;
             letter-spacing: 0.06em;
             justify-content: center;
@@ -259,8 +263,9 @@
             gap: 6px;
             cursor: pointer;
             transition: background-color 0.2s ease, border-color 0.2s ease;
-            margin-left: clamp(4px, 1vw, 16px);
+            margin-left: 0;
             flex-shrink: 0;
+            grid-area: toggle;
         }
 
         .nav-toggle:focus-visible {
@@ -297,46 +302,36 @@
         .logo {
             display: inline-flex;
             align-items: center;
-            gap: clamp(16px, 2.2vw, 24px);
+            justify-content: center;
             text-decoration: none;
             color: white;
             min-width: 0;
             flex-wrap: nowrap;
+            padding-right: clamp(4px, 1vw, 12px);
         }
 
         .logo img {
-            width: clamp(44px, 3.6vw, 50px);
-            height: clamp(44px, 3.6vw, 50px);
+            width: clamp(40px, 3.2vw, 48px);
+            height: clamp(40px, 3.2vw, 48px);
             flex-shrink: 0;
-            transform: translateX(clamp(-6px, -1vw, -12px));
-        }
-
-        .logo-text {
-            display: grid;
-            justify-items: flex-start;
-            text-align: left;
-            gap: 4px;
-            line-height: 1.05;
-            min-width: 0;
-            max-width: clamp(168px, 16vw, 224px);
-            padding-inline: clamp(4px, 1vw, 12px);
-            align-content: center;
+            transform: translateX(clamp(-4px, -0.6vw, -10px));
         }
 
         .logo-name {
-            font-size: clamp(16px, 0.96vw + 14px, 24px);
+            font-size: clamp(16px, 0.9vw + 14px, 22px);
             font-weight: 700;
             letter-spacing: 0.08em;
             white-space: nowrap;
+            color: #ffffff;
         }
 
         .logo-tagline {
-            font-size: clamp(10px, 0.5vw + 9px, 13px);
+            font-size: clamp(10px, 0.42vw + 9px, 13px);
             font-weight: 600;
             color: rgba(255, 255, 255, 0.72);
             text-transform: none;
             letter-spacing: 0.06em;
-            white-space: nowrap;
+            white-space: normal;
         }
 
         main section h1,
@@ -349,46 +344,72 @@
             user-select: none;
         }
 
-        .header-actions {
+        .header-phone {
+            grid-area: phone;
             display: flex;
             align-items: center;
-            gap: clamp(12px, 1.6vw, 22px);
             justify-content: flex-end;
-            margin-left: clamp(12px, 2vw, 32px);
-            flex: 0 0 auto;
-            min-width: clamp(210px, 20vw, 280px);
+            min-width: clamp(160px, 16vw, 220px);
+        }
+
+        .header-cta {
+            grid-area: cta;
+            justify-self: flex-end;
+            align-self: center;
         }
 
         @media (max-width: 1320px) {
             .header-container {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: clamp(16px, 3vw, 28px);
-            }
-
-            .header-brand {
-                order: 1;
-                justify-content: center;
+                column-gap: clamp(14px, 2.2vw, 28px);
             }
 
             .header-tagline {
-                order: 2;
-                flex: 1 1 100%;
-                justify-content: center;
+                min-width: clamp(170px, 22vw, 220px);
+                padding-inline: clamp(4px, 1vw, 10px);
+                justify-items: center;
+                text-align: center;
+            }
+
+            .header-nav__list {
+                gap: clamp(10px, 1.3vw, 18px);
+            }
+
+            .header-nav__list a {
+                font-size: clamp(11px, 0.3vw + 10px, 13px);
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .header-container {
+                grid-template-columns: auto minmax(0, 1fr) auto;
+                grid-template-areas:
+                    "brand nav nav"
+                    "tagline nav nav"
+                    "phone phone cta";
+                row-gap: clamp(12px, 2.4vw, 20px);
+            }
+
+            .header-brand {
+                justify-self: flex-start;
+            }
+
+            .header-tagline {
+                justify-self: flex-start;
+                justify-items: flex-start;
+                text-align: left;
             }
 
             .header-nav {
-                order: 3;
-                flex: 1 1 100%;
-                margin-inline: 0;
+                justify-content: flex-start;
             }
 
-            .header-actions {
-                order: 4;
-                width: 100%;
-                justify-content: center;
-                margin-left: 0;
-                min-width: unset;
+            .header-phone {
+                justify-content: flex-start;
+                min-width: auto;
+            }
+
+            .header-cta {
+                justify-self: flex-end;
             }
         }
 
@@ -1716,11 +1737,11 @@
 
         @media (max-width: 1200px) {
             .header-tagline {
-                display: none;
+                min-width: clamp(150px, 24vw, 210px);
             }
 
             .header-nav__list {
-                gap: clamp(16px, 1.6vw, 28px);
+                gap: clamp(12px, 1.8vw, 22px);
             }
         }
 
@@ -1731,44 +1752,56 @@
             }
 
             .header-container {
-                flex-wrap: wrap;
-                align-items: center;
-                gap: 16px 18px;
+                grid-template-columns: auto minmax(0, 1fr) auto;
+                grid-template-areas:
+                    "brand phone toggle"
+                    "tagline tagline tagline"
+                    "cta cta cta"
+                    "nav nav nav";
+                row-gap: clamp(14px, 4vw, 22px);
             }
 
             .header-brand {
-                order: 1;
+                justify-self: flex-start;
                 width: auto;
-                justify-content: flex-start;
-                min-width: 0;
             }
 
             .nav-toggle {
                 display: inline-flex;
-                order: 2;
-                margin-left: auto;
+                grid-area: toggle;
+                margin-left: 0;
+                justify-self: flex-end;
             }
 
-            .header-actions {
-                order: 3;
-                width: 100%;
-                justify-content: space-between;
-                flex-wrap: wrap;
-                gap: 14px;
-                margin-left: 0;
+            .header-tagline {
+                grid-area: tagline;
+                justify-self: center;
+                justify-items: center;
+                text-align: center;
+            }
+
+            .header-phone {
+                grid-area: phone;
+                justify-content: flex-end;
+                min-width: 0;
             }
 
             .header-nav {
-                order: 4;
+                grid-area: nav;
                 width: 100%;
                 justify-content: flex-start;
-                margin-inline: 0;
             }
 
             .header-nav__list {
                 align-items: flex-start;
                 justify-content: flex-start;
                 flex-wrap: wrap;
+            }
+
+            .header-cta {
+                grid-area: cta;
+                justify-self: stretch;
+                text-align: center;
             }
 
             .phone {
@@ -1791,18 +1824,26 @@
                 align-items: center;
             }
 
-            .header-actions {
-                justify-content: center;
-            }
-
             .logo img {
                 width: 40px;
                 height: 40px;
             }
 
-            .logo-text {
-                align-items: center;
+            .header-tagline {
+                justify-items: center;
                 text-align: center;
+            }
+
+            .header-tagline__link {
+                justify-items: center;
+            }
+
+            .header-phone {
+                justify-content: center;
+            }
+
+            .header-cta {
+                justify-self: center;
             }
 
             .hero h1 {
@@ -1878,13 +1919,15 @@
                 --section-inline: calc(clamp(16px, 6vw, 24px) * var(--scale-base));
             }
 
-            .header-actions {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
+            .header-phone {
+                justify-content: center;
             }
 
             .header-cta {
+                width: 100%;
+            }
+
+            .phone {
                 width: 100%;
             }
 
@@ -1941,13 +1984,13 @@
             <div class="header-brand">
                 <a href="#top" class="logo">
                     <img src="assets/logo-inline.svg" alt="Логотип Электроконструктив" loading="lazy" id="headerLogoImage">
-                    <div class="logo-text">
-                        <span class="logo-name">ЭЛЕКТРОКОНСТРУКТИВ</span>
-                    </div>
                 </a>
             </div>
             <div class="header-tagline">
-                <span class="logo-tagline">энергия надежных решений</span>
+                <a href="#top" class="header-tagline__link">
+                    <span class="logo-name">ЭЛЕКТРОКОНСТРУКТИВ</span>
+                    <span class="logo-tagline">энергия надежных решений</span>
+                </a>
             </div>
             <nav class="header-nav" id="siteNav" aria-hidden="false">
                 <ul class="header-nav__list">
@@ -1960,13 +2003,13 @@
                     <li><a href="#contacts">Контакты</a></li>
                 </ul>
             </nav>
-            <div class="header-actions">
+            <div class="header-phone">
                 <div class="phone">
                     <i class="fas fa-phone"></i>
                     <a href="tel:+74951234567" id="phoneLink">+7 (495) 123-45-67</a>
                 </div>
-                <a href="#request" class="header-cta" data-open-request="true">Заказать звонок</a>
             </div>
+            <a href="#request" class="header-cta" data-open-request="true">Заказать звонок</a>
             <button class="nav-toggle" type="button" aria-label="Переключить меню" aria-expanded="false" aria-controls="siteNav" aria-hidden="true">
                 <span class="nav-toggle__line"></span>
                 <span class="nav-toggle__line"></span>
