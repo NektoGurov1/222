@@ -632,10 +632,6 @@
             transition: opacity 0.4s ease;
         }
 
-        .hero[data-has-image="true"]::before {
-            opacity: 0.78;
-        }
-
         .hero::after {
             content: "";
             position: absolute;
@@ -784,47 +780,6 @@
             color: #ffffff;
         }
 
-        .hero-visual {
-            position: relative;
-            width: min(100%, 580px);
-            border-radius: clamp(22px, 4vw, 32px);
-            background: linear-gradient(135deg, rgba(255, 212, 0, 0.12), rgba(255, 212, 0, 0));
-            box-shadow: 0 40px 70px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            margin-inline: auto;
-        }
-
-        .hero-visual.is-hidden {
-            display: none;
-        }
-
-        .hero-visual::after {
-            content: "";
-            position: absolute;
-            inset: 12px;
-            border-radius: inherit;
-            pointer-events: none;
-        }
-
-        .hero-visual::before {
-            content: "";
-            position: absolute;
-            top: clamp(12px, 3vw, 28px);
-            left: clamp(12px, 3vw, 28px);
-            width: clamp(44px, 8vw, 72px);
-            height: clamp(44px, 8vw, 72px);
-            border-radius: 12px;
-            opacity: 0.65;
-        }
-
-        .hero-visual img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: clamp(16px, 3vw, 26px);
-            filter: saturate(1.05) contrast(1.05) brightness(1.02);
-        }
-
         @media (min-width: 720px) {
             .hero-highlights {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -834,7 +789,6 @@
 
         @media (min-width: 1100px) {
             .hero-grid {
-                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
                 justify-items: center;
                 text-align: center;
                 gap: clamp(40px, 6vw, 72px);
@@ -857,11 +811,6 @@
             .hero-highlights {
                 margin: clamp(20px, 3vw, 32px) auto 0;
                 justify-self: center;
-            }
-
-            .hero-visual {
-                justify-self: center;
-                margin-inline: auto;
             }
         }
 
@@ -2087,7 +2036,7 @@
     </header>
 
     <main id="top"> 
-        <section class="hero" id="hero" data-has-image="false">
+        <section class="hero" id="hero">
             <div class="container">
                 <div class="hero-grid">
                     <div class="hero-text">
@@ -2101,9 +2050,6 @@
                             <a href="#portfolio" class="btn-secondary">Наши проекты</a>
                         </div>
                         <ul class="hero-highlights is-hidden" id="heroHighlights" aria-live="polite" aria-label="Ключевые преимущества"></ul>
-                    </div>
-                    <div class="hero-visual is-hidden" id="heroVisualWrapper">
-                        <img src="" alt="Электромонтажные работы" id="heroVisual" loading="lazy" hidden>
                     </div>
                 </div>
             </div>
@@ -2319,7 +2265,6 @@
         const reviewsEndpoint = new URL('/api/reviews/external', window.location.origin).toString(); 
         const defaultHeaderLogo = 'assets/logo-inline.svg'; 
         const defaultHeroLogo = 'assets/logo-hero.svg';
-        const defaultHeroVisual = 'assets/hero-bg.svg';
         const PARTNERS_VISIBLE_COUNT = 5; 
         const DEFAULT_PARTNERS_INTERVAL_MS = 5000; 
         const MIN_PARTNERS_INTERVAL_MS = 1000; 
@@ -3029,37 +2974,6 @@
             }
 
             updateRequestLogo(branding);
-
-            const heroSection = document.getElementById('hero');
-            const heroVisual = document.getElementById('heroVisual');
-            const heroVisualWrapper = document.getElementById('heroVisualWrapper');
-            const heroImageSource = resolveAssetUrl(hero.image, defaultHeroVisual);
-
-            if (heroSection) {
-                if (heroImageSource) {
-                    heroSection.style.backgroundImage = `url(${heroImageSource})`;
-                    heroSection.dataset.hasImage = 'true';
-                } else {
-                    heroSection.style.removeProperty('background-image');
-                    heroSection.dataset.hasImage = 'false';
-                }
-            }
-
-            if (heroVisual) {
-                if (heroImageSource) {
-                    heroVisual.src = heroImageSource;
-                    heroVisual.removeAttribute('hidden');
-                    if (heroVisualWrapper) {
-                        heroVisualWrapper.classList.remove('is-hidden');
-                    }
-                } else {
-                    heroVisual.removeAttribute('src');
-                    heroVisual.setAttribute('hidden', 'true');
-                    if (heroVisualWrapper) {
-                        heroVisualWrapper.classList.add('is-hidden');
-                    }
-                }
-            }
 
             document.getElementById('heroTitle').textContent = hero.title || '';
             document.getElementById('heroSubtitle').textContent = hero.subtitle || '';
