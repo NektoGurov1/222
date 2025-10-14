@@ -146,10 +146,10 @@
                 "brand tagline nav phone toggle"
                 "brand tagline nav cta toggle";
             align-items: start;
-            column-gap: clamp(8px, 1.2vw, 16px);
+            column-gap: clamp(6px, 0.9vw, 12px);
             row-gap: clamp(4px, 0.8vw, 12px);
             grid-auto-rows: auto;
-            padding-inline: var(--section-inline);
+            padding-inline: calc(var(--section-inline) / 2);
         }
 
         .header-brand {
@@ -163,24 +163,28 @@
 
         .header-tagline {
             grid-area: tagline;
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             align-items: center;
-            gap: clamp(1px, 0.2vw, 3px);
+            justify-content: center;
+            gap: clamp(0px, 0.1vw, 2px);
             text-align: center;
-            min-width: clamp(180px, 15vw, 230px);
+            min-width: clamp(220px, 18vw, 264.8px);
+            max-width: 264.8px;
             color: rgba(255, 255, 255, 0.88);
             align-self: center;
         }
 
         .header-tagline__link {
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             align-items: center;
-            gap: clamp(1px, 0.2vw, 3px);
+            justify-content: center;
+            width: 100%;
             color: inherit;
             text-decoration: none;
             text-align: inherit;
+            gap: clamp(0px, 0.1vw, 2px);
         }
 
         .header-nav {
@@ -223,7 +227,7 @@
             color: rgba(255, 255, 255, 0.82);
             position: relative;
             transition: color var(--transition-base);
-            padding: clamp(6px, 0.8vw, 10px) clamp(12px, 1.3vw, 20px);
+            padding: 0;
         }
 
         .header-nav__list a:hover,
@@ -315,8 +319,12 @@
             flex-shrink: 0;
         }
 
-        .logo-name {
+        .logo-name,
+        .logo-tagline {
+            display: block;
+            width: 100%;
             font-size: clamp(15px, 0.7vw + 13px, 21px);
+            line-height: clamp(24px, 0.6vw + 24px, 33.1px);
             font-weight: 700;
             letter-spacing: 0.06em;
             white-space: nowrap;
@@ -324,13 +332,8 @@
         }
 
         .logo-tagline {
-            font-size: clamp(15px, 0.7vw + 13px, 21px);
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.82);
-            text-transform: none;
             letter-spacing: 0.04em;
-            white-space: nowrap;
-            line-height: 1.05;
         }
 
         main section h1,
@@ -368,7 +371,8 @@
             }
 
             .header-tagline {
-                min-width: clamp(170px, 22vw, 236px);
+                min-width: clamp(200px, 24vw, 264.8px);
+                max-width: 264.8px;
             }
 
             .header-nav__list a {
@@ -391,7 +395,8 @@
             }
 
             .header-tagline {
-                min-width: clamp(200px, 42vw, 280px);
+                min-width: clamp(200px, 42vw, 264.8px);
+                max-width: 264.8px;
             }
 
             .header-nav {
