@@ -163,6 +163,7 @@ cd "$VENDOR_DIR"/beautifulsoup4-4.10.0 && python3.6 setup.py install --user
 - `REQUEST_FROM_EMAIL` — адрес отправителя (по умолчанию `no-reply@elektrokonstruktiv.ru`).
 - `REQUEST_TARGET_EMAIL` — адрес получателя (по умолчанию `etl@elektrokonstruktiv.ru`).
 - `SENDMAIL_PATH` — путь к `sendmail`, если он отличается от `/usr/sbin/sendmail`. Приложение проверяет наличие бинарника перед отправкой и вернёт понятное сообщение, если утилита недоступна.
+- `SENDMAIL_TIMEOUT` — таймаут (в секундах) ожидания завершения `sendmail`. По умолчанию используется 15 секунд; увеличьте значение, если MTA обрабатывает письма дольше.
 
 ### Настройка отправки через sendmail
 1. Убедитесь, что пакет установлен: в контейнере он добавляется автоматически, на сервере выполните `sudo apt-get update && sudo apt-get install -y sendmail`.

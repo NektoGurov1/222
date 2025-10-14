@@ -35,6 +35,7 @@ DEFAULT_PASSWORD = os.getenv("ADMIN_PASSWORD", "1234")
 DEFAULT_REQUEST_EMAIL = os.getenv("REQUEST_TARGET_EMAIL", "etl@elektrokonstruktiv.ru")
 MAIL_FROM = os.getenv("REQUEST_FROM_EMAIL", "no-reply@elektrokonstruktiv.ru")
 MAX_ATTACHMENT_SIZE = int(os.getenv("MAX_ATTACHMENT_SIZE_BYTES", 20 * 1024 * 1024))
+SENDMAIL_TIMEOUT = float(os.getenv("SENDMAIL_TIMEOUT", "15"))
 COOKIE_TTL_SECONDS = 24 * 60 * 60
 COOKIE_SECURE = os.getenv("COOKIE_SECURE") in {"true", "1"}
 PORT = int(os.getenv("PORT", "9090"))
@@ -463,14 +464,22 @@ def send_email(message: EmailMessage) -> None:
             )
 
     try:
-        process = subprocess.Popen([sendmail_path, "-t", "-i"], stdin=subprocess.PIPE)
+        completed = subprocess.run(
+            [sendmail_path, "-t", "-i"],
+            input=message.as_bytes(),
+            check=False,
+            timeout=SENDMAIL_TIMEOUT,
+        )
     except FileNotFoundError as exc:
         raise RuntimeError(
             f"Не удалось запустить sendmail по пути '{sendmail_path}': {exc}"
         ) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise RuntimeError(
+            "Sendmail не завершился за установленный таймаут. Проверьте конфигурацию."
+        ) from exc
 
-    process.communicate(message.as_bytes())
-    if process.returncode not in (0, None):
+    if completed.returncode not in (0, None):
         raise RuntimeError("Sendmail вернул ненулевой код завершения")
 
 
