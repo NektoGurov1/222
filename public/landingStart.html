@@ -26,6 +26,7 @@
             --card-padding: calc(clamp(20px, 4vw, 32px) * var(--scale-base));
             --card-padding-tight: calc(clamp(16px, 3.2vw, 26px) * var(--scale-base));
             --transition-base: 0.3s ease;
+            --header-offset: clamp(72px, 10vw, 96px);
         }
 
         @media (min-width: 1600px) {
@@ -420,23 +421,25 @@
         header.is-compact-mode .header-container {
             grid-template-columns: auto minmax(0, 1fr) auto;
             grid-template-areas:
-                "brand tagline toggle"
-                "cta cta cta"
+                "brand cta toggle"
+                "tagline tagline tagline"
                 "nav nav nav";
-            align-items: start;
+            align-items: center;
             column-gap: clamp(6px, 1.4vw, 16px);
-            row-gap: clamp(4px, 1.2vw, 12px);
+            row-gap: clamp(2px, 0.8vw, 8px);
             padding-block: clamp(4px, 1vw, 8px);
+            width: min(100%, clamp(320px, 90vw, 720px));
         }
 
         header.is-compact-mode .header-brand,
         header.is-compact-mode .header-tagline {
-            align-self: flex-start;
+            align-self: center;
         }
 
         header.is-compact-mode .header-tagline {
-            justify-content: flex-start;
-            justify-self: flex-start;
+            justify-content: center;
+            justify-self: center;
+            margin-top: clamp(2px, 0.6vw, 6px);
         }
 
         header.is-compact-mode .header-phone {
@@ -448,8 +451,11 @@
         }
 
         header.is-compact-mode .header-cta {
-            justify-self: end;
+            justify-self: center;
+            align-self: center;
             width: auto;
+            min-width: auto;
+            max-width: 100%;
         }
 
         @media (max-width: 1280px) {
@@ -482,10 +488,10 @@
             header.is-compact-mode .header-container {
                 grid-template-columns: auto minmax(0, 1fr) auto;
                 grid-template-areas:
-                    "brand tagline toggle"
-                    "cta cta cta"
+                    "brand cta toggle"
+                    "tagline tagline tagline"
                     "nav nav nav";
-                row-gap: clamp(6px, 2.2vw, 16px);
+                row-gap: clamp(4px, 2vw, 14px);
             }
 
             header.is-compact-mode .header-tagline {
@@ -565,7 +571,7 @@
         }
 
         main {
-            margin-top: clamp(72px, 10vw, 96px);
+            margin-top: var(--header-offset);
         }
 
         main section {
@@ -2352,8 +2358,17 @@
         let requestToastTimer = null;
         let lastFocusedRequestTrigger = null;
         const NAV_COLLAPSE_BREAKPOINT = 1020;
-        const HEADER_GAP_THRESHOLD = 8;
+        const HEADER_TOUCH_TOLERANCE = 0.5;
+        const rootElement = document.documentElement;
         let isNavInCollapsedMode = null;
+
+        function updateHeaderOffset() {
+            if (!header || !rootElement) {
+                return;
+            }
+            const offset = header.offsetHeight;
+            rootElement.style.setProperty('--header-offset', `${Math.max(offset, 0)}px`);
+        }
 
         function updateSectionEmptyState(sectionId, hasContent) {
             const section = document.getElementById(sectionId);
@@ -2387,6 +2402,7 @@
             headerNav.classList.toggle('is-collapsed', collapsed);
             headerNav.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
             navToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            window.requestAnimationFrame(updateHeaderOffset);
         }
 
         function closeHeaderNav() {
@@ -2422,7 +2438,7 @@
                 return false;
             }
             const taglineRect = getVisibleRect(headerTaglineBlock) || getVisibleRect(headerBrand);
-            if (taglineRect && navRect.left - taglineRect.right < HEADER_GAP_THRESHOLD) {
+            if (taglineRect && navRect.left - taglineRect.right <= HEADER_TOUCH_TOLERANCE) {
                 return true;
             }
             const phoneRect = getVisibleRect(headerPhone);
@@ -2430,15 +2446,15 @@
             const rightCandidates = [phoneRect, ctaRect].filter(Boolean).map(rect => rect.left);
             if (rightCandidates.length > 0) {
                 const nearestRight = Math.min(...rightCandidates);
-                if (nearestRight - navRect.right < HEADER_GAP_THRESHOLD) {
+                if (nearestRight - navRect.right <= HEADER_TOUCH_TOLERANCE) {
                     return true;
                 }
             }
             const containerRect = headerContainer.getBoundingClientRect();
-            if (navRect.left - containerRect.left < HEADER_GAP_THRESHOLD) {
+            if (navRect.left - containerRect.left <= HEADER_TOUCH_TOLERANCE) {
                 return true;
             }
-            if (containerRect.right - navRect.right < HEADER_GAP_THRESHOLD) {
+            if (containerRect.right - navRect.right <= HEADER_TOUCH_TOLERANCE) {
                 return true;
             }
             return false;
@@ -2499,6 +2515,7 @@
                 navToggle.tabIndex = -1;
             }
             isNavInCollapsedMode = shouldCollapse;
+            updateHeaderOffset();
         }
 
         if (navToggle) {
@@ -2508,6 +2525,7 @@
                 }
                 const shouldCollapse = headerNav.classList.contains('is-collapsed');
                 setNavCollapsed(!shouldCollapse);
+                window.requestAnimationFrame(updateHeaderOffset);
             });
         }
 
@@ -2546,6 +2564,7 @@
         };
 
         window.addEventListener('resize', handleResize);
+        window.addEventListener('load', updateHeaderOffset);
         applyNavMode(true);
 
         function resolveAssetUrl(value, fallback) { 
