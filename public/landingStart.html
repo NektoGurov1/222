@@ -392,7 +392,7 @@
         main section li,
         main section span {
             cursor: default;
-            user-select: none;
+            user-select: text;
         }
 
         .header-phone {
@@ -402,8 +402,8 @@
             justify-content: flex-end;
             justify-self: end;
             align-self: center;
-            min-width: clamp(146px, 11vw, 190px);
-            max-width: clamp(160px, 12vw, 200px);
+            min-width: clamp(0px, 24vw, 180px);
+            max-width: clamp(140px, 34vw, 200px);
             white-space: nowrap;
         }
 
@@ -413,8 +413,8 @@
             align-self: center;
             white-space: nowrap;
             margin-top: 0;
-            min-width: clamp(146px, 11vw, 190px);
-            max-width: clamp(160px, 12vw, 200px);
+            min-width: clamp(0px, 28vw, 190px);
+            max-width: clamp(150px, 40vw, 220px);
         }
 
         header.is-compact-mode .header-container {
@@ -1908,6 +1908,9 @@
 
             .partners-window {
                 width: 100%;
+                max-width: 100%;
+                flex: 0 1 auto;
+                min-height: auto;
             }
 
             .partners-nav {
