@@ -1707,19 +1707,20 @@
 
         .footer-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: clamp(24px, 4vw, 36px);
             width: 100%;
             margin: 0 auto;
-            align-items: stretch;
-            justify-items: start;
+            align-items: start;
+            justify-items: stretch;
         }
 
         .footer-col {
-            display: grid;
-            gap: clamp(4px, 0.9vw, 10px);
-            padding: clamp(4px, 1.2vw, 12px) 0;
-            align-content: start;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: clamp(6px, 1vw, 14px);
+            text-align: left;
         }
 
         .footer-col.is-hidden {
@@ -1727,41 +1728,35 @@
         }
 
         .footer-col h3 {
-            margin-bottom: clamp(4px, 0.9vw, 10px);
+            margin: 0;
+            font-weight: 700;
         }
 
-        .footer-col h3 + * {
-            margin-top: 0;
+        .footer-col__body {
+            display: grid;
+            gap: clamp(6px, 1vw, 12px);
+            width: 100%;
+        }
+
+        .footer-col__body > * {
+            margin: 0;
         }
 
         .footer-contact {
             display: grid;
-            gap: clamp(4px, 0.8vw, 10px);
+            gap: clamp(6px, 1vw, 12px);
+            width: 100%;
         }
 
         .footer-contact p {
             margin: 0;
             display: flex;
             align-items: center;
-            gap: clamp(6px, 1vw, 10px);
+            gap: clamp(6px, 1vw, 12px);
         }
 
-        @media (min-width: 1200px) {
-            .footer-col:first-child p {
-                width: 239.614px;
-                min-height: 28.409px;
-            }
-
-            .footer-col:nth-child(2) h3 {
-                width: 179.42px;
-                line-height: 28.409px;
-                padding-left: 40px;
-            }
-
-            .footer-col:nth-child(3) .footer-contact {
-                width: 249.275px;
-                min-height: 94.2px;
-            }
+        .footer-contact i {
+            flex-shrink: 0;
         }
 
         .footer-col ul {
@@ -1769,7 +1764,67 @@
             margin: 0;
             padding: 0;
             display: grid;
-            gap: clamp(4px, 0.8vw, 10px);
+            gap: clamp(6px, 1vw, 12px);
+            width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .footer-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-col {
+                width: 100%;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+                padding-block: clamp(12px, 5vw, 18px);
+            }
+
+            .footer-col:last-child {
+                border-bottom: none;
+            }
+
+            .footer-col h3 {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: clamp(8px, 3vw, 16px);
+                cursor: pointer;
+                position: relative;
+                padding-right: clamp(12px, 5vw, 24px);
+            }
+
+            .footer-col h3::after {
+                content: '';
+                width: 10px;
+                height: 10px;
+                border-right: 2px solid currentColor;
+                border-bottom: 2px solid currentColor;
+                transform: rotate(45deg);
+                transition: transform 0.2s ease;
+            }
+
+            .footer-col.is-expanded h3::after {
+                transform: rotate(-135deg);
+            }
+
+            .footer-col.is-collapsed h3::after {
+                transform: rotate(45deg);
+            }
+
+            .footer-col[data-expanded="false"] .footer-col__body {
+                display: none;
+            }
+
+            .footer-col__body {
+                padding-top: clamp(8px, 3vw, 14px);
+            }
         }
 
         .footer-col a { 
@@ -2382,6 +2437,44 @@
         const HEADER_TOUCH_TOLERANCE = 0.5;
         const rootElement = document.documentElement;
         let isNavInCollapsedMode = null;
+        const footerColumns = Array.from(document.querySelectorAll('.footer-col'));
+        const FOOTER_ACCORDION_BREAKPOINT = 768;
+        let footerAccordionActive = false;
+
+        footerColumns.forEach((column, index) => {
+            const heading = column.querySelector('h3');
+            if (!heading) {
+                return;
+            }
+            let body = column.querySelector('.footer-col__body');
+            if (!body) {
+                body = document.createElement('div');
+                body.className = 'footer-col__body';
+                const fragment = document.createDocumentFragment();
+                Array.from(column.children).forEach(child => {
+                    if (child !== heading && child !== body) {
+                        fragment.appendChild(child);
+                    }
+                });
+                body.appendChild(fragment);
+                column.appendChild(body);
+            }
+            if (!body.id) {
+                body.id = `footer-col-body-${index + 1}`;
+            }
+            heading.setAttribute('data-footer-body', body.id);
+        });
+
+        footerColumns.forEach(column => {
+            const heading = column.querySelector('h3');
+            if (!heading) {
+                return;
+            }
+            heading.addEventListener('click', handleFooterHeadingClick);
+            heading.addEventListener('keydown', handleFooterHeadingKeydown);
+            heading.addEventListener('pointerenter', handleFooterHeadingPointerEnter);
+            heading.addEventListener('mouseenter', handleFooterHeadingMouseEnter);
+        });
 
         function updateHeaderOffset() {
             if (!header || !rootElement) {
@@ -2413,7 +2506,145 @@
                 return;
             }
             navItem.classList.toggle('is-hidden', !shouldShow);
-            window.requestAnimationFrame(() => applyNavMode(false));
+            window.requestAnimationFrame(() => {
+                applyNavMode(false);
+                applyFooterAccordion(false);
+            });
+        }
+
+        function setFooterColumnState(column, expanded) {
+            if (!column) {
+                return;
+            }
+            const heading = column.querySelector('h3');
+            const body = column.querySelector('.footer-col__body');
+            const isExpanded = Boolean(expanded);
+            column.dataset.expanded = isExpanded ? 'true' : 'false';
+            column.classList.toggle('is-expanded', isExpanded);
+            column.classList.toggle('is-collapsed', !isExpanded);
+            if (heading) {
+                heading.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+            }
+            if (body) {
+                body.hidden = footerAccordionActive ? !isExpanded : false;
+                body.setAttribute('aria-hidden', !footerAccordionActive || isExpanded ? 'false' : 'true');
+            }
+        }
+
+        function openFooterColumn(column) {
+            if (!footerAccordionActive || !column) {
+                return;
+            }
+            footerColumns.forEach(item => {
+                if (item !== column) {
+                    setFooterColumnState(item, false);
+                }
+            });
+            setFooterColumnState(column, true);
+        }
+
+        function toggleFooterColumn(column) {
+            if (!footerAccordionActive || !column) {
+                return;
+            }
+            const isExpanded = column.dataset.expanded === 'true';
+            if (isExpanded) {
+                setFooterColumnState(column, false);
+            } else {
+                openFooterColumn(column);
+            }
+        }
+
+        function handleFooterHeadingClick(event) {
+            if (!footerAccordionActive) {
+                return;
+            }
+            event.preventDefault();
+            const heading = event.currentTarget;
+            const column = heading ? heading.closest('.footer-col') : null;
+            if (!column) {
+                return;
+            }
+            toggleFooterColumn(column);
+        }
+
+        function handleFooterHeadingKeydown(event) {
+            if (!footerAccordionActive) {
+                return;
+            }
+            if (event.key !== 'Enter' && event.key !== ' ') {
+                return;
+            }
+            event.preventDefault();
+            const heading = event.currentTarget;
+            const column = heading ? heading.closest('.footer-col') : null;
+            if (!column) {
+                return;
+            }
+            toggleFooterColumn(column);
+        }
+
+        function handleFooterHeadingPointerEnter(event) {
+            if (!footerAccordionActive) {
+                return;
+            }
+            if (event.pointerType && event.pointerType === 'touch') {
+                return;
+            }
+            const heading = event.currentTarget;
+            const column = heading ? heading.closest('.footer-col') : null;
+            if (!column) {
+                return;
+            }
+            openFooterColumn(column);
+        }
+
+        function handleFooterHeadingMouseEnter(event) {
+            if (!footerAccordionActive) {
+                return;
+            }
+            const heading = event.currentTarget;
+            const column = heading ? heading.closest('.footer-col') : null;
+            if (!column) {
+                return;
+            }
+            openFooterColumn(column);
+        }
+
+        function applyFooterAccordion(force = false) {
+            const shouldEnable = window.innerWidth <= FOOTER_ACCORDION_BREAKPOINT;
+            if (!force && shouldEnable === footerAccordionActive) {
+                return;
+            }
+            footerAccordionActive = shouldEnable;
+            footerColumns.forEach(column => {
+                const heading = column.querySelector('h3');
+                const body = column.querySelector('.footer-col__body');
+                if (!heading || !body) {
+                    return;
+                }
+                if (shouldEnable) {
+                    heading.setAttribute('role', 'button');
+                    heading.setAttribute('aria-controls', body.id);
+                    heading.setAttribute('tabindex', '0');
+                    const isExpanded = column.dataset.expanded === 'true';
+                    setFooterColumnState(column, isExpanded);
+                } else {
+                    heading.removeAttribute('role');
+                    heading.removeAttribute('aria-controls');
+                    heading.removeAttribute('aria-expanded');
+                    heading.removeAttribute('tabindex');
+                    column.removeAttribute('data-expanded');
+                    column.classList.remove('is-expanded', 'is-collapsed');
+                    body.hidden = false;
+                    body.setAttribute('aria-hidden', 'false');
+                }
+            });
+            if (!shouldEnable) {
+                footerColumns.forEach(column => {
+                    column.classList.remove('is-expanded', 'is-collapsed');
+                });
+            }
         }
 
         function setNavCollapsed(collapsed) {
@@ -2584,11 +2815,15 @@
         });
 
         const handleResize = () => {
-            window.requestAnimationFrame(() => applyNavMode(false));
+            window.requestAnimationFrame(() => {
+                applyNavMode(false);
+                applyFooterAccordion(false);
+            });
         };
 
         window.addEventListener('resize', handleResize);
         window.addEventListener('load', updateHeaderOffset);
+        applyFooterAccordion(true);
         applyNavMode(true);
 
         function resolveAssetUrl(value, fallback) { 
