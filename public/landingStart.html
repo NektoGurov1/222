@@ -142,8 +142,8 @@
             position: relative;
             display: grid;
             width: min(100%, clamp(320px, 98vw, 1500px));
-            grid-template-columns: minmax(156px, 1fr) minmax(480px, 2.6fr) minmax(156px, 0.9fr) clamp(36px, 3.2vw, 56px) minmax(220px, 1.2fr) auto;
-            grid-template-areas: "cta nav phone brand tagline toggle";
+            grid-template-columns: clamp(36px, 3.2vw, 56px) minmax(220px, 1.2fr) minmax(480px, 2.6fr) minmax(156px, 0.9fr) minmax(156px, 1fr) auto;
+            grid-template-areas: "brand tagline nav phone cta toggle";
             align-items: center;
             column-gap: clamp(4px, 0.8vw, 10px);
             row-gap: clamp(2px, 0.6vw, 8px);
@@ -156,7 +156,7 @@
             grid-area: brand;
             display: flex;
             align-items: center;
-            justify-self: center;
+            justify-self: start;
             min-width: 0;
             align-self: center;
         }
@@ -401,7 +401,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            justify-self: center;
+            justify-self: end;
             align-self: center;
             min-width: clamp(0px, 24vw, 180px);
             max-width: clamp(140px, 34vw, 200px);
@@ -410,7 +410,7 @@
 
         .header-cta {
             grid-area: cta;
-            justify-self: start;
+            justify-self: end;
             align-self: center;
             white-space: nowrap;
             margin-top: 0;
