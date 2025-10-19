@@ -206,7 +206,14 @@
     "schedule": "Пн-Пт: 9:00 - 19:00"
   },
   "request": {
-    "targetEmail": "etl@elektrokonstruktiv.ru"
+    "targetEmail": "etl@elektrokonstruktiv.ru",
+    "smtp": {
+      "host": "",
+      "port": null,
+      "security": "starttls",
+      "username": "",
+      "password": ""
+    }
   },
   "branding": {
     "headerLogo": "assets/logo-inline.svg",

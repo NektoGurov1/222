@@ -2,9 +2,7 @@ import os
 import json
 import hashlib
 import re
-import shutil
 import smtplib
-import subprocess
 from collections import deque
 from datetime import datetime
 from email.message import EmailMessage
@@ -35,7 +33,6 @@ DEFAULT_PASSWORD = os.getenv("ADMIN_PASSWORD", "1234")
 DEFAULT_REQUEST_EMAIL = os.getenv("REQUEST_TARGET_EMAIL", "etl@elektrokonstruktiv.ru")
 MAIL_FROM = os.getenv("REQUEST_FROM_EMAIL", "no-reply@elektrokonstruktiv.ru")
 MAX_ATTACHMENT_SIZE = int(os.getenv("MAX_ATTACHMENT_SIZE_BYTES", 20 * 1024 * 1024))
-SENDMAIL_TIMEOUT = float(os.getenv("SENDMAIL_TIMEOUT", "15"))
 COOKIE_TTL_SECONDS = 24 * 60 * 60
 COOKIE_SECURE = os.getenv("COOKIE_SECURE") in {"true", "1"}
 PORT = int(os.getenv("PORT", "9090"))
@@ -428,59 +425,104 @@ def create_email_message(subject: str, text: str, html: str, attachment, recipie
     return message
 
 
-def send_email(message: EmailMessage) -> None:
-    host = os.getenv("SMTP_HOST")
+def normalise_smtp_settings(raw_settings: Any) -> Dict[str, Any]:
+    if not isinstance(raw_settings, dict):
+        return {}
+
+    result: Dict[str, Any] = {}
+
+    host = clean_whitespace(raw_settings.get("host"))
     if host:
-        port = int(os.getenv("SMTP_PORT", "587"))
-        username = os.getenv("SMTP_USER")
-        password = os.getenv("SMTP_PASSWORD")
-        secure = os.getenv("SMTP_SECURE") in {"true", "1"}
-        if secure:
-            with smtplib.SMTP_SSL(host, port) as server:
-                if username and password:
-                    server.login(username, password)
-                server.send_message(message)
+        result["host"] = host
+
+    port_value = raw_settings.get("port")
+    if port_value not in (None, ""):
+        try:
+            result["port"] = int(str(port_value).strip())
+        except (TypeError, ValueError):
+            pass
+
+    security_value = raw_settings.get("security")
+    if isinstance(security_value, str):
+        security = security_value.strip().lower()
+        if security in {"none", "starttls", "ssl"}:
+            result["security"] = security
+
+    username = raw_settings.get("username")
+    if username is not None:
+        result["username"] = clean_whitespace(username)
+
+    password = raw_settings.get("password")
+    if password is not None:
+        result["password"] = str(password)
+
+    return result
+
+
+def send_email(message: EmailMessage, smtp_settings: Dict[str, Any] = None) -> None:
+    smtp_settings = smtp_settings or {}
+    host = clean_whitespace(
+        smtp_settings.get("host")
+        or os.getenv("SMTP_HOST", "")
+    )
+    if not host:
+        raise RuntimeError(
+            "SMTP-сервер не настроен. Укажите адрес сервера в панели управления или через переменную окружения SMTP_HOST."
+        )
+
+    port_value = smtp_settings.get("port") or os.getenv("SMTP_PORT") or "587"
+    try:
+        port = int(str(port_value).strip())
+    except (TypeError, ValueError):
+        raise RuntimeError("Некорректное значение порта SMTP. Проверьте настройки.")
+
+    security_raw = smtp_settings.get("security")
+    if security_raw is None:
+        security_raw = os.getenv("SMTP_SECURITY")
+    if security_raw is None:
+        security_raw = os.getenv("SMTP_SECURE")
+
+    if security_raw is None:
+        security = "starttls"
+    else:
+        security_candidate = str(security_raw).strip().lower()
+        if security_candidate in {"none", "starttls", "ssl"}:
+            security = security_candidate
+        elif security_candidate in {"true", "1", "yes", "starttls", "tls"}:
+            security = "starttls"
+        elif security_candidate in {"ssl/tls", "smtps"}:
+            security = "ssl"
+        elif security_candidate in {"false", "0", "no"}:
+            security = "none"
         else:
-            with smtplib.SMTP(host, port) as server:
-                try:
-                    server.starttls()
-                    server.ehlo()
-                except smtplib.SMTPException:
-                    pass
-                if username and password:
-                    server.login(username, password)
-                server.send_message(message)
+            security = "starttls"
+
+    username = smtp_settings.get("username")
+    if username is None:
+        username = os.getenv("SMTP_USER")
+
+    password = smtp_settings.get("password")
+    if password is None:
+        password = os.getenv("SMTP_PASSWORD")
+
+    if security == "ssl":
+        with smtplib.SMTP_SSL(host, port) as server:
+            if username and password:
+                server.login(username, password)
+            server.send_message(message)
         return
 
-    configured_path = os.getenv("SENDMAIL_PATH", "/usr/sbin/sendmail")
-    sendmail_path = configured_path
-    if not Path(sendmail_path).exists():
-        resolved = shutil.which(sendmail_path)
-        if resolved:
-            sendmail_path = resolved
-        else:
-            raise RuntimeError(
-                f"Не найден sendmail по пути '{configured_path}'. Убедитесь, что пакет sendmail установлен в образе."
-            )
-
-    try:
-        completed = subprocess.run(
-            [sendmail_path, "-t", "-i"],
-            input=message.as_bytes(),
-            check=False,
-            timeout=SENDMAIL_TIMEOUT,
-        )
-    except FileNotFoundError as exc:
-        raise RuntimeError(
-            f"Не удалось запустить sendmail по пути '{sendmail_path}': {exc}"
-        ) from exc
-    except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(
-            "Sendmail не завершился за установленный таймаут. Проверьте конфигурацию."
-        ) from exc
-
-    if completed.returncode not in (0, None):
-        raise RuntimeError("Sendmail вернул ненулевой код завершения")
+    with smtplib.SMTP(host, port) as server:
+        if security == "starttls":
+            try:
+                server.ehlo()
+                server.starttls()
+                server.ehlo()
+            except smtplib.SMTPException:
+                pass
+        if username and password:
+            server.login(username, password)
+        server.send_message(message)
 
 
 @app.errorhandler(RequestEntityTooLarge)
@@ -642,6 +684,7 @@ def send_request():
     request_settings = raw_request_settings if isinstance(raw_request_settings, dict) else {}
     raw_contacts = content_snapshot.get("contacts")
     contacts_settings = raw_contacts if isinstance(raw_contacts, dict) else {}
+    smtp_settings = normalise_smtp_settings(request_settings.get("smtp"))
     target_email = next(
         (
             candidate.strip()
@@ -664,7 +707,7 @@ def send_request():
     )
 
     try:
-        send_email(message)
+        send_email(message, smtp_settings=smtp_settings)
     except Exception as exc:
         app.logger.error("Не удалось отправить заявку: %s", exc)
         return jsonify({"error": "Не удалось отправить заявку. Повторите попытку позже."}), 500

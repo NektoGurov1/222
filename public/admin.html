@@ -105,6 +105,9 @@
 
         input[type="text"],
         input[type="url"],
+        input[type="number"],
+        input[type="password"],
+        select,
         textarea {
             width: 100%;
             padding: 10px;
@@ -191,6 +194,33 @@
         .controls button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-field label {
+            margin-top: 0;
+        }
+
+        .smtp-settings {
+            margin-top: 25px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .smtp-settings h3 {
+            margin: 0 0 12px;
+            font-size: 18px;
+        }
+
+        .smtp-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
         }
 
         .status {
@@ -375,6 +405,35 @@
             <h2>Заявки</h2>
             <label for="requestEmail">E-mail для заявок</label>
             <input type="text" id="requestEmail">
+            <div class="smtp-settings">
+                <h3>SMTP-настройки</h3>
+                <div class="smtp-grid">
+                    <div class="form-field">
+                        <label for="requestSmtpHost">Сервер (SMTP-хост)</label>
+                        <input type="text" id="requestSmtpHost" placeholder="smtp.example.com">
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpPort">Порт</label>
+                        <input type="number" id="requestSmtpPort" min="1" placeholder="587">
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpSecurity">Шифрование</label>
+                        <select id="requestSmtpSecurity">
+                            <option value="starttls">STARTTLS</option>
+                            <option value="ssl">SSL/TLS</option>
+                            <option value="none">Без шифрования</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpUser">Логин</label>
+                        <input type="text" id="requestSmtpUser" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpPassword">Пароль</label>
+                        <input type="password" id="requestSmtpPassword" autocomplete="new-password">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="section">
@@ -397,6 +456,11 @@
         const portfolioList = document.getElementById('portfolioList');
         const reviewsList = document.getElementById('reviewsList');
         const requestEmailInput = document.getElementById('requestEmail');
+        const requestSmtpHostInput = document.getElementById('requestSmtpHost');
+        const requestSmtpPortInput = document.getElementById('requestSmtpPort');
+        const requestSmtpSecurityInput = document.getElementById('requestSmtpSecurity');
+        const requestSmtpUserInput = document.getElementById('requestSmtpUser');
+        const requestSmtpPasswordInput = document.getElementById('requestSmtpPassword');
         const heroImageInput = document.getElementById('heroImage');
         const aboutImageInput = document.getElementById('aboutImage');
 
@@ -417,6 +481,58 @@
         };
 
         const previewBindings = new Map();
+
+        function normaliseSmtpSecurity(value) {
+            if (typeof value !== 'string') {
+                return 'starttls';
+            }
+            const lower = value.trim().toLowerCase();
+            return ['starttls', 'ssl', 'none'].includes(lower) ? lower : 'starttls';
+        }
+
+        function setSmtpFormValues(settings) {
+            const smtpSettings = settings && typeof settings === 'object' ? settings : {};
+            if (requestSmtpHostInput) {
+                requestSmtpHostInput.value = typeof smtpSettings.host === 'string' ? smtpSettings.host : '';
+            }
+            if (requestSmtpPortInput) {
+                const portValue = smtpSettings.port;
+                requestSmtpPortInput.value = portValue === undefined || portValue === null || portValue === ''
+                    ? ''
+                    : String(portValue);
+            }
+            if (requestSmtpSecurityInput) {
+                requestSmtpSecurityInput.value = normaliseSmtpSecurity(smtpSettings.security);
+            }
+            if (requestSmtpUserInput) {
+                requestSmtpUserInput.value = typeof smtpSettings.username === 'string' ? smtpSettings.username : '';
+            }
+            if (requestSmtpPasswordInput) {
+                requestSmtpPasswordInput.value = typeof smtpSettings.password === 'string' ? smtpSettings.password : '';
+            }
+        }
+
+        function readSmtpSettingsFromForm() {
+            const result = {
+                host: requestSmtpHostInput ? requestSmtpHostInput.value.trim() : '',
+                port: null,
+                security: requestSmtpSecurityInput ? normaliseSmtpSecurity(requestSmtpSecurityInput.value) : 'starttls',
+                username: requestSmtpUserInput ? requestSmtpUserInput.value.trim() : '',
+                password: requestSmtpPasswordInput ? requestSmtpPasswordInput.value : ''
+            };
+
+            if (requestSmtpPortInput) {
+                const raw = requestSmtpPortInput.value.trim();
+                if (raw) {
+                    const parsed = Number.parseInt(raw, 10);
+                    if (!Number.isNaN(parsed)) {
+                        result.port = parsed;
+                    }
+                }
+            }
+
+            return result;
+        }
 
         function resolvePreviewUrl(value) {
             const candidate = (value || '').trim();
@@ -706,8 +822,9 @@
             document.getElementById('contactSchedule').value = data.contacts?.schedule || '';
             lastLoadedRequest = data.request && typeof data.request === 'object' ? { ...data.request } : {};
             if (requestEmailInput) {
-                requestEmailInput.value = lastLoadedRequest.targetEmail || '';
+                requestEmailInput.value = typeof lastLoadedRequest.targetEmail === 'string' ? lastLoadedRequest.targetEmail : '';
             }
+            setSmtpFormValues(lastLoadedRequest.smtp);
 
             refreshAllImagePreviews();
         }
@@ -753,7 +870,8 @@
                 },
                 request: {
                     ...lastLoadedRequest,
-                    targetEmail: requestEmailInput ? requestEmailInput.value.trim() : ''
+                    targetEmail: requestEmailInput ? requestEmailInput.value.trim() : '',
+                    smtp: readSmtpSettingsFromForm()
                 }
             };
         }
