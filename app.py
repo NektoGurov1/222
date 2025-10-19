@@ -44,6 +44,11 @@ EXTERNAL_REVIEWS_TIMEOUT = float(os.getenv("EXTERNAL_REVIEWS_TIMEOUT", "10"))
 EXTERNAL_REVIEWS_LIMIT = int(os.getenv("EXTERNAL_REVIEWS_LIMIT", "20"))
 EXTERNAL_REVIEWS_DISABLE_PROXY = os.getenv("EXTERNAL_REVIEWS_DISABLE_PROXY") in {"1", "true", "True"}
 
+MOBILE_USER_AGENT_PATTERN = re.compile(
+    r"(android|iphone|ipod|ipad|blackberry|windows phone|opera mini|mobile)",
+    re.IGNORECASE,
+)
+
 def ensure_directory(path: Path) -> None:
     if not path.exists():
         path.mkdir(parents=True, exist_ok=True)
@@ -116,6 +121,17 @@ def parse_rating(value: Any) -> float:
     if number < 0:
         return None
     return min(number, 5.0)
+
+
+def is_mobile_user_agent(user_agent: str) -> bool:
+    if not user_agent:
+        return False
+    if MOBILE_USER_AGENT_PATTERN.search(user_agent):
+        lower = user_agent.lower()
+        if "macintosh" in lower and "ipad" not in lower:
+            return False
+        return True
+    return False
 
 
 def normalise_review_entry(entry: Any) -> Dict[str, Any]:
@@ -532,7 +548,15 @@ def handle_large_file(_):
 
 @app.route("/")
 def serve_root():
+    user_agent = request.headers.get("User-Agent", "") or ""
+    if is_mobile_user_agent(user_agent):
+        return redirect("/mobile", code=302)
     return send_from_directory(str(PUBLIC_DIR), "landingStart.html")
+
+
+@app.route("/mobile")
+def serve_mobile():
+    return send_from_directory(str(PUBLIC_DIR), "mobile.html")
 
 
 @app.route("/login")

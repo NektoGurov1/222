@@ -215,6 +215,61 @@
       "password": ""
     }
   },
+  "mobile": {
+    "hero": {
+      "title": "Профессиональные электромонтажные работы",
+      "subtitle": "Работаем по Москве и области. Быстро, безопасно, с гарантией до 5 лет.",
+      "primaryAction": "Оставить заявку",
+      "secondaryAction": "Позвонить"
+    },
+    "highlights": [
+      {
+        "icon": "fas fa-bolt",
+        "title": "15 лет опыта",
+        "description": "Сертифицированные инженеры и точные сметы"
+      },
+      {
+        "icon": "fas fa-shield-alt",
+        "title": "Гарантия до 5 лет",
+        "description": "Фиксируем обязательства в договоре"
+      },
+      {
+        "icon": "fas fa-clock",
+        "title": "Быстрый старт",
+        "description": "Выезд на объект в день обращения"
+      }
+    ],
+    "services": [
+      {
+        "icon": "fas fa-tools",
+        "title": "Электромонтаж",
+        "description": "Монтаж и ремонт электропроводки"
+      },
+      {
+        "icon": "fas fa-lightbulb",
+        "title": "Освещение",
+        "description": "Проектирование и установка света"
+      },
+      {
+        "icon": "fas fa-bolt",
+        "title": "Заземление",
+        "description": "Контуры заземления и молниезащита"
+      },
+      {
+        "icon": "fas fa-drafting-compass",
+        "title": "Проектирование",
+        "description": "Расчёт нагрузок и подготовка схем"
+      }
+    ],
+    "contact": {
+      "title": "Свяжитесь с нами",
+      "phone": "+7 (495) 123-45-67",
+      "email": "etl@elektrokonstruktiv.ru",
+      "address": "Москва, ул. Электромонтажная, 15",
+      "schedule": "Пн-Пт: 9:00 - 19:00",
+      "cta": "Получить консультацию"
+    }
+  },
   "branding": {
     "headerLogo": "assets/logo-inline.svg",
     "heroLogo": "assets/logo-hero.svg"
