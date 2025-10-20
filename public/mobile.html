@@ -32,6 +32,8 @@
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
+            scroll-behavior: smooth;
+            --call-fab-offset: clamp(18px, 5vw, 32px);
         }
 
         a {
@@ -260,16 +262,19 @@
         .scroll-progress {
             position: fixed;
             top: 50%;
-            right: clamp(10px, 4.5vw, 22px);
+            right: max(4px, env(safe-area-inset-right) + 4px);
             transform: translateY(-50%);
             display: grid;
-            gap: 12px;
-            align-items: center;
+            justify-items: center;
+            align-items: start;
+            width: clamp(32px, 10vw, 44px);
+            pointer-events: none;
             z-index: 85;
         }
 
         .scroll-progress__track {
             position: relative;
+            grid-area: 1 / 1;
             width: 6px;
             height: clamp(140px, 45vh, 260px);
             background: rgba(255, 255, 255, 0.18);
@@ -280,27 +285,33 @@
         .scroll-progress__fill {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(255, 212, 0, 0.2) 0%, var(--secondary) 100%);
+            background: linear-gradient(180deg, rgba(255, 212, 0, 0.22) 0%, var(--secondary) 100%);
             transform: scaleY(0);
             transform-origin: bottom;
             transition: transform 0.2s ease-out;
+            will-change: transform;
         }
 
         .scroll-progress__icon {
+            grid-area: 1 / 1;
+            align-self: start;
+            transform: translateY(-55%);
             width: clamp(38px, 12vw, 48px);
             height: clamp(38px, 12vw, 48px);
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(17, 17, 17, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             display: grid;
             place-items: center;
-            color: #8b8b8b;
-            transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+            color: rgba(255, 255, 255, 0.78);
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            pointer-events: none;
         }
 
         .scroll-progress__icon.is-complete {
             background: var(--secondary);
+            border-color: var(--secondary);
             color: var(--primary);
-            box-shadow: 0 0 20px rgba(255, 212, 0, 0.45);
         }
 
         .page-cta {
@@ -336,7 +347,7 @@
 
         .call-fab {
             position: fixed;
-            bottom: clamp(18px, 5vw, 32px);
+            bottom: var(--call-fab-offset);
             right: clamp(18px, 5.5vw, 32px);
             width: clamp(56px, 16vw, 68px);
             height: clamp(56px, 16vw, 68px);
@@ -347,61 +358,33 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            box-shadow: 0 0 0 rgba(255, 212, 0, 0);
-            animation: callPulse 3s infinite;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            border: 1px solid rgba(255, 212, 0, 0.38);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
             z-index: 90;
         }
 
         .call-fab i {
             font-size: clamp(22px, 6vw, 28px);
-            transition: color 0.3s ease;
-        }
-
-        .call-fab::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            box-shadow: 0 0 0 rgba(255, 212, 0, 0);
-            transition: box-shadow 0.3s ease;
-            pointer-events: none;
+            transition: color 0.2s ease;
+            color: var(--secondary);
         }
 
         .call-fab:hover,
         .call-fab:focus-visible {
             transform: translateY(-2px);
-            box-shadow: 0 0 18px rgba(255, 212, 0, 0.45);
+            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.32);
+            border-color: rgba(255, 212, 0, 0.6);
             outline: none;
         }
 
         .call-fab:hover i,
         .call-fab:focus-visible i {
-            color: var(--secondary);
+            color: #ffffff;
         }
 
-        .call-fab:hover::after,
-        .call-fab:focus-visible::after {
-            box-shadow: 0 0 18px rgba(255, 212, 0, 0.45);
-        }
-
-        @keyframes callPulse {
-            0%, 60% {
-                box-shadow: 0 0 0 rgba(255, 212, 0, 0);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(255, 212, 0, 0.18);
-            }
-            80% {
-                box-shadow: 0 0 0 18px rgba(255, 212, 0, 0.08);
-            }
-            100% {
-                box-shadow: 0 0 0 rgba(255, 212, 0, 0);
-            }
-        }
-
-        body.has-bottom-cta .call-fab {
-            bottom: clamp(96px, 24vw, 132px);
+        body.has-bottom-cta {
+            --call-fab-offset: clamp(92px, 24vw, 128px);
         }
 
         .request-overlay {
@@ -593,7 +576,7 @@
                 <h1 id="heroTitle">Профессиональные электромонтажные работы</h1>
                 <p id="heroSubtitle">Работаем по Москве и области с 2005 года. Надёжно, оперативно, с гарантией.</p>
                 <div class="hero-actions">
-                    <button class="btn btn--primary" type="button" data-open-request="true" id="heroPrimaryAction">Получить консультацию</button>
+                    <button class="btn btn--primary" type="button" data-scroll-to-cta="true" id="heroPrimaryAction">Получить консультацию</button>
                     <a class="btn btn--outline" id="heroPhoneButton" href="tel:+74951234567">
                         <i class="fas fa-phone" aria-hidden="true"></i>
                         Позвонить
@@ -728,6 +711,7 @@
         const heroTitleEl = document.getElementById('heroTitle');
         const heroSubtitleEl = document.getElementById('heroSubtitle');
         const heroPrimaryAction = document.getElementById('heroPrimaryAction');
+        const scrollToCtaTriggers = document.querySelectorAll('[data-scroll-to-cta="true"]');
         const heroPhoneButton = document.getElementById('heroPhoneButton');
         const highlightsList = document.getElementById('highlightsList');
         const servicesList = document.getElementById('mobileServicesList');
@@ -805,6 +789,20 @@
                 scrollUpdateScheduled = false;
                 updateScrollProgress();
             });
+        }
+
+        function scrollToBottomCta() {
+            if (pageEndCta) {
+                pageEndCta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                window.setTimeout(() => {
+                    if (pageEndCta.classList.contains('is-visible')) {
+                        pageEndCta.focus({ preventScroll: true });
+                    }
+                }, 320);
+            } else {
+                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+            }
+            window.setTimeout(scheduleScrollProgressUpdate, 160);
         }
 
         function normalizePhoneToTel(value) {
@@ -1118,7 +1116,19 @@
 
         function initOpeners() {
             document.querySelectorAll('[data-open-request="true"]').forEach(element => {
+                if (element.dataset.scrollToCta === 'true') {
+                    return;
+                }
                 element.addEventListener('click', handleOpenRequest);
+            });
+        }
+
+        function initScrollToCta() {
+            scrollToCtaTriggers.forEach(element => {
+                element.addEventListener('click', event => {
+                    event.preventDefault();
+                    scrollToBottomCta();
+                });
             });
         }
 
@@ -1249,6 +1259,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadContent();
             initOpeners();
+            initScrollToCta();
             initCloseHandlers();
             initRequestForm();
         });
