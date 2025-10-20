@@ -308,6 +308,13 @@
             pointer-events: none;
         }
 
+        .scroll-progress__icon svg {
+            width: clamp(18px, 6vw, 22px);
+            height: clamp(18px, 6vw, 22px);
+            display: block;
+            fill: currentColor;
+        }
+
         .scroll-progress__icon.is-complete {
             background: var(--secondary);
             border-color: var(--secondary);
@@ -360,14 +367,16 @@
             text-decoration: none;
             border: 1px solid rgba(255, 212, 0, 0.38);
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, color 0.2s ease;
             z-index: 90;
+            color: var(--secondary);
         }
 
-        .call-fab i {
-            font-size: clamp(22px, 6vw, 28px);
-            transition: color 0.2s ease;
-            color: var(--secondary);
+        .call-fab__icon {
+            width: clamp(24px, 7vw, 30px);
+            height: clamp(24px, 7vw, 30px);
+            display: block;
+            fill: currentColor;
         }
 
         .call-fab:hover,
@@ -376,10 +385,6 @@
             box-shadow: 0 18px 32px rgba(0, 0, 0, 0.32);
             border-color: rgba(255, 212, 0, 0.6);
             outline: none;
-        }
-
-        .call-fab:hover i,
-        .call-fab:focus-visible i {
             color: #ffffff;
         }
 
@@ -505,6 +510,26 @@
             font-size: 13px;
         }
 
+        .request-footer {
+            display: grid;
+            gap: 6px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .request-footer a {
+            color: inherit;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .request-footer a:hover,
+        .request-footer a:focus-visible {
+            color: var(--primary);
+            outline: none;
+        }
+
         .request-status {
             min-height: 18px;
             text-align: center;
@@ -546,6 +571,35 @@
         .toast.is-visible {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 640px) {
+            .request-overlay {
+                padding: 0;
+            }
+
+            .request-modal {
+                width: 100vw;
+                height: 100vh;
+                max-width: none;
+                max-height: none;
+                border-radius: 0;
+                padding: clamp(20px, 6vw, 26px) clamp(16px, 5vw, 24px);
+                overflow-y: auto;
+            }
+
+            .request-close {
+                top: clamp(12px, 5vw, 20px);
+                right: clamp(12px, 5vw, 20px);
+            }
+
+            .request-actions {
+                margin-top: 12px;
+            }
+
+            .request-footer {
+                margin-top: 8px;
+            }
         }
 
         @media (min-width: 700px) {
@@ -647,14 +701,18 @@
             <div class="scroll-progress__fill" id="scrollProgressFill"></div>
         </div>
         <div class="scroll-progress__icon" id="scrollProgressIcon" aria-hidden="true">
-            <i class="fas fa-bolt"></i>
+            <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                <path d="M13.7 2.5a1 1 0 0 1 .94 1.35l-1.43 4.02h4.57a1 1 0 0 1 .83 1.56l-7.1 10.4a1 1 0 0 1-1.82-.74l1.47-4.87H6.39a1 1 0 0 1-.9-1.45l6-10.4a1 1 0 0 1 .87-.47h1.34z"/>
+            </svg>
         </div>
     </div>
 
     <button class="page-cta" id="pageEndCta" data-open-request="true" aria-hidden="true">Получить консультацию</button>
 
     <a class="call-fab" href="tel:+74951234567" id="floatingCallButton" aria-label="Позвонить">
-        <i class="fas fa-phone" aria-hidden="true"></i>
+        <svg class="call-fab__icon" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <path d="M6.62 2.99a1 1 0 0 1 1.12-.54l3.2.8a1 1 0 0 1 .73.97v3.12a1 1 0 0 1-.41.8l-1.63 1.22a11.05 11.05 0 0 0 4.92 4.92l1.22-1.63a1 1 0 0 1 .8-.41h3.12a1 1 0 0 1 .97.73l.8 3.2a1 1 0 0 1-.54 1.12l-2.74 1.37c-.3.15-.64.2-.97.13-2.86-.62-5.44-2.05-7.55-4.16-2.11-2.11-3.54-4.69-4.16-7.55a1.5 1.5 0 0 1 .13-.97L6.62 2.99z"/>
+        </svg>
     </a>
 
     <div class="request-overlay" id="requestOverlay" aria-hidden="true">
@@ -686,8 +744,8 @@
                 </div>
                 <div class="request-file">
                     <label for="requestFile">Прикрепить файл</label>
-                    <input type="file" id="requestFile" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
-                    <div class="request-file__info" id="requestFileInfo">Допустимые форматы: PDF, DOC, XLS, JPG, PNG. До 10 МБ.</div>
+                    <input type="file" id="requestFile" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip,.rar">
+                    <div class="request-file__info" id="requestFileInfo">Допустимые форматы: PDF, DOC, XLS, PPT, JPG, PNG, ZIP, RAR. До 10 МБ.</div>
                     <p class="field-error" id="requestFileError"></p>
                 </div>
                 <div class="request-status" id="requestStatus"></div>
@@ -696,6 +754,10 @@
                     <p class="request-note" id="requestNote">Мы перезвоним в течение рабочего дня.</p>
                 </div>
             </form>
+            <div class="request-footer">
+                <a href="mailto:etl@elektrokonstruktiv.ru" id="requestFooterEmail">etl@elektrokonstruktiv.ru</a>
+                <a href="tel:+74951234567" id="requestFooterPhone">+7 (495) 123-45-67</a>
+            </div>
         </div>
     </div>
 
@@ -746,6 +808,8 @@
         const requestToastMessage = document.getElementById('requestToastMessage');
         const brandLogo = document.getElementById('brandLogo');
         const brandLink = document.getElementById('brandLink');
+        const requestFooterEmail = document.getElementById('requestFooterEmail');
+        const requestFooterPhone = document.getElementById('requestFooterPhone');
 
         let requestToastTimer = null;
         let scrollUpdateScheduled = false;
@@ -792,17 +856,18 @@
         }
 
         function scrollToBottomCta() {
-            if (pageEndCta) {
-                pageEndCta.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                window.setTimeout(() => {
-                    if (pageEndCta.classList.contains('is-visible')) {
-                        pageEndCta.focus({ preventScroll: true });
-                    }
-                }, 320);
-            } else {
-                window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+            const scrollElement = getScrollElement();
+            if (!scrollElement) {
+                return;
             }
-            window.setTimeout(scheduleScrollProgressUpdate, 160);
+            const maxScroll = Math.max(scrollElement.scrollHeight - window.innerHeight, 0);
+            window.scrollTo({ top: maxScroll, behavior: 'smooth' });
+            window.setTimeout(() => {
+                scheduleScrollProgressUpdate();
+                if (pageEndCta && pageEndCta.classList.contains('is-visible')) {
+                    pageEndCta.focus({ preventScroll: true });
+                }
+            }, 320);
         }
 
         function normalizePhoneToTel(value) {
@@ -911,7 +976,7 @@
                 const sizeKb = Math.round(file.size / 1024);
                 requestFileInfo.textContent = `${file.name} — ${sizeKb} КБ`;
             } else {
-                requestFileInfo.textContent = 'Допустимые форматы: PDF, DOC, XLS, JPG, PNG. До 10 МБ.';
+                requestFileInfo.textContent = 'Допустимые форматы: PDF, DOC, XLS, PPT, JPG, PNG, ZIP, RAR. До 10 МБ.';
             }
         }
 
@@ -1103,6 +1168,14 @@
             }
             if (contactEmailEl) {
                 contactEmailEl.textContent = email;
+            }
+            if (requestFooterEmail) {
+                requestFooterEmail.textContent = email;
+                requestFooterEmail.href = `mailto:${email}`;
+            }
+            if (requestFooterPhone) {
+                requestFooterPhone.textContent = phone;
+                requestFooterPhone.href = tel ? `tel:${tel}` : '#';
             }
         }
 
