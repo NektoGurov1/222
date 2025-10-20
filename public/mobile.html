@@ -489,6 +489,7 @@
             border: 1px solid rgba(17, 17, 17, 0.1);
             font-size: clamp(14px, 4.2vw, 16px);
             background: rgba(17, 17, 17, 0.02);
+            transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
         }
 
         .request-field textarea {
@@ -501,10 +502,38 @@
             outline: 2px solid rgba(255, 212, 0, 0.6);
         }
 
-        .field-error {
-            font-size: 12px;
+        .request-field.has-error label {
             color: #d64545;
-            min-height: 16px;
+        }
+
+        .request-field.has-error input,
+        .request-field.has-error textarea {
+            border-color: rgba(214, 69, 69, 0.9);
+            box-shadow: 0 0 0 1px rgba(214, 69, 69, 0.18);
+            background: rgba(214, 69, 69, 0.04);
+        }
+
+        .request-file {
+            display: grid;
+            gap: 6px;
+        }
+
+        .request-file input {
+            padding: 0;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            transition: outline-color var(--transition), background-color var(--transition);
+        }
+
+        .request-file.has-error label,
+        .request-file.has-error .request-file__info {
+            color: #d64545;
+        }
+
+        .request-file.has-error input {
+            outline: 2px solid rgba(214, 69, 69, 0.7);
+            background: rgba(214, 69, 69, 0.06);
         }
 
         .request-actions {
@@ -560,17 +589,7 @@
             min-height: 18px;
             text-align: center;
             font-size: 13px;
-        }
-
-        .request-file {
-            display: grid;
-            gap: 6px;
-        }
-
-        .request-file input {
-            padding: 0;
-            border: none;
-            background: transparent;
+            white-space: pre-line;
         }
 
         .request-file__info {
@@ -753,28 +772,23 @@
                 <div class="request-field">
                     <label for="requestName">Ваше имя</label>
                     <input type="text" id="requestName" name="name" autocomplete="name" required>
-                    <p class="field-error" id="requestNameError"></p>
                 </div>
                 <div class="request-field">
                     <label for="requestPhone">Телефон</label>
                     <input type="tel" id="requestPhone" name="phone" autocomplete="tel">
-                    <p class="field-error" id="requestPhoneError"></p>
                 </div>
                 <div class="request-field">
                     <label for="requestEmail">E-mail</label>
                     <input type="email" id="requestEmail" name="email" autocomplete="email">
-                    <p class="field-error" id="requestEmailError"></p>
                 </div>
                 <div class="request-field">
                     <label for="requestComment">Комментарий</label>
                     <textarea id="requestComment" name="comment" placeholder="Опишите задачу"></textarea>
-                    <p class="field-error" id="requestCommentError"></p>
                 </div>
                 <div class="request-file">
                     <label for="requestFile">Прикрепить файл</label>
                     <input type="file" id="requestFile" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.zip,.rar">
                     <div class="request-file__info" id="requestFileInfo">Допустимые форматы: PDF, DOC, XLS, PPT, JPG, PNG, ZIP, RAR. До 10 МБ.</div>
-                    <p class="field-error" id="requestFileError"></p>
                 </div>
                 <div class="request-status" id="requestStatus"></div>
                 <div class="request-actions">
@@ -826,11 +840,6 @@
         const requestFileInput = document.getElementById('requestFile');
         const requestSubmitButton = document.getElementById('requestSubmit');
         const requestStatus = document.getElementById('requestStatus');
-        const requestNameError = document.getElementById('requestNameError');
-        const requestPhoneError = document.getElementById('requestPhoneError');
-        const requestEmailError = document.getElementById('requestEmailError');
-        const requestCommentError = document.getElementById('requestCommentError');
-        const requestFileError = document.getElementById('requestFileError');
         const requestFileInfo = document.getElementById('requestFileInfo');
         const requestToast = document.getElementById('requestToast');
         const requestToastMessage = document.getElementById('requestToastMessage');
@@ -1008,21 +1017,33 @@
             }
         }
 
-        function setFieldError(field, errorElement, message) {
-            if (errorElement) {
-                errorElement.textContent = message || '';
+        function setFieldError(field, message) {
+            const hasError = Boolean(message);
+            if (!field) {
+                return hasError;
             }
-            if (field) {
-                field.classList.toggle('is-error', Boolean(message));
+            field.classList.toggle('is-error', hasError);
+            field.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+            const group = field.closest('.request-field, .request-file');
+            if (group) {
+                group.classList.toggle('has-error', hasError);
             }
+            return hasError;
         }
 
         function clearRequestErrors() {
-            setFieldError(requestNameInput, requestNameError, '');
-            setFieldError(requestPhoneInput, requestPhoneError, '');
-            setFieldError(requestEmailInput, requestEmailError, '');
-            setFieldError(requestCommentInput, requestCommentError, '');
-            setFieldError(requestFileInput, requestFileError, '');
+            [
+                requestNameInput,
+                requestPhoneInput,
+                requestEmailInput,
+                requestCommentInput,
+                requestFileInput,
+            ].forEach(field => {
+                if (field) {
+                    setFieldError(field, '');
+                }
+            });
+            updateRequestStatus('');
         }
 
         function setRequestLoadingState(isLoading) {
@@ -1267,32 +1288,36 @@
 
                 updateRequestFileInfo(file);
 
-                let hasError = false;
+                const errorMessages = [];
+
                 if (!nameValue) {
-                    setFieldError(requestNameInput, requestNameError, 'Заполните это поле');
-                    hasError = true;
+                    setFieldError(requestNameInput, 'Заполните поле «Ваше имя»');
+                    errorMessages.push('Заполните поле «Ваше имя».');
                 }
+
                 const hasContact = Boolean(phoneValue) || Boolean(emailValue);
                 if (!hasContact) {
-                    const message = 'Укажите e-mail или телефон';
-                    setFieldError(requestPhoneInput, requestPhoneError, message);
-                    setFieldError(requestEmailInput, requestEmailError, message);
-                    hasError = true;
+                    setFieldError(requestPhoneInput, 'Укажите телефон или e-mail');
+                    setFieldError(requestEmailInput, 'Укажите телефон или e-mail');
+                    errorMessages.push('Добавьте телефон или e-mail.');
                 } else if (emailValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
-                    setFieldError(requestEmailInput, requestEmailError, 'Введите корректный e-mail');
-                    hasError = true;
+                    setFieldError(requestEmailInput, 'Введите корректный e-mail');
+                    errorMessages.push('Проверьте корректность e-mail.');
                 }
+
                 if (file && file.size > MAX_ATTACHMENT_SIZE) {
-                    setFieldError(requestFileInput, requestFileError, 'Файл слишком большой');
-                    hasError = true;
+                    setFieldError(requestFileInput, 'Файл слишком большой');
+                    errorMessages.push('Размер файла не должен превышать 10 МБ.');
                 }
+
                 if (!commentValue && !file) {
-                    const message = 'Добавьте комментарий или приложите файл';
-                    setFieldError(requestCommentInput, requestCommentError, message);
-                    setFieldError(requestFileInput, requestFileError, message);
-                    hasError = true;
+                    setFieldError(requestCommentInput, 'Добавьте комментарий или вложение');
+                    setFieldError(requestFileInput, 'Добавьте комментарий или вложение');
+                    errorMessages.push('Добавьте комментарий или приложите файл.');
                 }
-                if (hasError) {
+
+                if (errorMessages.length) {
+                    updateRequestStatus(errorMessages.join('\n'), 'error');
                     return;
                 }
 
@@ -1307,14 +1332,41 @@
                     });
                     const payload = await response.json();
                     if (!response.ok) {
+                        const serverMessages = [];
                         if (payload && payload.errors) {
-                            setFieldError(requestNameInput, requestNameError, payload.errors.name);
-                            setFieldError(requestPhoneInput, requestPhoneError, payload.errors.phone);
-                            setFieldError(requestEmailInput, requestEmailError, payload.errors.email);
-                            setFieldError(requestCommentInput, requestCommentError, payload.errors.comment);
-                            setFieldError(requestFileInput, requestFileError, payload.errors.attachment);
+                            if (payload.errors.name) {
+                                setFieldError(requestNameInput, payload.errors.name);
+                                if (!serverMessages.includes(payload.errors.name)) {
+                                    serverMessages.push(payload.errors.name);
+                                }
+                            }
+                            if (payload.errors.phone) {
+                                setFieldError(requestPhoneInput, payload.errors.phone);
+                                if (!serverMessages.includes(payload.errors.phone)) {
+                                    serverMessages.push(payload.errors.phone);
+                                }
+                            }
+                            if (payload.errors.email) {
+                                setFieldError(requestEmailInput, payload.errors.email);
+                                if (!serverMessages.includes(payload.errors.email)) {
+                                    serverMessages.push(payload.errors.email);
+                                }
+                            }
+                            if (payload.errors.comment) {
+                                setFieldError(requestCommentInput, payload.errors.comment);
+                                if (!serverMessages.includes(payload.errors.comment)) {
+                                    serverMessages.push(payload.errors.comment);
+                                }
+                            }
+                            if (payload.errors.attachment) {
+                                setFieldError(requestFileInput, payload.errors.attachment);
+                                if (!serverMessages.includes(payload.errors.attachment)) {
+                                    serverMessages.push(payload.errors.attachment);
+                                }
+                            }
                         }
-                        updateRequestStatus(payload.error || 'Не удалось отправить заявку.', 'error');
+                        const fallbackMessage = payload && payload.error ? payload.error : 'Не удалось отправить заявку.';
+                        updateRequestStatus(serverMessages.length ? serverMessages.join('\n') : fallbackMessage, 'error');
                         return;
                     }
                     updateRequestStatus('', 'success');
@@ -1332,21 +1384,15 @@
                 requestFileInput.addEventListener('change', () => {
                     const file = requestFileInput.files && requestFileInput.files[0] ? requestFileInput.files[0] : null;
                     updateRequestFileInfo(file);
-                    setFieldError(requestFileInput, requestFileError, '');
+                    setFieldError(requestFileInput, '');
+                    updateRequestStatus('');
                 });
             }
 
             [requestNameInput, requestPhoneInput, requestEmailInput, requestCommentInput].forEach(input => {
                 if (input) {
                     input.addEventListener('input', () => {
-                        setFieldError(
-                            input,
-                            input === requestNameInput ? requestNameError
-                                : input === requestPhoneInput ? requestPhoneError
-                                : input === requestEmailInput ? requestEmailError
-                                : requestCommentError,
-                            ''
-                        );
+                        setFieldError(input, '');
                         updateRequestStatus('');
                     });
                 }
