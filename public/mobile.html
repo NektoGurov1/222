@@ -414,24 +414,46 @@
             width: min(100%, 420px);
             background: var(--surface);
             border-radius: 20px;
-            padding: clamp(20px, 6vw, 26px);
+            padding: clamp(16px, 5.2vw, 22px);
             display: grid;
-            gap: 16px;
+            gap: clamp(12px, 4vw, 16px);
             position: relative;
         }
 
         .request-close {
             position: absolute;
-            top: 12px;
-            right: 12px;
+            top: 10px;
+            right: 10px;
             border: none;
-            background: rgba(17, 17, 17, 0.05);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            background: transparent;
+            width: 40px;
+            height: 40px;
             display: grid;
             place-items: center;
             cursor: pointer;
+            color: inherit;
+        }
+
+        .request-close i {
+            display: none;
+        }
+
+        .request-close::before,
+        .request-close::after {
+            content: "";
+            width: 20px;
+            height: 2px;
+            border-radius: 999px;
+            background: currentColor;
+            transition: transform var(--transition);
+        }
+
+        .request-close::before {
+            transform: rotate(45deg);
+        }
+
+        .request-close::after {
+            transform: rotate(-45deg);
         }
 
         .request-modal h2 {
@@ -442,12 +464,12 @@
 
         .request-form {
             display: grid;
-            gap: 12px;
+            gap: clamp(8px, 3.6vw, 14px);
         }
 
         .request-field {
             display: grid;
-            gap: 6px;
+            gap: clamp(4px, 2vw, 8px);
         }
 
         .request-field label {
@@ -458,7 +480,7 @@
         .request-field input,
         .request-field textarea {
             width: 100%;
-            padding: 12px;
+            padding: clamp(10px, 3.6vw, 12px);
             border-radius: 12px;
             border: 1px solid rgba(17, 17, 17, 0.1);
             font-size: clamp(14px, 4.2vw, 16px);
@@ -466,7 +488,7 @@
         }
 
         .request-field textarea {
-            min-height: 96px;
+            min-height: clamp(80px, 28vw, 104px);
             resize: vertical;
         }
 
@@ -483,14 +505,14 @@
 
         .request-actions {
             display: grid;
-            gap: 12px;
-            margin-top: 8px;
+            gap: clamp(8px, 3vw, 12px);
+            margin-top: 6px;
         }
 
         .request-submit {
             background: var(--primary);
             color: #ffffff;
-            padding: 14px;
+            padding: clamp(12px, 4vw, 14px);
             border-radius: 14px;
             border: none;
             font-weight: 700;
@@ -584,17 +606,17 @@
                 max-width: none;
                 max-height: none;
                 border-radius: 0;
-                padding: clamp(20px, 6vw, 26px) clamp(16px, 5vw, 24px);
+                padding: clamp(18px, 5.8vw, 24px) clamp(14px, 4.8vw, 20px);
                 overflow-y: auto;
             }
 
             .request-close {
-                top: clamp(12px, 5vw, 20px);
-                right: clamp(12px, 5vw, 20px);
+                top: clamp(10px, 4.6vw, 18px);
+                right: clamp(10px, 4.6vw, 18px);
             }
 
             .request-actions {
-                margin-top: 12px;
+                margin-top: 10px;
             }
 
             .request-footer {
