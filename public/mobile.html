@@ -424,10 +424,11 @@
             right: clamp(6px, 2vw, 14px);
             border: none;
             background: transparent;
-            width: clamp(18px, 5vw, 22px);
-            height: clamp(18px, 5vw, 22px);
-            display: grid;
-            place-items: center;
+            width: 10px;
+            height: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             color: inherit;
         }
@@ -439,19 +440,23 @@
         .request-close::before,
         .request-close::after {
             content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
             width: 100%;
-            height: 2px;
+            height: 1.2px;
             border-radius: 999px;
             background: currentColor;
+            transform-origin: center;
             transition: transform var(--transition);
         }
 
         .request-close::before {
-            transform: rotate(45deg);
+            transform: translate(-50%, -50%) rotate(45deg);
         }
 
         .request-close::after {
-            transform: rotate(-45deg);
+            transform: translate(-50%, -50%) rotate(-45deg);
         }
 
         .request-modal h2 {
