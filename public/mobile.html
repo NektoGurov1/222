@@ -42,32 +42,29 @@
         .page {
             max-width: 560px;
             margin: 0 auto;
-            padding: 16px clamp(16px, 5vw, 24px) 96px;
+            padding: clamp(16px, 5vw, 24px);
+            padding-bottom: clamp(120px, 22vw, 160px);
         }
 
         header.site-header {
-            display: grid;
-            gap: 16px;
-            padding-top: clamp(12px, 3vw, 24px);
-        }
-
-        .site-header__row {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            align-items: center;
-            gap: 12px;
+            display: flex;
+            justify-content: center;
+            padding-block: clamp(12px, 4vw, 24px);
         }
 
         .brand {
             display: grid;
-            grid-template-columns: clamp(44px, 16vw, 56px) 1fr;
-            gap: 12px;
+            grid-template-columns: clamp(44px, 16vw, 56px) auto;
             align-items: center;
+            justify-content: center;
+            gap: 12px;
             background: rgba(255, 255, 255, 0.06);
             border-radius: 999px;
-            padding: 8px 12px;
+            padding: 8px 14px;
             color: #ffffff;
             box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+            text-align: center;
+            margin: 0 auto;
         }
 
         .brand img {
@@ -81,6 +78,7 @@
         .brand__text {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 4px;
             font-weight: 600;
         }
@@ -99,36 +97,23 @@
             opacity: 0.8;
         }
 
-        .cta-button {
-            justify-self: end;
-            padding: 12px 18px;
-            border-radius: 999px;
-            background: var(--secondary);
-            color: var(--primary);
-            font-weight: 700;
-            font-size: clamp(13px, 4.4vw, 15px);
-            border: none;
-            cursor: pointer;
-            transition: transform var(--transition), box-shadow var(--transition);
+        .page-content {
+            display: grid;
+            gap: clamp(24px, 8vw, 36px);
         }
 
-        .cta-button:hover,
-        .cta-button:focus-visible {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-card);
-        }
-
-        .cta-button:focus-visible {
-            outline: 3px solid rgba(255, 212, 0, 0.4);
-            outline-offset: 3px;
+        .content-block {
+            background: var(--surface);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-soft);
+            padding: clamp(22px, 7vw, 32px);
+            display: grid;
+            gap: clamp(16px, 5vw, 24px);
         }
 
         .hero {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: clamp(24px, 7vw, 32px);
-            box-shadow: var(--shadow-soft);
-            margin-top: 6px;
+            margin: 0;
+            text-align: center;
         }
 
         .hero h1 {
@@ -147,6 +132,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
+            justify-content: center;
         }
 
         .hero-actions .btn {
@@ -182,13 +168,9 @@
             margin-right: 8px;
         }
 
-        section {
-            margin-top: clamp(28px, 9vw, 40px);
-        }
-
         section h2 {
             font-size: clamp(20px, 6vw, 26px);
-            margin-bottom: 14px;
+            margin: 0;
         }
 
         .highlights,
@@ -196,6 +178,7 @@
         .contact-info {
             display: grid;
             gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         }
 
         .card {
@@ -274,26 +257,151 @@
             border: 1px solid rgba(17, 17, 17, 0.08);
         }
 
-        .call-fab {
+        .scroll-progress {
             position: fixed;
-            right: clamp(16px, 5vw, 24px);
-            bottom: clamp(24px, 7vw, 36px);
-            width: 64px;
-            height: 64px;
+            top: 50%;
+            right: clamp(10px, 4.5vw, 22px);
+            transform: translateY(-50%);
+            display: grid;
+            gap: 12px;
+            align-items: center;
+            z-index: 85;
+        }
+
+        .scroll-progress__track {
+            position: relative;
+            width: 6px;
+            height: clamp(140px, 45vh, 260px);
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .scroll-progress__fill {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255, 212, 0, 0.2) 0%, var(--secondary) 100%);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.2s ease-out;
+        }
+
+        .scroll-progress__icon {
+            width: clamp(38px, 12vw, 48px);
+            height: clamp(38px, 12vw, 48px);
             border-radius: 50%;
-            background: var(--secondary);
-            color: var(--primary);
+            background: rgba(255, 255, 255, 0.12);
             display: grid;
             place-items: center;
-            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.2);
-            transition: transform var(--transition);
-            z-index: 50;
+            color: #8b8b8b;
+            transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .scroll-progress__icon.is-complete {
+            background: var(--secondary);
+            color: var(--primary);
+            box-shadow: 0 0 20px rgba(255, 212, 0, 0.45);
+        }
+
+        .page-cta {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            border: none;
+            background: var(--secondary);
+            color: var(--primary);
+            font-weight: 700;
+            font-size: clamp(16px, 4.8vw, 18px);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: clamp(16px, 5vw, 22px);
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 80;
+        }
+
+        .page-cta.is-visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .page-cta:focus-visible {
+            outline: 3px solid rgba(255, 212, 0, 0.45);
+            outline-offset: 2px;
+        }
+
+        .call-fab {
+            position: fixed;
+            bottom: clamp(18px, 5vw, 32px);
+            right: clamp(18px, 5.5vw, 32px);
+            width: clamp(56px, 16vw, 68px);
+            height: clamp(56px, 16vw, 68px);
+            border-radius: 50%;
+            background: var(--primary);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 0 0 rgba(255, 212, 0, 0);
+            animation: callPulse 3s infinite;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            z-index: 90;
+        }
+
+        .call-fab i {
+            font-size: clamp(22px, 6vw, 28px);
+            transition: color 0.3s ease;
+        }
+
+        .call-fab::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: 0 0 0 rgba(255, 212, 0, 0);
+            transition: box-shadow 0.3s ease;
+            pointer-events: none;
         }
 
         .call-fab:hover,
         .call-fab:focus-visible {
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(255, 212, 0, 0.45);
             outline: none;
+        }
+
+        .call-fab:hover i,
+        .call-fab:focus-visible i {
+            color: var(--secondary);
+        }
+
+        .call-fab:hover::after,
+        .call-fab:focus-visible::after {
+            box-shadow: 0 0 18px rgba(255, 212, 0, 0.45);
+        }
+
+        @keyframes callPulse {
+            0%, 60% {
+                box-shadow: 0 0 0 rgba(255, 212, 0, 0);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(255, 212, 0, 0.18);
+            }
+            80% {
+                box-shadow: 0 0 0 18px rgba(255, 212, 0, 0.08);
+            }
+            100% {
+                box-shadow: 0 0 0 rgba(255, 212, 0, 0);
+            }
+        }
+
+        body.has-bottom-cta .call-fab {
+            bottom: clamp(96px, 24vw, 132px);
         }
 
         .request-overlay {
@@ -457,38 +565,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        nav.site-nav {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 999px;
-            overflow: hidden;
-            color: rgba(255, 255, 255, 0.92);
-        }
-
-        .site-nav__list {
-            list-style: none;
-            margin: 0;
-            padding: 8px;
-            display: grid;
-            grid-auto-flow: column;
-            gap: 8px;
-            justify-content: start;
-            overflow-x: auto;
-        }
-
-        .site-nav__list a {
-            display: inline-flex;
-            padding: 8px 14px;
-            border-radius: 999px;
-            background: rgba(0, 0, 0, 0.35);
-            color: #ffffff;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .site-nav__list a:focus-visible {
-            outline: 2px solid rgba(255, 255, 255, 0.6);
-        }
-
         @media (min-width: 700px) {
             body {
                 background: linear-gradient(180deg, #111111 0%, #1f1f1f 24%, #ffffff 24%, #ffffff 100%);
@@ -497,39 +573,23 @@
             .page {
                 padding-top: 24px;
             }
-
-            .site-nav__list {
-                grid-auto-flow: row;
-                grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
         }
     </style>
 </head>
 <body>
     <div class="page">
         <header class="site-header">
-            <div class="site-header__row">
-                <a class="cta-button" href="#request" data-open-request="true" id="headerRequestButton">Заказать звонок</a>
-                <a class="brand" href="#top" id="brandLink">
-                    <img src="assets/logo-inline.svg" alt="Электроконструктив" id="brandLogo" loading="lazy">
-                    <span class="brand__text">
-                        <span class="brand__title">ЭЛЕКТРОКОНСТРУКТИВ</span>
-                        <span class="brand__subtitle">энергия надежных решений</span>
-                    </span>
-                </a>
-            </div>
-            <nav class="site-nav" aria-label="Основные разделы">
-                <ul class="site-nav__list">
-                    <li><a href="#top">Главное</a></li>
-                    <li><a href="#highlights">Почему мы</a></li>
-                    <li><a href="#services">Услуги</a></li>
-                    <li><a href="#contact">Контакты</a></li>
-                </ul>
-            </nav>
+            <a class="brand" href="#top" id="brandLink">
+                <img src="assets/logo-inline.svg" alt="Электроконструктив" id="brandLogo" loading="lazy">
+                <span class="brand__text">
+                    <span class="brand__title">ЭЛЕКТРОКОНСТРУКТИВ</span>
+                    <span class="brand__subtitle">энергия надежных решений</span>
+                </span>
+            </a>
         </header>
 
-        <main>
-            <section class="hero" id="top">
+        <main class="page-content">
+            <section class="content-block hero" id="top">
                 <h1 id="heroTitle">Профессиональные электромонтажные работы</h1>
                 <p id="heroSubtitle">Работаем по Москве и области с 2005 года. Надёжно, оперативно, с гарантией.</p>
                 <div class="hero-actions">
@@ -541,7 +601,7 @@
                 </div>
             </section>
 
-            <section id="highlights">
+            <section class="content-block" id="highlights">
                 <h2>Главные преимущества</h2>
                 <div class="highlights" id="highlightsList">
                     <article class="card">
@@ -552,7 +612,7 @@
                 </div>
             </section>
 
-            <section id="services">
+            <section class="content-block" id="services">
                 <h2>Услуги</h2>
                 <div class="services" id="mobileServicesList">
                     <article class="card">
@@ -563,7 +623,7 @@
                 </div>
             </section>
 
-            <section id="contact">
+            <section class="content-block" id="contact">
                 <h2 id="contactTitle">Связаться с нами</h2>
                 <div class="contact-info" id="contactInfo">
                     <article class="card">
@@ -598,6 +658,17 @@
             </section>
         </main>
     </div>
+
+    <div class="scroll-progress" aria-hidden="true">
+        <div class="scroll-progress__track">
+            <div class="scroll-progress__fill" id="scrollProgressFill"></div>
+        </div>
+        <div class="scroll-progress__icon" id="scrollProgressIcon" aria-hidden="true">
+            <i class="fas fa-bolt"></i>
+        </div>
+    </div>
+
+    <button class="page-cta" id="pageEndCta" data-open-request="true" aria-hidden="true">Получить консультацию</button>
 
     <a class="call-fab" href="tel:+74951234567" id="floatingCallButton" aria-label="Позвонить">
         <i class="fas fa-phone" aria-hidden="true"></i>
@@ -668,7 +739,9 @@
         const contactCallButton = document.getElementById('contactCallButton');
         const contactRequestButton = document.getElementById('contactRequestButton');
         const floatingCallButton = document.getElementById('floatingCallButton');
-        const headerRequestButton = document.getElementById('headerRequestButton');
+        const scrollProgressFill = document.getElementById('scrollProgressFill');
+        const scrollProgressIcon = document.getElementById('scrollProgressIcon');
+        const pageEndCta = document.getElementById('pageEndCta');
         const requestOverlay = document.getElementById('requestOverlay');
         const requestClose = document.getElementById('requestClose');
         const requestForm = document.getElementById('requestForm');
@@ -691,6 +764,48 @@
         const brandLink = document.getElementById('brandLink');
 
         let requestToastTimer = null;
+        let scrollUpdateScheduled = false;
+        const SCROLL_COMPLETE_THRESHOLD = 0.995;
+
+        function getScrollElement() {
+            return document.scrollingElement || document.documentElement;
+        }
+
+        function updateScrollProgress() {
+            const scrollElement = getScrollElement();
+            if (!scrollElement) {
+                return;
+            }
+            const scrollTop = scrollElement.scrollTop;
+            const scrollableHeight = scrollElement.scrollHeight - window.innerHeight;
+            const progress = scrollableHeight > 0 ? Math.min(Math.max(scrollTop / scrollableHeight, 0), 1) : 1;
+            const isComplete = progress >= SCROLL_COMPLETE_THRESHOLD;
+
+            if (scrollProgressFill) {
+                scrollProgressFill.style.transform = `scaleY(${progress})`;
+            }
+            if (scrollProgressIcon) {
+                scrollProgressIcon.classList.toggle('is-complete', isComplete);
+            }
+            if (pageEndCta) {
+                pageEndCta.classList.toggle('is-visible', isComplete);
+                pageEndCta.setAttribute('aria-hidden', isComplete ? 'false' : 'true');
+            }
+            if (document.body) {
+                document.body.classList.toggle('has-bottom-cta', isComplete);
+            }
+        }
+
+        function scheduleScrollProgressUpdate() {
+            if (scrollUpdateScheduled) {
+                return;
+            }
+            scrollUpdateScheduled = true;
+            window.requestAnimationFrame(() => {
+                scrollUpdateScheduled = false;
+                updateScrollProgress();
+            });
+        }
 
         function normalizePhoneToTel(value) {
             if (!value) {
@@ -934,7 +1049,7 @@
             }
 
             const ctaText = contact.cta || mobile.hero?.primaryAction || content.cta?.button;
-            [heroPrimaryAction, contactRequestButton, headerRequestButton].forEach(element => {
+            [heroPrimaryAction, contactRequestButton, pageEndCta].forEach(element => {
                 if (element && ctaText) {
                     element.textContent = ctaText;
                 }
@@ -947,6 +1062,8 @@
             if (brandLink) {
                 brandLink.href = '#top';
             }
+
+            scheduleScrollProgressUpdate();
         }
 
         async function loadContent() {
@@ -958,6 +1075,7 @@
                 const data = await response.json();
                 applyMobileContent(data);
                 updateRequestContacts(data);
+                scheduleScrollProgressUpdate();
             } catch (error) {
                 console.error(error);
             }
@@ -1123,6 +1241,10 @@
                 }
             });
         }
+
+        window.addEventListener('scroll', scheduleScrollProgressUpdate, { passive: true });
+        window.addEventListener('resize', scheduleScrollProgressUpdate);
+        scheduleScrollProgressUpdate();
 
         document.addEventListener('DOMContentLoaded', () => {
             loadContent();
