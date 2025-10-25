@@ -361,6 +361,11 @@
                 <h2>Услуги</h2>
                 <button id="addService">Добавить услугу</button>
             </div>
+            <div class="form-field">
+                <label for="servicesBackground">URL фонового изображения</label>
+                <input type="url" id="servicesBackground">
+                <p class="hint">Изображение отобразится под блоком «Наши услуги» на десктопной версии.</p>
+            </div>
             <div id="servicesList"></div>
         </div>
 
@@ -552,6 +557,7 @@
         const requestSmtpUserInput = document.getElementById('requestSmtpUser');
         const requestSmtpPasswordInput = document.getElementById('requestSmtpPassword');
         const heroImageInput = document.getElementById('heroImage');
+        const servicesBackgroundInput = document.getElementById('servicesBackground');
         const aboutImageInput = document.getElementById('aboutImage');
         const mobileHeroTitleInput = document.getElementById('mobileHeroTitle');
         const mobileHeroSubtitleInput = document.getElementById('mobileHeroSubtitle');
@@ -700,7 +706,7 @@
             error: rootStyles.getPropertyValue('--danger').trim() || '#d64545'
         };
 
-        [heroImageInput, aboutImageInput, headerLogoInput, heroLogoInput].forEach(attachImagePreview);
+        [heroImageInput, servicesBackgroundInput, aboutImageInput, headerLogoInput, heroLogoInput].forEach(attachImagePreview);
 
         const DEFAULT_PARTNERS_INTERVAL_MS = 5000;
         const MIN_PARTNERS_INTERVAL_MS = 1000;
@@ -926,6 +932,10 @@
                 { name: 'description', label: 'Описание', type: 'textarea' }
             ]);
 
+            if (servicesBackgroundInput) {
+                servicesBackgroundInput.value = data.servicesSettings?.background || '';
+            }
+
             populateArray(stepsList, data.steps || [], [
                 { name: 'title', label: 'Заголовок' },
                 { name: 'description', label: 'Описание', type: 'textarea' }
@@ -1045,6 +1055,9 @@
                 },
                 features: getItemsFromContainer(featuresList),
                 services: getItemsFromContainer(servicesList),
+                servicesSettings: {
+                    background: servicesBackgroundInput ? servicesBackgroundInput.value.trim() : ''
+                },
                 steps: getItemsFromContainer(stepsList),
                 about: {
                     title: document.getElementById('aboutTitle').value.trim(),

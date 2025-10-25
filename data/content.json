@@ -53,6 +53,9 @@
       "description": "Разработка проектов электроснабжения с учетом норм ПУЭ и технических требований."
     }
   ],
+  "servicesSettings": {
+    "background": "assets/hero-background-blue.svg"
+  },
   "steps": [
     {
       "title": "Заявка",

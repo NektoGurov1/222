@@ -385,8 +385,8 @@
             width: 100%;
             font-weight: 600;
             letter-spacing: 0.06em;
-            font-size: clamp(13px, 0.55vw + 12px, 18px);
-            line-height: clamp(24px, 0.6vw + 24px, 33.1px);
+            font-size: clamp(9px, 0.39vw + 8.4px, 12.6px);
+            line-height: clamp(17px, 0.42vw + 17px, 23.2px);
             text-transform: uppercase;
             text-align: center;
             white-space: nowrap;
@@ -1231,6 +1231,27 @@
         .feature-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 26px 48px rgba(17,17,17,0.14);
+        }
+
+        .services {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.3s ease;
+        }
+
+        .services.services--has-background::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(15, 15, 20, 0.55) 0%, rgba(15, 15, 20, 0.65) 100%);
+            pointer-events: none;
+        }
+
+        .services.services--has-background > .container {
+            position: relative;
+            z-index: 1;
         }
 
         .services-grid {
@@ -2327,6 +2348,7 @@
         const defaultHeroLogo = 'assets/logo-hero.svg';
         const defaultHeroBackground = 'assets/hero-background-blue.svg';
         const heroSection = document.querySelector('.hero');
+        const servicesSection = document.getElementById('services');
         const PARTNERS_VISIBLE_COUNT = 4;
         const DEFAULT_PARTNERS_INTERVAL_MS = 5000;
         const MIN_PARTNERS_INTERVAL_MS = 1000;
@@ -2806,6 +2828,20 @@
             } else {
                 heroSection.style.backgroundImage = '';
                 heroSection.classList.remove('hero--has-image');
+            }
+        }
+
+        function applyServicesBackground(imageValue) {
+            if (!servicesSection) {
+                return;
+            }
+            const backgroundUrl = resolveAssetUrl(imageValue);
+            if (backgroundUrl) {
+                servicesSection.style.backgroundImage = `url("${backgroundUrl}")`;
+                servicesSection.classList.add('services--has-background');
+            } else {
+                servicesSection.style.backgroundImage = '';
+                servicesSection.classList.remove('services--has-background');
             }
         }
 
@@ -3353,7 +3389,10 @@
             const hero = data.hero || {}; 
             const branding = data.branding || {}; 
             const features = Array.isArray(data.features) ? data.features : []; 
-            const services = Array.isArray(data.services) ? data.services : []; 
+            const services = Array.isArray(data.services) ? data.services : [];
+            const servicesSettings = data.servicesSettings && typeof data.servicesSettings === 'object'
+                ? data.servicesSettings
+                : {};
             const steps = Array.isArray(data.steps) ? data.steps : []; 
             const about = data.about || {}; 
             const partners = Array.isArray(data.partners) ? data.partners : []; 
@@ -3379,6 +3418,7 @@
             document.getElementById('heroSubtitle').textContent = hero.subtitle || '';
             document.getElementById('heroCta').textContent = hero.cta || '';
             applyHeroBackground(hero.image);
+            applyServicesBackground(servicesSettings.background);
 
             const featuresGrid = document.getElementById('featuresGrid');
             if (featuresGrid) {
