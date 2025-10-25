@@ -114,8 +114,45 @@
         }
 
         .hero {
+            position: relative;
             margin: 0;
             text-align: center;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(4, 8, 15, 0.78), rgba(4, 8, 15, 0.55));
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .hero.hero--has-image {
+            color: #ffffff;
+        }
+
+        .hero.hero--has-image::before {
+            opacity: 1;
+        }
+
+        .hero.hero--has-image p {
+            color: rgba(255, 255, 255, 0.78);
+        }
+
+        .hero.hero--has-image .btn--outline {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.35);
         }
 
         .hero h1 {
@@ -811,6 +848,8 @@
         const contentUrl = new URL('/api/content', window.location.origin).toString();
         const requestUrl = new URL('/api/request', window.location.origin).toString();
         const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024;
+        const defaultHeroBackground = 'assets/hero-background-blue.svg';
+        const heroSection = document.querySelector('.hero');
 
         const heroTitleEl = document.getElementById('heroTitle');
         const heroSubtitleEl = document.getElementById('heroSubtitle');
@@ -851,6 +890,38 @@
         let requestToastTimer = null;
         let scrollUpdateScheduled = false;
         const SCROLL_COMPLETE_THRESHOLD = 0.995;
+
+        function resolveAssetUrl(value, fallback) {
+            const candidate = (value || '').trim();
+            const fallbackValue = (fallback || '').trim();
+            const target = candidate || fallbackValue;
+            if (!target) {
+                return '';
+            }
+            if (/^(data:|blob:|https?:|ftp:|\/\/)/i.test(target)) {
+                return target;
+            }
+            try {
+                return new URL(target, window.location.origin).toString();
+            } catch (error) {
+                console.warn('Не удалось преобразовать путь к фоновому изображению героя', target, error);
+                return target;
+            }
+        }
+
+        function applyHeroBackground(imageValue) {
+            if (!heroSection) {
+                return;
+            }
+            const backgroundUrl = resolveAssetUrl(imageValue, defaultHeroBackground);
+            if (backgroundUrl) {
+                heroSection.style.backgroundImage = `url("${backgroundUrl}")`;
+                heroSection.classList.add('hero--has-image');
+            } else {
+                heroSection.style.backgroundImage = '';
+                heroSection.classList.remove('hero--has-image');
+            }
+        }
 
         function getScrollElement() {
             return document.scrollingElement || document.documentElement;
@@ -1114,6 +1185,8 @@
             if (heroPhoneButton) {
                 heroPhoneButton.textContent = hero.secondaryAction || 'Позвонить';
             }
+
+            applyHeroBackground(hero.image || content.hero?.image);
 
             if (Array.isArray(highlightsList?.children)) {
                 clearElementChildren(highlightsList);

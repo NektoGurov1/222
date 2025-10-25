@@ -2380,6 +2380,8 @@
         const reviewsEndpoint = new URL('/api/reviews/external', window.location.origin).toString(); 
         const defaultHeaderLogo = 'assets/logo-inline.svg'; 
         const defaultHeroLogo = 'assets/logo-hero.svg';
+        const defaultHeroBackground = 'assets/hero-background-blue.svg';
+        const heroSection = document.querySelector('.hero');
         const PARTNERS_VISIBLE_COUNT = 5; 
         const DEFAULT_PARTNERS_INTERVAL_MS = 5000; 
         const MIN_PARTNERS_INTERVAL_MS = 1000; 
@@ -2844,6 +2846,20 @@
                 return target; 
             } 
         } 
+
+        function applyHeroBackground(imageValue) {
+            if (!heroSection) {
+                return;
+            }
+            const backgroundUrl = resolveAssetUrl(imageValue, defaultHeroBackground);
+            if (backgroundUrl) {
+                heroSection.style.backgroundImage = `url("${backgroundUrl}")`;
+                heroSection.classList.add('hero--has-image');
+            } else {
+                heroSection.style.backgroundImage = '';
+                heroSection.classList.remove('hero--has-image');
+            }
+        }
 
         function sanitizePartnersInterval(value) { 
             const parsed = Number(value); 
@@ -3429,6 +3445,7 @@
             document.getElementById('heroTitle').textContent = hero.title || '';
             document.getElementById('heroSubtitle').textContent = hero.subtitle || '';
             document.getElementById('heroCta').textContent = hero.cta || '';
+            applyHeroBackground(hero.image);
 
             const heroHighlightsList = document.getElementById('heroHighlights');
             if (heroHighlightsList) {
