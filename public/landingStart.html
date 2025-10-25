@@ -25,6 +25,8 @@
             --card-gap: calc(clamp(22px, 4vw, 36px) * var(--scale-base));
             --card-padding: calc(clamp(20px, 4vw, 32px) * var(--scale-base));
             --card-padding-tight: calc(clamp(16px, 3.2vw, 26px) * var(--scale-base));
+            --partner-card-width: clamp(160px, 13vw, 210px);
+            --partner-gap: clamp(18px, 2.6vw, 26px);
             --transition-base: 0.3s ease;
             --header-offset: clamp(72px, 10vw, 96px);
         }
@@ -1438,16 +1440,17 @@
         }
 
         .partners-window {
-            flex: 1 1 clamp(280px, 60vw, 840px);
+            flex: 0 0 auto;
+            width: min(100%, calc(4 * var(--partner-card-width) + 3 * var(--partner-gap)));
+            max-width: calc(4 * var(--partner-card-width) + 3 * var(--partner-gap));
             overflow: hidden;
             border-radius: 12px;
-            max-width: clamp(280px, 60vw, 840px);
         }
 
         .partners-track {
             display: flex;
             align-items: center;
-            gap: clamp(16px, 3vw, 28px);
+            gap: var(--partner-gap);
             will-change: transform;
             transition: transform 0.6s ease;
         }
@@ -1482,7 +1485,8 @@
         } 
 
         .partner-card {
-            flex: 0 0 clamp(150px, 16vw, 220px);
+            flex: 0 0 var(--partner-card-width);
+            width: var(--partner-card-width);
             background-color: #ffffff;
             border-radius: 12px;
             display: flex;
@@ -2022,6 +2026,7 @@
 
             .partner-card {
                 flex: 0 0 clamp(180px, 48vw, 260px);
+                width: clamp(180px, 48vw, 260px);
                 min-height: 88px;
             }
 
@@ -2382,7 +2387,7 @@
         const defaultHeroLogo = 'assets/logo-hero.svg';
         const defaultHeroBackground = 'assets/hero-background-blue.svg';
         const heroSection = document.querySelector('.hero');
-        const PARTNERS_VISIBLE_COUNT = 5; 
+        const PARTNERS_VISIBLE_COUNT = 4;
         const DEFAULT_PARTNERS_INTERVAL_MS = 5000; 
         const MIN_PARTNERS_INTERVAL_MS = 1000; 
         const partnersPrevButton = document.getElementById('partnersPrev'); 
