@@ -743,62 +743,6 @@
             outline: none;
         }
 
-        .hero-highlights {
-            list-style: none;
-            display: grid;
-            gap: clamp(14px, 2.4vw, 24px);
-            margin: clamp(12px, 3vw, 28px) auto 0;
-            width: min(100%, 640px);
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 18px;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            padding: clamp(16px, 2.6vw, 26px) clamp(18px, 3vw, 28px);
-        }
-
-        .hero-highlights.is-hidden {
-            display: none;
-        }
-
-        .hero-highlight {
-            display: grid;
-            grid-template-columns: minmax(0, auto) minmax(0, 1fr);
-            gap: 16px;
-            align-items: flex-start;
-            text-align: left;
-        }
-
-        .hero-highlight-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            background: rgba(255, 212, 0, 0.18);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--secondary);
-            font-size: 20px;
-            box-shadow: inset 0 0 0 1px rgba(255, 212, 0, 0.3);
-        }
-
-        .hero-highlight-text {
-            display: grid;
-            gap: 6px;
-            color: rgba(255, 255, 255, 0.76);
-        }
-
-        .hero-highlight-text strong {
-            font-size: 16px;
-            color: #ffffff;
-        }
-
-        @media (min-width: 720px) {
-            .hero-highlights {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 18px 24px;
-            }
-        }
-
         @media (min-width: 1100px) {
             .hero-grid {
                 justify-items: center;
@@ -818,11 +762,6 @@
 
             .hero-actions {
                 justify-content: center;
-            }
-
-            .hero-highlights {
-                margin: clamp(20px, 3vw, 32px) auto 0;
-                justify-self: center;
             }
         }
 
@@ -2000,10 +1939,6 @@
                 margin-inline: auto;
             }
 
-            .hero-highlights {
-                border-radius: 18px;
-            }
-
             .partners-viewport {
                 flex-direction: column;
                 align-items: stretch;
@@ -2167,7 +2102,6 @@
                             <a href="#request" class="btn" id="heroCta" data-open-request="true">Получить консультацию</a>
                             <a href="#portfolio" class="btn-secondary">Наши проекты</a>
                         </div>
-                        <ul class="hero-highlights is-hidden" id="heroHighlights" aria-live="polite" aria-label="Ключевые преимущества"></ul>
                     </div>
                 </div>
             </div>
@@ -3451,36 +3385,6 @@
             document.getElementById('heroSubtitle').textContent = hero.subtitle || '';
             document.getElementById('heroCta').textContent = hero.cta || '';
             applyHeroBackground(hero.image);
-
-            const heroHighlightsList = document.getElementById('heroHighlights');
-            if (heroHighlightsList) {
-                heroHighlightsList.innerHTML = '';
-                const highlightItems = features.slice(0, 3);
-                highlightItems.forEach(feature => {
-                    const item = document.createElement('li');
-                    item.className = 'hero-highlight';
-
-                    const iconWrapper = document.createElement('span');
-                    iconWrapper.className = 'hero-highlight-icon';
-                    const icon = document.createElement('i');
-                    icon.className = feature.icon || 'fas fa-bolt';
-                    iconWrapper.appendChild(icon);
-
-                    const textWrapper = document.createElement('div');
-                    textWrapper.className = 'hero-highlight-text';
-                    const titleElement = document.createElement('strong');
-                    titleElement.textContent = feature.title || '';
-                    const descriptionElement = document.createElement('span');
-                    descriptionElement.textContent = feature.description || '';
-                    textWrapper.appendChild(titleElement);
-                    textWrapper.appendChild(descriptionElement);
-
-                    item.appendChild(iconWrapper);
-                    item.appendChild(textWrapper);
-                    heroHighlightsList.appendChild(item);
-                });
-                heroHighlightsList.classList.toggle('is-hidden', highlightItems.length === 0);
-            }
 
             const featuresGrid = document.getElementById('featuresGrid');
             if (featuresGrid) {
