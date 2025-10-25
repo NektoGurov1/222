@@ -2322,12 +2322,15 @@
         const defaultHeroBackground = 'assets/hero-background-blue.svg';
         const heroSection = document.querySelector('.hero');
         const PARTNERS_VISIBLE_COUNT = 4;
-        const DEFAULT_PARTNERS_INTERVAL_MS = 5000; 
-        const MIN_PARTNERS_INTERVAL_MS = 1000; 
-        const partnersPrevButton = document.getElementById('partnersPrev'); 
-        const partnersNextButton = document.getElementById('partnersNext'); 
-        let partnersAutoTimer = null; 
-        let partnersAutoInterval = DEFAULT_PARTNERS_INTERVAL_MS; 
+        const DEFAULT_PARTNERS_INTERVAL_MS = 5000;
+        const MIN_PARTNERS_INTERVAL_MS = 1000;
+        const partnersPrevButton = document.getElementById('partnersPrev');
+        const partnersNextButton = document.getElementById('partnersNext');
+        let partnersAutoTimer = null;
+        let partnersAutoInterval = DEFAULT_PARTNERS_INTERVAL_MS;
+        let partnersRenderedItems = [];
+        let partnersMaxIndex = 0;
+        let currentPartnerIndex = 0;
         const reviewsStatusElement = document.getElementById('reviewsStatus'); 
         let reviewsData = []; 
         let reviewsSource = 'content'; 
@@ -3130,103 +3133,101 @@
             } 
         } 
 
-        function startPartnersAutoSlide() { 
-            stopPartnersAutoSlide(); 
-            const section = document.getElementById('partners'); 
-            const track = document.getElementById('partnersTrack'); 
-            if (!section || !track || section.classList.contains('is-hidden')) { 
-                return; 
-            } 
-            if (track.dataset.hasMultiple !== 'true') { 
-                return; 
-            }
-            if (track.children.length <= 1) { 
-                return; 
-            } 
-            partnersAutoInterval = sanitizePartnersInterval(partnersAutoInterval); 
-            partnersAutoTimer = setInterval(() => advancePartners(), partnersAutoInterval); 
-        } 
-
-        function advancePartners() {
-            const track = document.getElementById('partnersTrack');
-            if (!track || track.children.length === 0) {
-                stopPartnersAutoSlide();
+        function startPartnersAutoSlide() {
+            stopPartnersAutoSlide();
+            const section = document.getElementById('partners');
+            if (!section || section.classList.contains('is-hidden')) {
                 return;
             }
-            if (track.dataset.animating === 'true') {
+            if (partnersMaxIndex <= 0) {
                 return;
             }
-            const firstCard = track.firstElementChild;
-            if (!firstCard) {
-                return;
-            }
-            const style = window.getComputedStyle(track);
-            const gap = parseFloat(style.columnGap || style.gap || '0');
-            const shift = firstCard.getBoundingClientRect().width + gap;
-            if (!Number.isFinite(shift) || shift <= 0) {
-                track.dataset.animating = 'false';
-                return;
-            }
-
-            const handleTransitionEnd = () => {
-                track.removeEventListener('transitionend', handleTransitionEnd);
-                track.style.transition = 'none';
-                track.appendChild(firstCard);
-                track.style.transform = 'translateX(0)';
-                requestAnimationFrame(() => {
-                    track.style.transition = 'transform 0.6s ease';
-                    track.dataset.animating = 'false';
-                });
-            };
-
-            track.dataset.animating = 'true';
-            track.addEventListener('transitionend', handleTransitionEnd, { once: true });
-            requestAnimationFrame(() => {
-                track.style.transition = 'transform 0.6s ease';
-                track.style.transform = `translateX(-${shift}px)`;
-            });
+            partnersAutoInterval = sanitizePartnersInterval(partnersAutoInterval);
+            partnersAutoTimer = setInterval(() => advancePartners(1), partnersAutoInterval);
         }
 
-        function retreatPartners() {
-            const track = document.getElementById('partnersTrack');
-            if (!track || track.children.length === 0) {
-                stopPartnersAutoSlide();
-                return;
+        function getPartnerStep(track) {
+            if (!track) {
+                return 0;
             }
-            if (track.dataset.animating === 'true') {
-                return;
-            }
-            const lastCard = track.lastElementChild;
-            if (!lastCard) {
-                return;
+            const firstCard = track.querySelector('.partner-card');
+            if (!firstCard) {
+                return 0;
             }
             const style = window.getComputedStyle(track);
             const gap = parseFloat(style.columnGap || style.gap || '0');
-            const shift = lastCard.getBoundingClientRect().width + gap;
-            if (!Number.isFinite(shift) || shift <= 0) {
-                track.dataset.animating = 'false';
+            const width = firstCard.getBoundingClientRect().width;
+            if (!Number.isFinite(width)) {
+                return 0;
+            }
+            return width + gap;
+        }
+
+        function updatePartnersTransform(track, immediate = false) {
+            if (!track) {
                 return;
             }
-
-            const handleTransitionEnd = () => {
-                track.removeEventListener('transitionend', handleTransitionEnd);
+            const step = getPartnerStep(track);
+            const offset = step * currentPartnerIndex;
+            if (immediate) {
+                const previousTransition = track.style.transition;
                 track.style.transition = 'none';
-                track.style.transform = 'translateX(0)';
-                requestAnimationFrame(() => {
-                    track.style.transition = 'transform 0.6s ease';
-                    track.dataset.animating = 'false';
-                });
-            };
-
-            track.dataset.animating = 'true';
-            track.style.transition = 'none';
-            track.insertBefore(lastCard, track.firstElementChild);
-            track.style.transform = `translateX(-${shift}px)`;
-            requestAnimationFrame(() => {
-                track.addEventListener('transitionend', handleTransitionEnd, { once: true });
+                track.style.transform = `translateX(-${offset}px)`;
+                void track.offsetWidth;
+                track.style.transition = previousTransition || 'transform 0.6s ease';
+            } else {
                 track.style.transition = 'transform 0.6s ease';
-                track.style.transform = 'translateX(0)';
-            });
+                track.style.transform = `translateX(-${offset}px)`;
+            }
+        }
+
+        function updatePartnersControls() {
+            const hasMultiple = partnersMaxIndex > 0;
+            if (partnersPrevButton) {
+                partnersPrevButton.style.display = hasMultiple ? 'flex' : 'none';
+                partnersPrevButton.disabled = !hasMultiple;
+                partnersPrevButton.setAttribute('aria-hidden', hasMultiple ? 'false' : 'true');
+            }
+            if (partnersNextButton) {
+                partnersNextButton.style.display = hasMultiple ? 'flex' : 'none';
+                partnersNextButton.disabled = !hasMultiple;
+                partnersNextButton.setAttribute('aria-hidden', hasMultiple ? 'false' : 'true');
+            }
+        }
+
+        function setPartnerIndex(index, { immediate = false } = {}) {
+            const track = document.getElementById('partnersTrack');
+            if (!track || partnersRenderedItems.length === 0) {
+                currentPartnerIndex = 0;
+                if (track) {
+                    track.style.transform = 'translateX(0)';
+                }
+                return;
+            }
+            const positions = partnersMaxIndex + 1;
+            if (positions <= 0) {
+                currentPartnerIndex = 0;
+                updatePartnersTransform(track, true);
+                return;
+            }
+            let nextIndex = Number.isFinite(index) ? index : 0;
+            nextIndex = ((nextIndex % positions) + positions) % positions;
+            currentPartnerIndex = nextIndex;
+            updatePartnersTransform(track, immediate);
+        }
+
+        function advancePartners(step = 1) {
+            if (partnersRenderedItems.length === 0) {
+                return;
+            }
+            if (partnersMaxIndex <= 0) {
+                setPartnerIndex(0, { immediate: true });
+                return;
+            }
+            const positions = partnersMaxIndex + 1;
+            let nextIndex = currentPartnerIndex + step;
+            nextIndex = ((nextIndex % positions) + positions) % positions;
+            setPartnerIndex(nextIndex, { immediate: false });
         }
 
         function renderPartners(partners) {
@@ -3236,19 +3237,24 @@
             const viewport = document.getElementById('partnersViewport');
             if (!section || !track || !status || !viewport) {
                 updateSectionEmptyState('partners', false);
+                partnersRenderedItems = [];
+                partnersMaxIndex = 0;
+                currentPartnerIndex = 0;
+                updatePartnersControls();
                 return;
             }
 
             stopPartnersAutoSlide();
+            partnersRenderedItems = [];
+            partnersMaxIndex = 0;
+            currentPartnerIndex = 0;
             track.innerHTML = '';
-            track.style.transition = 'none'; 
-            track.style.transform = 'translateX(0)'; 
-            track.dataset.animating = 'false'; 
-            track.dataset.hasMultiple = 'false'; 
-            status.textContent = ''; 
-            status.style.display = 'none'; 
+            track.style.transition = 'none';
+            track.style.transform = 'translateX(0)';
+            status.textContent = '';
+            status.style.display = 'none';
 
-            const source = Array.isArray(partners) ? partners : []; 
+            const source = Array.isArray(partners) ? partners : [];
             const normalized = source
                 .map((partner, index) => {
                     const name = typeof partner.name === 'string' ? partner.name.trim() : '';
@@ -3269,14 +3275,7 @@
                 updateSectionEmptyState('partners', false);
                 status.textContent = 'Партнёры пока не добавлены.';
                 status.style.display = 'block';
-                if (partnersPrevButton) {
-                    partnersPrevButton.style.display = 'none';
-                    partnersPrevButton.disabled = true;
-                }
-                if (partnersNextButton) { 
-                    partnersNextButton.style.display = 'none';
-                    partnersNextButton.disabled = true;
-                }
+                updatePartnersControls();
                 return;
             }
 
@@ -3292,11 +3291,11 @@
                 itemsToRender.length = targetLength; 
             } 
 
-            itemsToRender.forEach(partner => { 
-                const link = document.createElement('a'); 
-                link.className = 'partner-card'; 
-                link.href = partner.url; 
-                if (partner.url && partner.url !== '#') { 
+            itemsToRender.forEach(partner => {
+                const link = document.createElement('a');
+                link.className = 'partner-card';
+                link.href = partner.url;
+                if (partner.url && partner.url !== '#') {
                     link.target = '_blank'; 
                     link.rel = 'noopener noreferrer'; 
                 } 
@@ -3307,35 +3306,24 @@
                 image.alt = partner.name; 
                 image.loading = 'lazy'; 
 
-                link.appendChild(image); 
-                track.appendChild(link); 
-            }); 
+                link.appendChild(image);
+                track.appendChild(link);
+            });
 
-            const hasMultiplePartners = normalized.length > 1; 
-            track.dataset.hasMultiple = hasMultiplePartners ? 'true' : 'false'; 
-            if (partnersPrevButton) { 
-                partnersPrevButton.style.display = hasMultiplePartners ? 'flex' : 'none';
-                partnersPrevButton.disabled = !hasMultiplePartners;
-                partnersPrevButton.setAttribute('aria-hidden', hasMultiplePartners ? 'false' : 'true');
-            }
-            if (partnersNextButton) { 
-                partnersNextButton.style.display = hasMultiplePartners ? 'flex' : 'none';
-                partnersNextButton.disabled = !hasMultiplePartners;
-                partnersNextButton.setAttribute('aria-hidden', hasMultiplePartners ? 'false' : 'true');
+            partnersRenderedItems = itemsToRender;
+            partnersMaxIndex = Math.max(0, partnersRenderedItems.length - PARTNERS_VISIBLE_COUNT);
+            currentPartnerIndex = 0;
+            updatePartnersControls();
+            setPartnerIndex(0, { immediate: true });
+
+            if (!viewport.dataset.listenersAttached) {
+                viewport.addEventListener('mouseenter', () => stopPartnersAutoSlide());
+                viewport.addEventListener('mouseleave', () => startPartnersAutoSlide());
+                viewport.dataset.listenersAttached = 'true';
             }
 
-            if (!viewport.dataset.listenersAttached) { 
-                viewport.addEventListener('mouseenter', () => stopPartnersAutoSlide()); 
-                viewport.addEventListener('mouseleave', () => startPartnersAutoSlide()); 
-                viewport.dataset.listenersAttached = 'true'; 
-            } 
-
-            if (hasMultiplePartners) { 
-                startPartnersAutoSlide(); 
-            } else {
-                stopPartnersAutoSlide(); 
-            }
-        } 
+            startPartnersAutoSlide();
+        }
 
         async function loadContent() { 
             try { 
@@ -3881,19 +3869,19 @@
             }); 
         }); 
 
-        if (partnersPrevButton) { 
+        if (partnersPrevButton) {
             partnersPrevButton.addEventListener('click', () => {
-                stopPartnersAutoSlide(); 
-                retreatPartners(); 
-                setTimeout(() => startPartnersAutoSlide(), 700); 
+                stopPartnersAutoSlide();
+                advancePartners(-1);
+                startPartnersAutoSlide();
             });
         }
 
-        if (partnersNextButton) { 
+        if (partnersNextButton) {
             partnersNextButton.addEventListener('click', () => {
-                stopPartnersAutoSlide(); 
-                advancePartners(); 
-                setTimeout(() => startPartnersAutoSlide(), 700); 
+                stopPartnersAutoSlide();
+                advancePartners(1);
+                startPartnersAutoSlide();
             });
         }
 
@@ -3908,9 +3896,10 @@
             }
         });
 
-        window.addEventListener('resize', () => { 
-            startPartnersAutoSlide(); 
-        }); 
+        window.addEventListener('resize', () => {
+            setPartnerIndex(currentPartnerIndex, { immediate: true });
+            startPartnersAutoSlide();
+        });
 
         document.addEventListener('visibilitychange', () => { 
             if (document.hidden) { 
