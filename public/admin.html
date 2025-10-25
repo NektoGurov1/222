@@ -105,6 +105,9 @@
 
         input[type="text"],
         input[type="url"],
+        input[type="number"],
+        input[type="password"],
+        select,
         textarea {
             width: 100%;
             padding: 10px;
@@ -193,6 +196,72 @@
             cursor: not-allowed;
         }
 
+        .tab-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .tab-button {
+            padding: 10px 18px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .tab-button.is-active {
+            background: var(--secondary);
+            color: var(--primary);
+            border-color: transparent;
+            box-shadow: 0 10px 20px rgba(17, 17, 17, 0.12);
+        }
+
+        .tab-button:focus-visible {
+            outline: 3px solid rgba(255, 212, 0, 0.6);
+            outline-offset: 3px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.is-active {
+            display: block;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-field label {
+            margin-top: 0;
+        }
+
+        .smtp-settings {
+            margin-top: 25px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .smtp-settings h3 {
+            margin: 0 0 12px;
+            font-size: 18px;
+        }
+
+        .smtp-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        }
+
         .status {
             margin-top: 20px;
             font-weight: 600;
@@ -248,13 +317,16 @@
 <body>
     <header>
         <h1>Панель управления контентом</h1>
-        <p>Редактируйте тексты, изображения и структуру лендинга. Для смены аккаунта используйте кнопку ниже.</p>
         <div class="header-actions">
-            <button type="button" id="logoutButton" class="logout-button">Сменить аккаунт</button>
             <a class="site-link" href="/" target="_blank" rel="noopener" data-site-link="landing">Открыть сайт</a>
         </div>
     </header>
     <main>
+        <div class="tab-controls" role="tablist" aria-label="Режимы редактирования">
+            <button type="button" class="tab-button is-active" data-tab-button="desktop" id="desktopTab" role="tab" aria-selected="true" aria-controls="desktopPanel">Версия для ПК</button>
+            <button type="button" class="tab-button" data-tab-button="mobile" id="mobileTab" role="tab" aria-selected="false" aria-controls="mobilePanel">Мобильная версия</button>
+        </div>
+        <div class="tab-panel is-active" data-tab-panel="desktop" id="desktopPanel" role="tabpanel" aria-labelledby="desktopTab">
         <div class="section">
             <h2>Hero</h2>
             <label for="heroTitle">Заголовок</label>
@@ -288,6 +360,11 @@
             <div class="array-header">
                 <h2>Услуги</h2>
                 <button id="addService">Добавить услугу</button>
+            </div>
+            <div class="form-field">
+                <label for="servicesBackground">URL фонового изображения</label>
+                <input type="url" id="servicesBackground">
+                <p class="hint">Изображение отобразится под блоком «Наши услуги» на десктопной версии.</p>
             </div>
             <div id="servicesList"></div>
         </div>
@@ -375,6 +452,35 @@
             <h2>Заявки</h2>
             <label for="requestEmail">E-mail для заявок</label>
             <input type="text" id="requestEmail">
+            <div class="smtp-settings">
+                <h3>SMTP-настройки</h3>
+                <div class="smtp-grid">
+                    <div class="form-field">
+                        <label for="requestSmtpHost">Сервер (SMTP-хост)</label>
+                        <input type="text" id="requestSmtpHost" placeholder="smtp.example.com">
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpPort">Порт</label>
+                        <input type="number" id="requestSmtpPort" min="1" placeholder="587">
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpSecurity">Шифрование</label>
+                        <select id="requestSmtpSecurity">
+                            <option value="starttls">STARTTLS</option>
+                            <option value="ssl">SSL/TLS</option>
+                            <option value="none">Без шифрования</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpUser">Логин</label>
+                        <input type="text" id="requestSmtpUser" autocomplete="off">
+                    </div>
+                    <div class="form-field">
+                        <label for="requestSmtpPassword">Пароль</label>
+                        <input type="password" id="requestSmtpPassword" autocomplete="new-password">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="section">
@@ -384,6 +490,54 @@
                 <a class="secondary" href="/" target="_blank" rel="noopener" data-site-link="landing">Открыть лендинг</a>
             </div>
             <div class="status" id="statusMessage"></div>
+        </div>
+        </div>
+        <div class="tab-panel" data-tab-panel="mobile" id="mobilePanel" role="tabpanel" aria-labelledby="mobileTab" aria-hidden="true" tabindex="-1" hidden>
+            <div class="section">
+                <h2>Hero (мобильная версия)</h2>
+                <label for="mobileHeroTitle">Заголовок</label>
+                <input type="text" id="mobileHeroTitle">
+                <label for="mobileHeroSubtitle">Подзаголовок</label>
+                <textarea id="mobileHeroSubtitle"></textarea>
+                <label for="mobileHeroPrimary">Текст основной кнопки</label>
+                <input type="text" id="mobileHeroPrimary">
+                <label for="mobileHeroSecondary">Текст кнопки звонка</label>
+                <input type="text" id="mobileHeroSecondary">
+            </div>
+
+            <div class="section">
+                <div class="array-header">
+                    <h2>Ключевые блоки</h2>
+                    <button id="addMobileHighlight">Добавить блок</button>
+                </div>
+                <p class="hint">Каждый блок отображается с иконкой и коротким описанием. Укажите CSS-класс иконки из Font Awesome.</p>
+                <div id="mobileHighlightsList"></div>
+            </div>
+
+            <div class="section">
+                <div class="array-header">
+                    <h2>Услуги (мобильная версия)</h2>
+                    <button id="addMobileService">Добавить услугу</button>
+                </div>
+                <p class="hint">Список отображается компактно, текст должен быть кратким.</p>
+                <div id="mobileServicesList"></div>
+            </div>
+
+            <div class="section">
+                <h2>Контакты (мобильная версия)</h2>
+                <label for="mobileContactTitle">Заголовок блока</label>
+                <input type="text" id="mobileContactTitle">
+                <label for="mobileContactPhone">Телефон</label>
+                <input type="text" id="mobileContactPhone">
+                <label for="mobileContactEmail">E-mail</label>
+                <input type="text" id="mobileContactEmail">
+                <label for="mobileContactAddress">Адрес</label>
+                <input type="text" id="mobileContactAddress">
+                <label for="mobileContactSchedule">График</label>
+                <input type="text" id="mobileContactSchedule">
+                <label for="mobileContactCta">Текст кнопки заявки</label>
+                <input type="text" id="mobileContactCta">
+            </div>
         </div>
     </main>
 
@@ -397,13 +551,32 @@
         const portfolioList = document.getElementById('portfolioList');
         const reviewsList = document.getElementById('reviewsList');
         const requestEmailInput = document.getElementById('requestEmail');
+        const requestSmtpHostInput = document.getElementById('requestSmtpHost');
+        const requestSmtpPortInput = document.getElementById('requestSmtpPort');
+        const requestSmtpSecurityInput = document.getElementById('requestSmtpSecurity');
+        const requestSmtpUserInput = document.getElementById('requestSmtpUser');
+        const requestSmtpPasswordInput = document.getElementById('requestSmtpPassword');
         const heroImageInput = document.getElementById('heroImage');
+        const servicesBackgroundInput = document.getElementById('servicesBackground');
         const aboutImageInput = document.getElementById('aboutImage');
+        const mobileHeroTitleInput = document.getElementById('mobileHeroTitle');
+        const mobileHeroSubtitleInput = document.getElementById('mobileHeroSubtitle');
+        const mobileHeroPrimaryInput = document.getElementById('mobileHeroPrimary');
+        const mobileHeroSecondaryInput = document.getElementById('mobileHeroSecondary');
+        const mobileHighlightsList = document.getElementById('mobileHighlightsList');
+        const mobileServicesList = document.getElementById('mobileServicesList');
+        const mobileContactTitleInput = document.getElementById('mobileContactTitle');
+        const mobileContactPhoneInput = document.getElementById('mobileContactPhone');
+        const mobileContactEmailInput = document.getElementById('mobileContactEmail');
+        const mobileContactAddressInput = document.getElementById('mobileContactAddress');
+        const mobileContactScheduleInput = document.getElementById('mobileContactSchedule');
+        const mobileContactCtaInput = document.getElementById('mobileContactCta');
+        const tabButtons = Array.from(document.querySelectorAll('[data-tab-button]'));
+        const tabPanels = Array.from(document.querySelectorAll('[data-tab-panel]'));
 
         const statusMessage = document.getElementById('statusMessage');
         const saveButton = document.getElementById('saveButton');
         const reloadButton = document.getElementById('reloadContent');
-        const logoutButton = document.getElementById('logoutButton');
         const headerLogoInput = document.getElementById('brandingHeaderLogo');
         const heroLogoInput = document.getElementById('brandingHeroLogo');
 
@@ -412,11 +585,62 @@
             landing: new URL('/', siteOrigin).toString(),
             login: new URL('/login', siteOrigin).toString(),
             admin: new URL('/admin', siteOrigin).toString(),
-            content: new URL('/api/content', siteOrigin).toString(),
-            logout: new URL('/api/auth/logout', siteOrigin).toString()
+            content: new URL('/api/content', siteOrigin).toString()
         };
 
         const previewBindings = new Map();
+
+        function normaliseSmtpSecurity(value) {
+            if (typeof value !== 'string') {
+                return 'starttls';
+            }
+            const lower = value.trim().toLowerCase();
+            return ['starttls', 'ssl', 'none'].includes(lower) ? lower : 'starttls';
+        }
+
+        function setSmtpFormValues(settings) {
+            const smtpSettings = settings && typeof settings === 'object' ? settings : {};
+            if (requestSmtpHostInput) {
+                requestSmtpHostInput.value = typeof smtpSettings.host === 'string' ? smtpSettings.host : '';
+            }
+            if (requestSmtpPortInput) {
+                const portValue = smtpSettings.port;
+                requestSmtpPortInput.value = portValue === undefined || portValue === null || portValue === ''
+                    ? ''
+                    : String(portValue);
+            }
+            if (requestSmtpSecurityInput) {
+                requestSmtpSecurityInput.value = normaliseSmtpSecurity(smtpSettings.security);
+            }
+            if (requestSmtpUserInput) {
+                requestSmtpUserInput.value = typeof smtpSettings.username === 'string' ? smtpSettings.username : '';
+            }
+            if (requestSmtpPasswordInput) {
+                requestSmtpPasswordInput.value = typeof smtpSettings.password === 'string' ? smtpSettings.password : '';
+            }
+        }
+
+        function readSmtpSettingsFromForm() {
+            const result = {
+                host: requestSmtpHostInput ? requestSmtpHostInput.value.trim() : '',
+                port: null,
+                security: requestSmtpSecurityInput ? normaliseSmtpSecurity(requestSmtpSecurityInput.value) : 'starttls',
+                username: requestSmtpUserInput ? requestSmtpUserInput.value.trim() : '',
+                password: requestSmtpPasswordInput ? requestSmtpPasswordInput.value : ''
+            };
+
+            if (requestSmtpPortInput) {
+                const raw = requestSmtpPortInput.value.trim();
+                if (raw) {
+                    const parsed = Number.parseInt(raw, 10);
+                    if (!Number.isNaN(parsed)) {
+                        result.port = parsed;
+                    }
+                }
+            }
+
+            return result;
+        }
 
         function resolvePreviewUrl(value) {
             const candidate = (value || '').trim();
@@ -482,11 +706,63 @@
             error: rootStyles.getPropertyValue('--danger').trim() || '#d64545'
         };
 
-        [heroImageInput, aboutImageInput, headerLogoInput, heroLogoInput].forEach(attachImagePreview);
+        [heroImageInput, servicesBackgroundInput, aboutImageInput, headerLogoInput, heroLogoInput].forEach(attachImagePreview);
 
         const DEFAULT_PARTNERS_INTERVAL_MS = 5000;
         const MIN_PARTNERS_INTERVAL_MS = 1000;
         const MIN_PARTNERS_INTERVAL_SECONDS = MIN_PARTNERS_INTERVAL_MS / 1000;
+
+        function activateTab(name) {
+            if (!name) {
+                return;
+            }
+            tabButtons.forEach(button => {
+                const isActive = button.dataset.tabButton === name;
+                button.classList.toggle('is-active', isActive);
+                button.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+            tabPanels.forEach(panel => {
+                const isActive = panel.dataset.tabPanel === name;
+                panel.classList.toggle('is-active', isActive);
+                panel.hidden = !isActive;
+                panel.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+                panel.tabIndex = isActive ? 0 : -1;
+            });
+        }
+
+        function focusAdjacentTab(currentIndex, direction) {
+            const buttons = tabButtons;
+            if (!buttons.length) {
+                return;
+            }
+            const nextIndex = (currentIndex + direction + buttons.length) % buttons.length;
+            const nextButton = buttons[nextIndex];
+            if (nextButton) {
+                nextButton.focus();
+                activateTab(nextButton.dataset.tabButton);
+            }
+        }
+
+        function initTabs() {
+            if (!tabButtons.length || !tabPanels.length) {
+                return;
+            }
+            tabButtons.forEach((button, index) => {
+                button.addEventListener('click', () => {
+                    activateTab(button.dataset.tabButton);
+                });
+                button.addEventListener('keydown', event => {
+                    if (event.key === 'ArrowRight') {
+                        event.preventDefault();
+                        focusAdjacentTab(index, 1);
+                    } else if (event.key === 'ArrowLeft') {
+                        event.preventDefault();
+                        focusAdjacentTab(index, -1);
+                    }
+                });
+            });
+            activateTab('desktop');
+        }
 
         if (partnersAutoIntervalInput) {
             partnersAutoIntervalInput.min = String(MIN_PARTNERS_INTERVAL_SECONDS);
@@ -656,6 +932,10 @@
                 { name: 'description', label: 'Описание', type: 'textarea' }
             ]);
 
+            if (servicesBackgroundInput) {
+                servicesBackgroundInput.value = data.servicesSettings?.background || '';
+            }
+
             populateArray(stepsList, data.steps || [], [
                 { name: 'title', label: 'Заголовок' },
                 { name: 'description', label: 'Описание', type: 'textarea' }
@@ -704,10 +984,58 @@
             document.getElementById('contactPhone').value = data.contacts?.phone || '';
             document.getElementById('contactEmail').value = data.contacts?.email || '';
             document.getElementById('contactSchedule').value = data.contacts?.schedule || '';
+            const mobile = data.mobile && typeof data.mobile === 'object' ? data.mobile : {};
+            const mobileHero = mobile.hero && typeof mobile.hero === 'object' ? mobile.hero : {};
+            if (mobileHeroTitleInput) {
+                mobileHeroTitleInput.value = mobileHero.title || '';
+            }
+            if (mobileHeroSubtitleInput) {
+                mobileHeroSubtitleInput.value = mobileHero.subtitle || '';
+            }
+            if (mobileHeroPrimaryInput) {
+                mobileHeroPrimaryInput.value = mobileHero.primaryAction || '';
+            }
+            if (mobileHeroSecondaryInput) {
+                mobileHeroSecondaryInput.value = mobileHero.secondaryAction || '';
+            }
+            if (mobileHighlightsList) {
+                populateArray(mobileHighlightsList, mobile.highlights || [], [
+                    { name: 'icon', label: 'CSS-класс иконки' },
+                    { name: 'title', label: 'Заголовок' },
+                    { name: 'description', label: 'Описание', type: 'textarea' }
+                ]);
+            }
+            if (mobileServicesList) {
+                populateArray(mobileServicesList, mobile.services || [], [
+                    { name: 'icon', label: 'CSS-класс иконки' },
+                    { name: 'title', label: 'Заголовок' },
+                    { name: 'description', label: 'Описание', type: 'textarea' }
+                ]);
+            }
+            const mobileContact = mobile.contact && typeof mobile.contact === 'object' ? mobile.contact : {};
+            if (mobileContactTitleInput) {
+                mobileContactTitleInput.value = mobileContact.title || '';
+            }
+            if (mobileContactPhoneInput) {
+                mobileContactPhoneInput.value = mobileContact.phone || '';
+            }
+            if (mobileContactEmailInput) {
+                mobileContactEmailInput.value = mobileContact.email || '';
+            }
+            if (mobileContactAddressInput) {
+                mobileContactAddressInput.value = mobileContact.address || '';
+            }
+            if (mobileContactScheduleInput) {
+                mobileContactScheduleInput.value = mobileContact.schedule || '';
+            }
+            if (mobileContactCtaInput) {
+                mobileContactCtaInput.value = mobileContact.cta || '';
+            }
             lastLoadedRequest = data.request && typeof data.request === 'object' ? { ...data.request } : {};
             if (requestEmailInput) {
-                requestEmailInput.value = lastLoadedRequest.targetEmail || '';
+                requestEmailInput.value = typeof lastLoadedRequest.targetEmail === 'string' ? lastLoadedRequest.targetEmail : '';
             }
+            setSmtpFormValues(lastLoadedRequest.smtp);
 
             refreshAllImagePreviews();
         }
@@ -727,6 +1055,9 @@
                 },
                 features: getItemsFromContainer(featuresList),
                 services: getItemsFromContainer(servicesList),
+                servicesSettings: {
+                    background: servicesBackgroundInput ? servicesBackgroundInput.value.trim() : ''
+                },
                 steps: getItemsFromContainer(stepsList),
                 about: {
                     title: document.getElementById('aboutTitle').value.trim(),
@@ -751,9 +1082,28 @@
                     email: document.getElementById('contactEmail').value.trim(),
                     schedule: document.getElementById('contactSchedule').value.trim()
                 },
+                mobile: {
+                    hero: {
+                        title: mobileHeroTitleInput ? mobileHeroTitleInput.value.trim() : '',
+                        subtitle: mobileHeroSubtitleInput ? mobileHeroSubtitleInput.value.trim() : '',
+                        primaryAction: mobileHeroPrimaryInput ? mobileHeroPrimaryInput.value.trim() : '',
+                        secondaryAction: mobileHeroSecondaryInput ? mobileHeroSecondaryInput.value.trim() : ''
+                    },
+                    highlights: mobileHighlightsList ? getItemsFromContainer(mobileHighlightsList) : [],
+                    services: mobileServicesList ? getItemsFromContainer(mobileServicesList) : [],
+                    contact: {
+                        title: mobileContactTitleInput ? mobileContactTitleInput.value.trim() : '',
+                        phone: mobileContactPhoneInput ? mobileContactPhoneInput.value.trim() : '',
+                        email: mobileContactEmailInput ? mobileContactEmailInput.value.trim() : '',
+                        address: mobileContactAddressInput ? mobileContactAddressInput.value.trim() : '',
+                        schedule: mobileContactScheduleInput ? mobileContactScheduleInput.value.trim() : '',
+                        cta: mobileContactCtaInput ? mobileContactCtaInput.value.trim() : ''
+                    }
+                },
                 request: {
                     ...lastLoadedRequest,
-                    targetEmail: requestEmailInput ? requestEmailInput.value.trim() : ''
+                    targetEmail: requestEmailInput ? requestEmailInput.value.trim() : '',
+                    smtp: readSmtpSettingsFromForm()
                 }
             };
         }
@@ -852,17 +1202,31 @@
             ], {}, reviewsList);
         });
 
+        const addMobileHighlightButton = document.getElementById('addMobileHighlight');
+        if (addMobileHighlightButton && mobileHighlightsList) {
+            addMobileHighlightButton.addEventListener('click', () => {
+                createItemCard([
+                    { name: 'icon', label: 'CSS-класс иконки' },
+                    { name: 'title', label: 'Заголовок' },
+                    { name: 'description', label: 'Описание', type: 'textarea' }
+                ], {}, mobileHighlightsList);
+            });
+        }
+
+        const addMobileServiceButton = document.getElementById('addMobileService');
+        if (addMobileServiceButton && mobileServicesList) {
+            addMobileServiceButton.addEventListener('click', () => {
+                createItemCard([
+                    { name: 'icon', label: 'CSS-класс иконки' },
+                    { name: 'title', label: 'Заголовок' },
+                    { name: 'description', label: 'Описание', type: 'textarea' }
+                ], {}, mobileServicesList);
+            });
+        }
+
         saveButton.addEventListener('click', saveContent);
         reloadButton.addEventListener('click', () => loadContent());
-        logoutButton.addEventListener('click', async () => {
-            try {
-                await fetch(routes.logout, { method: 'POST', credentials: 'include' });
-            } catch (error) {
-                console.error('Logout failed', error);
-            } finally {
-                redirectToLogin();
-            }
-        });
+        initTabs();
         updateActionButtons();
         loadContent();
     </script>
