@@ -234,15 +234,16 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(26px, 6.2vw, 34px);
-            color: var(--secondary);
-            width: auto;
-            height: auto;
-            line-height: 1;
+            width: clamp(40px, 11vw, 52px);
+            height: clamp(40px, 11vw, 52px);
+            border-radius: 50%;
+            background: var(--secondary);
+            box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.08);
+            flex-shrink: 0;
         }
 
         .card__icon i {
-            font-size: 1em;
+            display: none;
         }
 
         .card__title {
@@ -271,11 +272,6 @@
 
         .services .card__icon {
             grid-row: span 2;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: rgba(255, 212, 0, 0.14);
-            color: var(--primary);
         }
 
         .contact-info .card {
@@ -284,12 +280,8 @@
         }
 
         .contact-info .card__icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 212, 0, 0.14);
-            color: var(--primary);
-            font-size: 16px;
+            width: clamp(36px, 10vw, 48px);
+            height: clamp(36px, 10vw, 48px);
         }
 
         .contact-actions {
