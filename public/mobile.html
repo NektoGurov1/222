@@ -1466,23 +1466,49 @@
                 }
             });
 
-            const ctaText = contact.cta || mobile.hero?.primaryAction || content.cta?.button;
-            [heroPrimaryAction, contactRequestButton, scrollCta].forEach(element => {
-                if (!element) {
-                    return;
+            const defaultScrollCtaText = 'Получить консультацию';
+            const fallbackCtaText = (typeof content.cta?.button === 'string' && content.cta.button.trim())
+                ? content.cta.button.trim()
+                : defaultScrollCtaText;
+            const heroPrimaryText = (typeof mobile.hero?.primaryAction === 'string' && mobile.hero.primaryAction.trim())
+                ? mobile.hero.primaryAction.trim()
+                : fallbackCtaText;
+            const contactCtaText = (typeof contact.cta === 'string' && contact.cta.trim())
+                ? contact.cta.trim()
+                : defaultScrollCtaText;
+
+            if (heroPrimaryAction) {
+                if (heroPrimaryText) {
+                    heroPrimaryAction.textContent = heroPrimaryText;
+                    heroPrimaryAction.hidden = false;
+                    heroPrimaryAction.removeAttribute('hidden');
+                } else {
+                    heroPrimaryAction.hidden = true;
                 }
-                if (ctaText) {
-                    element.textContent = ctaText;
-                    element.hidden = false;
-                    return;
+            }
+
+            if (contactRequestButton) {
+                if (contactCtaText) {
+                    contactRequestButton.textContent = contactCtaText;
+                    contactRequestButton.hidden = false;
+                    contactRequestButton.removeAttribute('hidden');
+                } else {
+                    contactRequestButton.hidden = true;
                 }
-                if (element !== heroPrimaryAction) {
-                    element.hidden = true;
-                }
-            });
+            }
+
             if (scrollCta) {
-                scrollCta.setAttribute('aria-hidden', 'true');
-                scrollCta.classList.remove('is-visible');
+                if (contactCtaText) {
+                    scrollCta.textContent = contactCtaText;
+                    scrollCta.hidden = false;
+                    scrollCta.removeAttribute('hidden');
+                    scrollCta.setAttribute('aria-hidden', 'true');
+                    scrollCta.classList.remove('is-visible');
+                } else {
+                    scrollCta.hidden = true;
+                    scrollCta.setAttribute('aria-hidden', 'true');
+                    scrollCta.classList.remove('is-visible');
+                }
             }
 
             const logo = content.branding?.headerLogo || 'assets/logo-inline.svg';
