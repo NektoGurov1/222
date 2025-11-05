@@ -3,7 +3,6 @@ import json
 import hashlib
 import re
 import smtplib
-import subprocess
 from collections import deque
 from datetime import datetime
 from email.message import EmailMessage
@@ -44,6 +43,11 @@ EXTERNAL_REVIEWS_URL = os.getenv(
 EXTERNAL_REVIEWS_TIMEOUT = float(os.getenv("EXTERNAL_REVIEWS_TIMEOUT", "10"))
 EXTERNAL_REVIEWS_LIMIT = int(os.getenv("EXTERNAL_REVIEWS_LIMIT", "20"))
 EXTERNAL_REVIEWS_DISABLE_PROXY = os.getenv("EXTERNAL_REVIEWS_DISABLE_PROXY") in {"1", "true", "True"}
+
+MOBILE_USER_AGENT_PATTERN = re.compile(
+    r"(android|iphone|ipod|ipad|blackberry|windows phone|opera mini|mobile)",
+    re.IGNORECASE,
+)
 
 def ensure_directory(path: Path) -> None:
     if not path.exists():
@@ -117,6 +121,17 @@ def parse_rating(value: Any) -> float:
     if number < 0:
         return None
     return min(number, 5.0)
+
+
+def is_mobile_user_agent(user_agent: str) -> bool:
+    if not user_agent:
+        return False
+    if MOBILE_USER_AGENT_PATTERN.search(user_agent):
+        lower = user_agent.lower()
+        if "macintosh" in lower and "ipad" not in lower:
+            return False
+        return True
+    return False
 
 
 def normalise_review_entry(entry: Any) -> Dict[str, Any]:
@@ -426,35 +441,104 @@ def create_email_message(subject: str, text: str, html: str, attachment, recipie
     return message
 
 
-def send_email(message: EmailMessage) -> None:
-    host = os.getenv("SMTP_HOST")
+def normalise_smtp_settings(raw_settings: Any) -> Dict[str, Any]:
+    if not isinstance(raw_settings, dict):
+        return {}
+
+    result: Dict[str, Any] = {}
+
+    host = clean_whitespace(raw_settings.get("host"))
     if host:
-        port = int(os.getenv("SMTP_PORT", "587"))
-        username = os.getenv("SMTP_USER")
-        password = os.getenv("SMTP_PASSWORD")
-        secure = os.getenv("SMTP_SECURE") in {"true", "1"}
-        if secure:
-            with smtplib.SMTP_SSL(host, port) as server:
-                if username and password:
-                    server.login(username, password)
-                server.send_message(message)
+        result["host"] = host
+
+    port_value = raw_settings.get("port")
+    if port_value not in (None, ""):
+        try:
+            result["port"] = int(str(port_value).strip())
+        except (TypeError, ValueError):
+            pass
+
+    security_value = raw_settings.get("security")
+    if isinstance(security_value, str):
+        security = security_value.strip().lower()
+        if security in {"none", "starttls", "ssl"}:
+            result["security"] = security
+
+    username = raw_settings.get("username")
+    if username is not None:
+        result["username"] = clean_whitespace(username)
+
+    password = raw_settings.get("password")
+    if password is not None:
+        result["password"] = str(password)
+
+    return result
+
+
+def send_email(message: EmailMessage, smtp_settings: Dict[str, Any] = None) -> None:
+    smtp_settings = smtp_settings or {}
+    host = clean_whitespace(
+        smtp_settings.get("host")
+        or os.getenv("SMTP_HOST", "")
+    )
+    if not host:
+        raise RuntimeError(
+            "SMTP-сервер не настроен. Укажите адрес сервера в панели управления или через переменную окружения SMTP_HOST."
+        )
+
+    port_value = smtp_settings.get("port") or os.getenv("SMTP_PORT") or "587"
+    try:
+        port = int(str(port_value).strip())
+    except (TypeError, ValueError):
+        raise RuntimeError("Некорректное значение порта SMTP. Проверьте настройки.")
+
+    security_raw = smtp_settings.get("security")
+    if security_raw is None:
+        security_raw = os.getenv("SMTP_SECURITY")
+    if security_raw is None:
+        security_raw = os.getenv("SMTP_SECURE")
+
+    if security_raw is None:
+        security = "starttls"
+    else:
+        security_candidate = str(security_raw).strip().lower()
+        if security_candidate in {"none", "starttls", "ssl"}:
+            security = security_candidate
+        elif security_candidate in {"true", "1", "yes", "starttls", "tls"}:
+            security = "starttls"
+        elif security_candidate in {"ssl/tls", "smtps"}:
+            security = "ssl"
+        elif security_candidate in {"false", "0", "no"}:
+            security = "none"
         else:
-            with smtplib.SMTP(host, port) as server:
-                try:
-                    server.starttls()
-                    server.ehlo()
-                except smtplib.SMTPException:
-                    pass
-                if username and password:
-                    server.login(username, password)
-                server.send_message(message)
+            security = "starttls"
+
+    username = smtp_settings.get("username")
+    if username is None:
+        username = os.getenv("SMTP_USER")
+
+    password = smtp_settings.get("password")
+    if password is None:
+        password = os.getenv("SMTP_PASSWORD")
+
+    if security == "ssl":
+        with smtplib.SMTP_SSL(host, port) as server:
+            if username and password:
+                server.login(username, password)
+            server.send_message(message)
         return
 
-    sendmail_path = os.getenv("SENDMAIL_PATH", "/usr/sbin/sendmail")
-    process = subprocess.Popen([sendmail_path, "-t", "-i"], stdin=subprocess.PIPE)
-    process.communicate(message.as_bytes())
-    if process.returncode not in (0, None):
-        raise RuntimeError("Sendmail returned non-zero exit code")
+    with smtplib.SMTP(host, port) as server:
+        if security == "starttls":
+            try:
+                server.ehlo()
+                server.starttls()
+                server.ehlo()
+            except smtplib.SMTPException:
+                pass
+        if username and password:
+            server.login(username, password)
+        server.send_message(message)
 
 
 @app.errorhandler(RequestEntityTooLarge)
@@ -464,7 +548,15 @@ def handle_large_file(_):
 
 @app.route("/")
 def serve_root():
+    user_agent = request.headers.get("User-Agent", "") or ""
+    if is_mobile_user_agent(user_agent):
+        return redirect("/mobile", code=302)
     return send_from_directory(str(PUBLIC_DIR), "landingStart.html")
+
+
+@app.route("/mobile")
+def serve_mobile():
+    return send_from_directory(str(PUBLIC_DIR), "mobile.html")
 
 
 @app.route("/login")
@@ -563,14 +655,17 @@ def send_request():
     if not name:
         errors["name"] = "Заполните это поле"
 
-    if not email:
-        errors["email"] = "Заполните это поле"
-    else:
-        if "@" not in email or "." not in email.split("@")[-1]:
-            errors["email"] = "Введите корректный e-mail"
+    has_contact = bool(email) or bool(phone)
+    if not has_contact:
+        contact_message = "Укажите e-mail или телефон"
+        errors["email"] = contact_message
+        errors["phone"] = contact_message
+    elif email and ("@" not in email or "." not in email.split("@")[-1]):
+        errors["email"] = "Введите корректный e-mail"
 
     file_storage = request.files.get("attachment")
     attachment_tuple = None
+    has_attachment = False
     if file_storage and file_storage.filename:
         file_storage.stream.seek(0, os.SEEK_END)
         size = file_storage.stream.tell()
@@ -583,11 +678,20 @@ def send_request():
                 file_storage.read(),
                 file_storage.mimetype or "application/octet-stream",
             )
+            has_attachment = True
+
+    if not comment and not has_attachment:
+        requirement_message = "Добавьте комментарий или приложите файл"
+        errors["comment"] = requirement_message
+        if "attachment" not in errors:
+            errors["attachment"] = requirement_message
 
     if errors:
         return jsonify({"error": "Некорректные данные", "errors": errors}), 400
 
-    parts = [f"Имя: {name}", f"E-mail: {email}"]
+    parts = [f"Имя: {name}"]
+    if email:
+        parts.append(f"E-mail: {email}")
     if phone:
         parts.append(f"Телефон: {phone}")
     if comment:
@@ -604,6 +708,7 @@ def send_request():
     request_settings = raw_request_settings if isinstance(raw_request_settings, dict) else {}
     raw_contacts = content_snapshot.get("contacts")
     contacts_settings = raw_contacts if isinstance(raw_contacts, dict) else {}
+    smtp_settings = normalise_smtp_settings(request_settings.get("smtp"))
     target_email = next(
         (
             candidate.strip()
@@ -626,7 +731,7 @@ def send_request():
     )
 
     try:
-        send_email(message)
+        send_email(message, smtp_settings=smtp_settings)
     except Exception as exc:
         app.logger.error("Не удалось отправить заявку: %s", exc)
         return jsonify({"error": "Не удалось отправить заявку. Повторите попытку позже."}), 500
