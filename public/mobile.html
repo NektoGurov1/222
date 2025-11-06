@@ -968,8 +968,9 @@
             if (!scrollElement) {
                 return;
             }
+            const viewportHeight = scrollElement.clientHeight || window.innerHeight;
             const scrollTop = scrollElement.scrollTop;
-            const scrollableHeight = scrollElement.scrollHeight - window.innerHeight;
+            const scrollableHeight = Math.max(scrollElement.scrollHeight - viewportHeight, 0);
             const progress = scrollableHeight > 0 ? Math.min(Math.max(scrollTop / scrollableHeight, 0), 1) : 1;
             const isComplete = progress >= SCROLL_COMPLETE_THRESHOLD;
 
@@ -1735,6 +1736,7 @@
 
         window.addEventListener('scroll', scheduleScrollProgressUpdate, { passive: true });
         window.addEventListener('resize', scheduleScrollProgressUpdate);
+        window.addEventListener('orientationchange', scheduleScrollProgressUpdate);
         scheduleScrollProgressUpdate();
 
         document.addEventListener('DOMContentLoaded', () => {
