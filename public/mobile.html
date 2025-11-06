@@ -1545,8 +1545,10 @@
             requestScrollUpdate();
             window.addEventListener('scroll', requestScrollUpdate, { passive: true });
             window.addEventListener('touchmove', requestScrollUpdate, { passive: true });
+            window.addEventListener('wheel', requestScrollUpdate, { passive: true });
             document.addEventListener('scroll', requestScrollUpdate, { passive: true });
             document.addEventListener('touchmove', requestScrollUpdate, { passive: true });
+            document.addEventListener('wheel', requestScrollUpdate, { passive: true });
             window.addEventListener('resize', requestScrollUpdate);
             window.addEventListener('orientationchange', requestScrollUpdate);
         }
