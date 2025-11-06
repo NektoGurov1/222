@@ -1469,28 +1469,45 @@
             }
         }
 
-        function updateScrollUi() {
+        function readScrollMetrics() {
             const scrollingElement = document.scrollingElement || document.documentElement;
             const body = document.body;
-            const viewportHeight = window.innerHeight || scrollingElement.clientHeight || body.clientHeight || 1;
+            const docEl = document.documentElement;
+
+            const viewportHeight = window.innerHeight
+                || docEl.clientHeight
+                || scrollingElement.clientHeight
+                || body.clientHeight
+                || 1;
+
             const totalHeight = Math.max(
-                scrollingElement.scrollHeight || 0,
-                document.documentElement.scrollHeight || 0,
-                body.scrollHeight || 0,
+                docEl ? docEl.scrollHeight : 0,
+                body ? body.scrollHeight : 0,
+                scrollingElement ? scrollingElement.scrollHeight : 0,
                 viewportHeight
             );
-            const totalScrollable = Math.max(0, totalHeight - viewportHeight);
-            let scrollTop = typeof window.scrollY === 'number'
-                ? window.scrollY
-                : (scrollingElement.scrollTop || document.documentElement.scrollTop || body.scrollTop || 0);
 
-            if (scrollTop < 0) {
-                scrollTop = 0;
-            }
+            const totalScrollable = Math.max(0, totalHeight - viewportHeight);
+
+            const rawScrollTop = [
+                typeof window.scrollY === 'number' ? window.scrollY : null,
+                typeof window.pageYOffset === 'number' ? window.pageYOffset : null,
+                scrollingElement ? scrollingElement.scrollTop : null,
+                docEl ? docEl.scrollTop : null,
+                body ? body.scrollTop : null,
+            ].find(value => typeof value === 'number');
+
+            const scrollTop = Math.max(0, rawScrollTop || 0);
+
+            return { scrollTop, totalScrollable, viewportHeight };
+        }
+
+        function updateScrollUi() {
+            const { scrollTop, totalScrollable } = readScrollMetrics();
 
             const hasScrollableContent = totalScrollable > 4;
             const progress = hasScrollableContent && totalScrollable > 0
-                ? Math.min(scrollTop / totalScrollable, 1)
+                ? Math.min(Math.max(scrollTop / totalScrollable, 0), 1)
                 : 0;
 
             if (scrollIndicator) {
@@ -1528,6 +1545,8 @@
             requestScrollUpdate();
             window.addEventListener('scroll', requestScrollUpdate, { passive: true });
             window.addEventListener('touchmove', requestScrollUpdate, { passive: true });
+            document.addEventListener('scroll', requestScrollUpdate, { passive: true });
+            document.addEventListener('touchmove', requestScrollUpdate, { passive: true });
             window.addEventListener('resize', requestScrollUpdate);
             window.addEventListener('orientationchange', requestScrollUpdate);
         }
